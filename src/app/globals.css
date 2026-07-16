@@ -1,0 +1,36 @@
+@import "tailwindcss";
+
+@theme inline {
+  --color-bg: #0b0f17;
+  --color-surface: #131a26;
+  --color-surface-2: #1b2536;
+  --color-border: #26324a;
+  --color-fg: #e8edf5;
+  --color-muted: #8a97ad;
+  --color-primary: #4f7cff;
+  --color-primary-hover: #3d6bf0;
+  --color-primary-fg: #ffffff;
+  --color-success: #34d399;
+  --color-warning: #fbbf24;
+  --color-danger: #f87171;
+
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  background: var(--color-bg);
+  color: var(--color-fg);
+  font-family: var(--font-sans), system-ui, sans-serif;
+}
+
+/* Nozik scrollbar */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-border) transparent;
+}

@@ -1,0 +1,177 @@
+// Revator CRM — Prisma schema (SQLite)
+// To'liq CRM: User + Contact + Lead + Deal + Task + Note + Activity
+
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id         String     @id @default(cuid())
+  name       String
+  email      String     @unique
+  password   String
+  role       Role       @default(MANAGER)
+  active     Boolean    @default(true)
+  leads      Lead[]
+  deals      Deal[]
+  tasks      Task[]
+  activities Activity[]
+  createdAt  DateTime   @default(now())
+}
+
+model Contact {
+  id         String     @id @default(cuid())
+  name       String?
+  phone      String     @unique
+  email      String?
+  notes      String? // umumiy eslatma
+  leads      Lead[]
+  deals      Deal[]
+  activities Activity[]
+  createdAt  DateTime   @default(now())
+  updatedAt  DateTime   @updatedAt
+}
+
+model Lead {
+  id            String     @id @default(cuid())
+  phone         String
+  destination   String // Sayohat manzili (qayerga)
+  travelDate    DateTime? // Qachon (aniq sana, agar bo'lsa)
+  travelDateText String? // Bot yuborgan sana matni ("1 oy ichida" kabi)
+  travelers     Int        @default(1) // Necha kishi
+  children      String? // JSON: [{"age":5},{"age":8}]
+  contactTime   String? // Bog'lanish uchun qulay vaqt
+  source        String     @default("manual") // manual | telegram
+  status        LeadStatus @default(NEW)
+  assignedTo    User?      @relation(fields: [assignedToId], references: [id])
+  assignedToId  String?
+  contact       Contact?   @relation(fields: [contactId], references: [id])
+  contactId     String?
+  deal          Deal?
+  telegramMsgId String?
+  notes         Note[]
+  activities    Activity[]
+  createdAt     DateTime   @default(now())
+  updatedAt     DateTime   @updatedAt
+
+  @@index([status])
+  @@index([phone])
+  @@index([assignedToId])
+}
+
+model Deal {
+  id                String     @id @default(cuid())
+  title             String
+  amount            Float?
+  stage             DealStage  @default(QUALIFICATION)
+  lead              Lead?      @relation(fields: [leadId], references: [id])
+  leadId            String?    @unique
+  contact           Contact?   @relation(fields: [contactId], references: [id])
+  contactId         String?
+  assignedTo        User?      @relation(fields: [assignedToId], references: [id])
+  assignedToId      String?
+  expectedCloseDate DateTime?
+  notes             Note[]
+  activities        Activity[]
+  createdAt         DateTime   @default(now())
+  updatedAt         DateTime   @updatedAt
+
+  @@index([stage])
+  @@index([assignedToId])
+}
+
+model Task {
+  id           String     @id @default(cuid())
+  title        String
+  description  String?
+  dueDate      DateTime?
+  priority     Priority   @default(MEDIUM)
+  status       TaskStatus @default(TODO)
+  assignedTo   User?      @relation(fields: [assignedToId], references: [id])
+  assignedToId String?
+  leadId       String? // ixtiyoriy bog'lanish (kontekst uchun)
+  dealId       String?
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+
+  @@index([status])
+  @@index([assignedToId])
+}
+
+model Note {
+  id        String   @id @default(cuid())
+  content   String
+  authorId  String? // kim yozgani (User.id)
+  authorName String?
+  lead      Lead?    @relation(fields: [leadId], references: [id], onDelete: Cascade)
+  leadId    String?
+  deal      Deal?    @relation(fields: [dealId], references: [id], onDelete: Cascade)
+  dealId    String?
+  createdAt DateTime @default(now())
+}
+
+model Activity {
+  id        String       @id @default(cuid())
+  type      ActivityType
+  content   String
+  user      User?        @relation(fields: [userId], references: [id])
+  userId    String?
+  lead      Lead?        @relation(fields: [leadId], references: [id], onDelete: Cascade)
+  leadId    String?
+  contact   Contact?     @relation(fields: [contactId], references: [id], onDelete: Cascade)
+  contactId String?
+  deal      Deal?        @relation(fields: [dealId], references: [id], onDelete: Cascade)
+  dealId    String?
+  createdAt DateTime     @default(now())
+}
+
+enum Role {
+  ADMIN
+  MANAGER
+  OPERATOR
+}
+
+enum LeadStatus {
+  NEW
+  CONTACTED
+  QUALIFIED
+  CONVERTED
+  LOST
+}
+
+enum DealStage {
+  QUALIFICATION
+  PROPOSAL
+  NEGOTIATION
+  CLOSED_WON
+  CLOSED_LOST
+}
+
+enum TaskStatus {
+  TODO
+  IN_PROGRESS
+  DONE
+}
+
+enum Priority {
+  LOW
+  MEDIUM
+  HIGH
+  URGENT
+}
+
+enum ActivityType {
+  CREATED
+  STATUS_CHANGE
+  NOTE
+  CALL
+  EMAIL
+  MEETING
+  ASSIGNED
+  CONVERTED
+}
