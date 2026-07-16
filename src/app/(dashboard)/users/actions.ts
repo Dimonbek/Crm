@@ -34,7 +34,8 @@ export async function createUserAction(
     return { error: parsed.error.issues[0]?.message ?? "Ma'lumot noto'g'ri" };
   }
 
-  const { name, email, password, role } = parsed.data;
+  const { name, password, role } = parsed.data;
+  const email = parsed.data.email.toLowerCase();
 
   const existing = await prisma.user.findUnique({ where: { email } });
   if (existing) {

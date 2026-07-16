@@ -7,7 +7,7 @@ const adapter = new PrismaPg({ connectionString: process.env.DATABASE_URL });
 const prisma = new PrismaClient({ adapter });
 
 async function main() {
-  const email = process.env.ADMIN_EMAIL || "admin@revator.uz";
+  const email = (process.env.ADMIN_EMAIL || "admin@revator.uz").toLowerCase();
   const password = process.env.ADMIN_PASSWORD || "admin123";
 
   const existing = await prisma.user.findUnique({ where: { email } });

@@ -26,7 +26,8 @@ export async function loginAction(
     return { error: parsed.error.issues[0]?.message ?? "Ma'lumot noto'g'ri" };
   }
 
-  const { email, password } = parsed.data;
+  const email = parsed.data.email.toLowerCase();
+  const { password } = parsed.data;
   const user = await prisma.user.findUnique({ where: { email } });
   if (!user || !(await verifyPassword(password, user.password))) {
     return { error: "Email yoki parol noto'g'ri" };
