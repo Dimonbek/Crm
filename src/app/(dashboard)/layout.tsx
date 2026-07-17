@@ -1,4 +1,4 @@
-import { requireUser } from "@/lib/auth";
+import { currentOrg } from "@/lib/auth";
 import { Sidebar } from "./sidebar";
 import { logoutAction } from "./actions";
 
@@ -7,8 +7,8 @@ export default async function DashboardLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const user = await requireUser();
-  const initials = user.name.slice(0, 2).toUpperCase();
+  const { session: user } = await currentOrg();
+  const initials = (user.name || "?").slice(0, 2).toUpperCase();
 
   return (
     <div className="flex min-h-full">

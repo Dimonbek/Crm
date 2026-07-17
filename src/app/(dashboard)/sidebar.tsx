@@ -19,9 +19,10 @@ export function Sidebar({
   orgName,
 }: {
   role: string;
-  orgName: string;
+  orgName?: string;
 }) {
   const pathname = usePathname();
+  const label = orgName?.trim() || "CRM";
   const items =
     role === "ADMIN" ? [...nav, ...adminNav, ...commonNav] : [...nav, ...commonNav];
 
@@ -29,10 +30,10 @@ export function Sidebar({
     <aside className="hidden w-60 shrink-0 flex-col border-r border-border bg-surface md:flex">
       <div className="flex h-16 items-center gap-2.5 border-b border-border px-5">
         <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-primary text-sm font-bold text-primary-fg">
-          {orgName.slice(0, 1).toUpperCase()}
+          {label.slice(0, 1).toUpperCase()}
         </div>
-        <span className="truncate font-semibold" title={orgName}>
-          {orgName}
+        <span className="truncate font-semibold" title={label}>
+          {label}
         </span>
       </div>
 

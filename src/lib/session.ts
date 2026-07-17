@@ -45,7 +45,11 @@ export async function getSession(): Promise<SessionPayload | null> {
   if (!token) return null;
   try {
     const { payload } = await jwtVerify(token, getSecret());
-    return payload as unknown as SessionPayload;
+    const session = payload as unknown as SessionPayload;
+    // Multi-tenant'gacha yaratilgan eski sessiyalarда kompaniya yo'q —
+    // ularni yaroqsiz deb hisoblaymiz (foydalanuvchi qaytadan kiradi).
+    if (!session.organizationId || !session.organizationName) return null;
+    return session;
   } catch {
     return null;
   }
