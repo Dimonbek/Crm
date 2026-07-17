@@ -20,6 +20,9 @@ model Organization {
   /// Bot shu token bilan o'z kompaniyasiga lead yuboradi
   webhookToken String @unique
 
+  /// Telegram bot username (@siz) — reklama havolalarini yasash uchun
+  botUsername String?
+
   users      User[]
   contacts   Contact[]
   leads      Lead[]
@@ -27,9 +30,33 @@ model Organization {
   tasks      Task[]
   notes      Note[]
   activities Activity[]
+  campaigns  Campaign[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+}
+
+/// Reklama kampaniyasi — qaysi reklama qancha lead va foyda keltirganini o'lchash uchun.
+/// Bot `t.me/bot?start=<code>` havolasi orqali leadni shu kampaniyaga bog'laydi.
+model Campaign {
+  id      String  @id @default(cuid())
+  name    String // "Instagram iyul"
+  code    String // "insta_iyul" — deep-link kodi
+  channel String? // Instagram, Telegram, Facebook...
+  /// Shu kampaniyaga sarflangan pul
+  budget  Float   @default(0)
+  active  Boolean @default(true)
+
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  organizationId String
+  leads          Lead[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  /// Kod bitta kompaniya ichida takrorlanmasin
+  @@unique([organizationId, code])
+  @@index([organizationId])
 }
 
 model User {
@@ -88,6 +115,9 @@ model Lead {
   telegramMsgId String?
   organization   Organization? @relation(fields: [organizationId], references: [id], onDelete: Cascade)
   organizationId String?
+  /// Qaysi reklamadan kelgani (bot deep-link orqali)
+  campaign       Campaign?     @relation(fields: [campaignId], references: [id], onDelete: SetNull)
+  campaignId     String?
   notes         Note[]
   activities    Activity[]
   createdAt     DateTime   @default(now())
@@ -96,6 +126,7 @@ model Lead {
   @@index([organizationId, status])
   @@index([organizationId, phone])
   @@index([assignedToId])
+  @@index([campaignId])
 }
 
 model Deal {

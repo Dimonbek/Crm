@@ -16,6 +16,8 @@ const payloadSchema = z.object({
   telegramUserId: z.union([z.string(), z.number()]).optional(),
   managerSuggestion: z.string().trim().optional(),
   telegramMsgId: z.union([z.string(), z.number()]).optional(),
+  /// Reklama kampaniyasi kodi (bot deep-link'dan: t.me/bot?start=<code>)
+  campaignCode: z.string().trim().optional(),
 });
 
 export async function POST(req: Request) {
@@ -65,6 +67,14 @@ export async function POST(req: Request) {
     },
   });
 
+  // Reklama kampaniyasi (deep-link kodi bo'yicha, faqat shu kompaniyaniki)
+  const campaign = d.campaignCode
+    ? await prisma.campaign.findFirst({
+        where: { organizationId: org.id, code: d.campaignCode.toLowerCase() },
+        select: { id: true },
+      })
+    : null;
+
   const lead = await prisma.lead.create({
     data: {
       phone: d.phone,
@@ -77,6 +87,7 @@ export async function POST(req: Request) {
       telegramMsgId: d.telegramMsgId ? String(d.telegramMsgId) : null,
       contactId: contact.id,
       organizationId: org.id,
+      campaignId: campaign?.id ?? null,
     },
   });
 

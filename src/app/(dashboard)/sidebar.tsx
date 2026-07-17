@@ -9,6 +9,7 @@ const nav = [
   { href: "/contacts", label: "Kontaktlar", icon: "☰" },
   { href: "/deals", label: "Bitimlar", icon: "▤" },
   { href: "/tasks", label: "Vazifalar", icon: "✓" },
+  { href: "/campaigns", label: "Reklama", icon: "◈" },
 ];
 
 const adminNav = [{ href: "/users", label: "Xodimlar", icon: "◆" }];

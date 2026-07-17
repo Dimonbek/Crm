@@ -21,6 +21,7 @@ export default async function LeadDetailPage({
       include: {
         assignedTo: true,
         contact: true,
+        campaign: { select: { name: true, channel: true } },
         notes: { orderBy: { createdAt: "desc" } },
         activities: { orderBy: { createdAt: "desc" }, take: 30 },
         deal: true,
@@ -70,7 +71,14 @@ export default async function LeadDetailPage({
               />
               <Info label="Necha kishi" value={String(lead.travelers)} />
               <Info label="Bog'lanish vaqti" value={lead.contactTime || "—"} />
-              <Info label="Manba" value={lead.source} />
+              <Info
+                label="Manba"
+                value={
+                  lead.campaign
+                    ? `${lead.source} · ${lead.campaign.name}`
+                    : lead.source
+                }
+              />
               <Info label="Yaratilgan" value={formatDate(lead.createdAt)} />
               {lead.contact && (
                 <div>

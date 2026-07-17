@@ -21,7 +21,11 @@ export function formatDateTime(d: Date | string | null | undefined): string {
 
 export function formatMoney(amount: number | null | undefined): string {
   if (amount == null) return "—";
-  return new Intl.NumberFormat("uz-UZ").format(amount) + " so'm";
+  // Butun songa yaxlitlaymiz — "333 333,333 so'm" ko'rinishi kerak emas
+  return (
+    new Intl.NumberFormat("uz-UZ", { maximumFractionDigits: 0 }).format(amount) +
+    " so'm"
+  );
 }
 
 /** "2 kun oldin" ko'rinishida nisbiy vaqt */
