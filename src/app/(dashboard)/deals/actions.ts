@@ -77,7 +77,7 @@ export async function createDealAction(
   });
 
   revalidatePath("/deals");
-  revalidatePath("/");
+  revalidatePath("/dashboard");
   return { ok: true };
 }
 
@@ -108,7 +108,7 @@ export async function moveDealStageAction(
   });
 
   revalidatePath("/deals");
-  revalidatePath("/");
+  revalidatePath("/dashboard");
 }
 
 export async function deleteDealAction(dealId: string): Promise<void> {
@@ -117,5 +117,5 @@ export async function deleteDealAction(dealId: string): Promise<void> {
     where: { id: dealId, organizationId: orgId },
   });
   revalidatePath("/deals");
-  revalidatePath("/");
+  revalidatePath("/dashboard");
 }

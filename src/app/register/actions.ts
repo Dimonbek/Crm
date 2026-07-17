@@ -68,5 +68,5 @@ export async function registerAction(
     organizationName: org.name,
   });
 
-  redirect("/");
+  redirect("/dashboard");
 }

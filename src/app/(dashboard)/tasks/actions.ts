@@ -56,7 +56,7 @@ export async function createTaskAction(
   });
 
   revalidatePath("/tasks");
-  revalidatePath("/");
+  revalidatePath("/dashboard");
   return { ok: true };
 }
 
@@ -72,7 +72,7 @@ export async function setTaskStatusAction(
     data: { status: status as TaskStatus },
   });
   revalidatePath("/tasks");
-  revalidatePath("/");
+  revalidatePath("/dashboard");
 }
 
 export async function deleteTaskAction(taskId: string): Promise<void> {
@@ -81,5 +81,5 @@ export async function deleteTaskAction(taskId: string): Promise<void> {
     where: { id: taskId, organizationId: orgId },
   });
   revalidatePath("/tasks");
-  revalidatePath("/");
+  revalidatePath("/dashboard");
 }

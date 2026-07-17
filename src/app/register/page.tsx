@@ -5,7 +5,7 @@ import { RegisterForm } from "./register-form";
 
 export default async function RegisterPage() {
   const session = await getSession();
-  if (session) redirect("/");
+  if (session) redirect("/dashboard");
 
   return (
     <main className="flex min-h-full items-center justify-center px-4 py-12">

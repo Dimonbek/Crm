@@ -4,7 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 
 const nav = [
-  { href: "/", label: "Boshqaruv paneli", icon: "◧" },
+  { href: "/dashboard", label: "Boshqaruv paneli", icon: "◧" },
   { href: "/leads", label: "Leadlar", icon: "◎" },
   { href: "/contacts", label: "Kontaktlar", icon: "☰" },
   { href: "/deals", label: "Bitimlar", icon: "▤" },
@@ -39,10 +39,7 @@ export function Sidebar({
 
       <nav className="flex flex-col gap-1 p-3">
         {items.map((item) => {
-          const active =
-            item.href === "/"
-              ? pathname === "/"
-              : pathname.startsWith(item.href);
+          const active = pathname.startsWith(item.href);
           return (
             <Link
               key={item.href}

@@ -60,7 +60,7 @@ export async function createLeadAction(
   });
 
   revalidatePath("/leads");
-  revalidatePath("/");
+  revalidatePath("/dashboard");
   return { ok: true };
 }
 
@@ -88,7 +88,7 @@ export async function updateLeadStatusAction(
   });
 
   revalidatePath("/leads");
-  revalidatePath("/");
+  revalidatePath("/dashboard");
 }
 
 export async function deleteLeadAction(leadId: string): Promise<void> {
@@ -97,5 +97,5 @@ export async function deleteLeadAction(leadId: string): Promise<void> {
     where: { id: leadId, organizationId: orgId },
   });
   revalidatePath("/leads");
-  revalidatePath("/");
+  revalidatePath("/dashboard");
 }

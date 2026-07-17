@@ -51,5 +51,5 @@ export async function loginAction(
     organizationName: user.organization.name,
   });
 
-  redirect("/");
+  redirect("/dashboard");
 }
