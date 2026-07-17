@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { prisma } from "@/lib/prisma";
-import { requireUser } from "@/lib/auth";
+import { currentOrg } from "@/lib/auth";
 import { formatDate } from "@/lib/format";
 import { AddContactButton, DeleteContactButton } from "./contacts-client";
 
@@ -9,19 +9,22 @@ export default async function ContactsPage({
 }: {
   searchParams: Promise<{ q?: string }>;
 }) {
-  await requireUser();
+  const { orgId } = await currentOrg();
   const { q } = await searchParams;
 
   const contacts = await prisma.contact.findMany({
-    where: q
-      ? {
-          OR: [
-            { phone: { contains: q } },
-            { name: { contains: q } },
-            { email: { contains: q } },
-          ],
-        }
-      : {},
+    where: {
+      organizationId: orgId,
+      ...(q
+        ? {
+            OR: [
+              { phone: { contains: q, mode: "insensitive" } },
+              { name: { contains: q, mode: "insensitive" } },
+              { email: { contains: q, mode: "insensitive" } },
+            ],
+          }
+        : {}),
+    },
     orderBy: { createdAt: "desc" },
     include: { _count: { select: { leads: true, deals: true } } },
   });

@@ -10,11 +10,28 @@ export async function requireUser(): Promise<SessionPayload> {
   return session;
 }
 
-/** Faqat ADMIN uchun. Aks holda bosh sahifaga yo'naltiradi. */
+/** Faqat kompaniya administratori uchun. */
 export async function requireAdmin(): Promise<SessionPayload> {
   const session = await requireUser();
   if (session.role !== "ADMIN") {
     redirect("/");
   }
   return session;
+}
+
+/**
+ * Joriy kompaniya konteksti (multi-tenant izolyatsiya).
+ *
+ * MUHIM: barcha ma'lumot so'rovlari `where: { organizationId: orgId }` bilan
+ * cheklanishi SHART — aks holda bir kompaniya boshqasining mijozlarini ko'radi.
+ */
+export async function currentOrg(): Promise<{
+  orgId: string;
+  session: SessionPayload;
+}> {
+  const session = await requireUser();
+  if (!session.organizationId) {
+    redirect("/login");
+  }
+  return { orgId: session.organizationId, session };
 }

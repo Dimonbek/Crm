@@ -28,9 +28,18 @@ export async function loginAction(
 
   const email = parsed.data.email.toLowerCase();
   const { password } = parsed.data;
-  const user = await prisma.user.findUnique({ where: { email } });
+  const user = await prisma.user.findUnique({
+    where: { email },
+    include: { organization: true },
+  });
   if (!user || !(await verifyPassword(password, user.password))) {
     return { error: "Email yoki parol noto'g'ri" };
+  }
+  if (!user.active) {
+    return { error: "Hisobingiz bloklangan. Administratorga murojaat qiling." };
+  }
+  if (!user.organization) {
+    return { error: "Hisobingiz kompaniyaga biriktirilmagan." };
   }
 
   await createSession({
@@ -38,6 +47,8 @@ export async function loginAction(
     name: user.name,
     email: user.email,
     role: user.role,
+    organizationId: user.organization.id,
+    organizationName: user.organization.name,
   });
 
   redirect("/");

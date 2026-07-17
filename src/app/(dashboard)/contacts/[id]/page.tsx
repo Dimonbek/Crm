@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { prisma } from "@/lib/prisma";
-import { requireUser } from "@/lib/auth";
+import { currentOrg } from "@/lib/auth";
 import { formatDate, formatMoney } from "@/lib/format";
 import { STATUS_LABEL, STATUS_CLASS } from "@/lib/leads";
 import { STAGE_LABEL } from "@/lib/deals";
@@ -11,11 +11,11 @@ export default async function ContactDetailPage({
 }: {
   params: Promise<{ id: string }>;
 }) {
-  await requireUser();
+  const { orgId } = await currentOrg();
   const { id } = await params;
 
-  const contact = await prisma.contact.findUnique({
-    where: { id },
+  const contact = await prisma.contact.findFirst({
+    where: { id, organizationId: orgId },
     include: {
       leads: { orderBy: { createdAt: "desc" } },
       deals: { orderBy: { createdAt: "desc" } },

@@ -1,12 +1,14 @@
 import { prisma } from "@/lib/prisma";
-import { requireAdmin } from "@/lib/auth";
+import { requireAdmin, currentOrg } from "@/lib/auth";
 import { formatDate } from "@/lib/format";
 import { AddUserButton, RoleSelect, ActiveToggle } from "./users-client";
 
 export default async function UsersPage() {
   const me = await requireAdmin();
+  const { orgId } = await currentOrg();
 
   const users = await prisma.user.findMany({
+    where: { organizationId: orgId },
     orderBy: { createdAt: "asc" },
     include: { _count: { select: { leads: true, deals: true, tasks: true } } },
   });
@@ -15,7 +17,7 @@ export default async function UsersPage() {
     <div className="flex flex-col gap-6">
       <div className="flex flex-wrap items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-semibold">Foydalanuvchilar</h1>
+          <h1 className="text-2xl font-semibold">Xodimlar</h1>
           <p className="mt-1 text-sm text-muted">Jami {users.length} ta xodim</p>
         </div>
         <AddUserButton />

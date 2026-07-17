@@ -19,14 +19,22 @@ const payloadSchema = z.object({
 });
 
 export async function POST(req: Request) {
-  const secret = process.env.WEBHOOK_SECRET;
-  if (secret) {
-    const provided =
-      req.headers.get("x-webhook-secret") ??
-      new URL(req.url).searchParams.get("secret");
-    if (provided !== secret) {
-      return NextResponse.json({ error: "unauthorized" }, { status: 401 });
-    }
+  // Token ham autentifikatsiya, ham qaysi kompaniya ekanini aniqlaydi
+  const token =
+    req.headers.get("x-webhook-secret") ??
+    new URL(req.url).searchParams.get("secret");
+
+  if (!token) {
+    return NextResponse.json({ error: "unauthorized" }, { status: 401 });
+  }
+
+  const org = await prisma.organization.findUnique({
+    where: { webhookToken: token },
+    select: { id: true },
+  });
+
+  if (!org) {
+    return NextResponse.json({ error: "unauthorized" }, { status: 401 });
   }
 
   let json: unknown;
@@ -46,13 +54,14 @@ export async function POST(req: Request) {
 
   const d = parsed.data;
 
-  // Kontakt: telefon bo'yicha dedup (bor bo'lsa ulanadi)
+  // Kontakt: shu kompaniya ichida telefon bo'yicha dedup
   const contact = await prisma.contact.upsert({
-    where: { phone: d.phone },
+    where: { organizationId_phone: { organizationId: org.id, phone: d.phone } },
     update: {},
     create: {
       phone: d.phone,
       name: d.telegramUsername ? d.telegramUsername.replace(/^@/, "") : null,
+      organizationId: org.id,
     },
   });
 
@@ -67,6 +76,7 @@ export async function POST(req: Request) {
       source: "telegram",
       telegramMsgId: d.telegramMsgId ? String(d.telegramMsgId) : null,
       contactId: contact.id,
+      organizationId: org.id,
     },
   });
 
@@ -81,6 +91,7 @@ export async function POST(req: Request) {
       type: "CREATED",
       content: "Lead Telegram botdan qabul qilindi",
       leadId: lead.id,
+      organizationId: org.id,
     },
   });
 
@@ -90,6 +101,7 @@ export async function POST(req: Request) {
         content: details.join("\n"),
         authorName: "Telegram bot",
         leadId: lead.id,
+        organizationId: org.id,
       },
     });
   }

@@ -12,7 +12,7 @@ export default async function DashboardLayout({
 
   return (
     <div className="flex min-h-full">
-      <Sidebar role={user.role} />
+      <Sidebar role={user.role} orgName={user.organizationName} />
 
       <div className="flex min-w-0 flex-1 flex-col">
         <header className="flex h-16 items-center justify-between gap-4 border-b border-border bg-surface/60 px-5 backdrop-blur">

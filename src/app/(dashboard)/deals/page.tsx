@@ -1,12 +1,13 @@
 import { prisma } from "@/lib/prisma";
-import { requireUser } from "@/lib/auth";
+import { currentOrg } from "@/lib/auth";
 import { Kanban, type DealCard } from "./kanban";
 
 export default async function DealsPage() {
-  await requireUser();
+  const { orgId } = await currentOrg();
 
   const [deals, contacts, users] = await Promise.all([
     prisma.deal.findMany({
+      where: { organizationId: orgId },
       orderBy: { createdAt: "desc" },
       include: {
         contact: { select: { name: true, phone: true } },
@@ -14,11 +15,12 @@ export default async function DealsPage() {
       },
     }),
     prisma.contact.findMany({
+      where: { organizationId: orgId },
       select: { id: true, name: true, phone: true },
       orderBy: { createdAt: "desc" },
     }),
     prisma.user.findMany({
-      where: { active: true },
+      where: { active: true, organizationId: orgId },
       select: { id: true, name: true },
       orderBy: { name: "asc" },
     }),

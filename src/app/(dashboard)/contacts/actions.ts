@@ -3,7 +3,7 @@
 import { z } from "zod";
 import { revalidatePath } from "next/cache";
 import { prisma } from "@/lib/prisma";
-import { requireUser } from "@/lib/auth";
+import { currentOrg } from "@/lib/auth";
 
 const schema = z.object({
   name: z.string().trim().optional(),
@@ -18,7 +18,7 @@ export async function createContactAction(
   _prev: ContactState,
   formData: FormData
 ): Promise<ContactState> {
-  await requireUser();
+  const { orgId } = await currentOrg();
 
   const parsed = schema.safeParse({
     name: formData.get("name"),
@@ -33,7 +33,9 @@ export async function createContactAction(
 
   const { name, phone, email, notes } = parsed.data;
 
-  const existing = await prisma.contact.findUnique({ where: { phone } });
+  const existing = await prisma.contact.findFirst({
+    where: { phone, organizationId: orgId },
+  });
   if (existing) {
     return { error: "Bu telefon raqamli kontakt allaqachon mavjud" };
   }
@@ -44,6 +46,7 @@ export async function createContactAction(
       phone,
       email: email || null,
       notes: notes || null,
+      organizationId: orgId,
     },
   });
 
@@ -52,7 +55,9 @@ export async function createContactAction(
 }
 
 export async function deleteContactAction(contactId: string): Promise<void> {
-  await requireUser();
-  await prisma.contact.delete({ where: { id: contactId } });
+  const { orgId } = await currentOrg();
+  await prisma.contact.deleteMany({
+    where: { id: contactId, organizationId: orgId },
+  });
   revalidatePath("/contacts");
 }

@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { prisma } from "@/lib/prisma";
-import { requireUser } from "@/lib/auth";
+import { currentOrg } from "@/lib/auth";
 import { formatDate, formatDateTime, timeAgo } from "@/lib/format";
 import { StatusSelect } from "../leads-client";
 import { AssignSelect, NoteForm, ConvertButton } from "./lead-detail-client";
@@ -11,12 +11,13 @@ export default async function LeadDetailPage({
 }: {
   params: Promise<{ id: string }>;
 }) {
-  await requireUser();
+  const { orgId } = await currentOrg();
   const { id } = await params;
 
   const [lead, users] = await Promise.all([
-    prisma.lead.findUnique({
-      where: { id },
+    // findFirst + organizationId — begona lead ochilmaydi (404 beradi)
+    prisma.lead.findFirst({
+      where: { id, organizationId: orgId },
       include: {
         assignedTo: true,
         contact: true,
@@ -26,7 +27,7 @@ export default async function LeadDetailPage({
       },
     }),
     prisma.user.findMany({
-      where: { active: true },
+      where: { active: true, organizationId: orgId },
       select: { id: true, name: true },
       orderBy: { name: "asc" },
     }),

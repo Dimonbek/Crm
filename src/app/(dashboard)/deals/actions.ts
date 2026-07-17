@@ -3,7 +3,7 @@
 import { z } from "zod";
 import { revalidatePath } from "next/cache";
 import { prisma } from "@/lib/prisma";
-import { requireUser } from "@/lib/auth";
+import { currentOrg } from "@/lib/auth";
 import { DEAL_STAGES, STAGE_LABEL } from "@/lib/deals";
 import type { DealStage } from "@/generated/prisma/enums";
 
@@ -27,7 +27,7 @@ export async function createDealAction(
   _prev: CreateDealState,
   formData: FormData
 ): Promise<CreateDealState> {
-  const me = await requireUser();
+  const { orgId, session } = await currentOrg();
 
   const parsed = createSchema.safeParse({
     title: formData.get("title"),
@@ -43,13 +43,26 @@ export async function createDealAction(
 
   const { title, amount, stage, contactId, assignedToId } = parsed.data;
 
+  // Kontakt va xodim shu kompaniyaniki ekanini tekshiramiz
+  const contact = contactId
+    ? await prisma.contact.findFirst({
+        where: { id: contactId, organizationId: orgId },
+      })
+    : null;
+  const assignee = assignedToId
+    ? await prisma.user.findFirst({
+        where: { id: assignedToId, organizationId: orgId },
+      })
+    : null;
+
   const deal = await prisma.deal.create({
     data: {
       title,
       amount: amount ?? null,
       stage,
-      contactId: contactId || null,
-      assignedToId: assignedToId || null,
+      contactId: contact?.id ?? null,
+      assignedToId: assignee?.id ?? null,
+      organizationId: orgId,
     },
   });
 
@@ -58,7 +71,8 @@ export async function createDealAction(
       type: "CREATED",
       content: "Bitim yaratildi",
       dealId: deal.id,
-      userId: me.userId,
+      userId: session.userId,
+      organizationId: orgId,
     },
   });
 
@@ -71,14 +85,16 @@ export async function moveDealStageAction(
   dealId: string,
   stage: string
 ): Promise<void> {
-  const me = await requireUser();
+  const { orgId, session } = await currentOrg();
   if (!DEAL_STAGES.includes(stage as DealStage)) return;
 
-  const deal = await prisma.deal.findUnique({ where: { id: dealId } });
+  const deal = await prisma.deal.findFirst({
+    where: { id: dealId, organizationId: orgId },
+  });
   if (!deal || deal.stage === stage) return;
 
-  await prisma.deal.update({
-    where: { id: dealId },
+  await prisma.deal.updateMany({
+    where: { id: dealId, organizationId: orgId },
     data: { stage: stage as DealStage },
   });
   await prisma.activity.create({
@@ -86,7 +102,8 @@ export async function moveDealStageAction(
       type: "STATUS_CHANGE",
       content: `Bosqich o'zgardi: ${STAGE_LABEL[stage as DealStage]}`,
       dealId,
-      userId: me.userId,
+      userId: session.userId,
+      organizationId: orgId,
     },
   });
 
@@ -95,8 +112,10 @@ export async function moveDealStageAction(
 }
 
 export async function deleteDealAction(dealId: string): Promise<void> {
-  await requireUser();
-  await prisma.deal.delete({ where: { id: dealId } });
+  const { orgId } = await currentOrg();
+  await prisma.deal.deleteMany({
+    where: { id: dealId, organizationId: orgId },
+  });
   revalidatePath("/deals");
   revalidatePath("/");
 }

@@ -4,25 +4,40 @@ import { z } from "zod";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { prisma } from "@/lib/prisma";
-import { requireUser } from "@/lib/auth";
+import { currentOrg } from "@/lib/auth";
+
+/** Lead shu kompaniyaga tegishlimi — har amaldan oldin tekshiriladi */
+async function ownLead(leadId: string, orgId: string) {
+  return prisma.lead.findFirst({
+    where: { id: leadId, organizationId: orgId },
+  });
+}
 
 export async function addLeadNoteAction(
   leadId: string,
   formData: FormData
 ): Promise<void> {
-  const user = await requireUser();
+  const { orgId, session } = await currentOrg();
   const content = String(formData.get("content") ?? "").trim();
   if (!content) return;
+  if (!(await ownLead(leadId, orgId))) return;
 
   await prisma.note.create({
-    data: { content, leadId, authorId: user.userId, authorName: user.name },
+    data: {
+      content,
+      leadId,
+      authorId: session.userId,
+      authorName: session.name,
+      organizationId: orgId,
+    },
   });
   await prisma.activity.create({
     data: {
       type: "NOTE",
       content: "Izoh qo'shildi",
       leadId,
-      userId: user.userId,
+      userId: session.userId,
+      organizationId: orgId,
     },
   });
 
@@ -33,14 +48,19 @@ export async function assignLeadAction(
   leadId: string,
   userId: string
 ): Promise<void> {
-  const me = await requireUser();
+  const { orgId, session } = await currentOrg();
+  if (!(await ownLead(leadId, orgId))) return;
+
+  // Faqat shu kompaniya xodimiga tayinlash mumkin
   const assignee =
     userId === ""
       ? null
-      : await prisma.user.findUnique({ where: { id: userId } });
+      : await prisma.user.findFirst({
+          where: { id: userId, organizationId: orgId },
+        });
 
-  await prisma.lead.update({
-    where: { id: leadId },
+  await prisma.lead.updateMany({
+    where: { id: leadId, organizationId: orgId },
     data: { assignedToId: assignee?.id ?? null },
   });
   await prisma.activity.create({
@@ -50,7 +70,8 @@ export async function assignLeadAction(
         ? `Menejerga tayinlandi: ${assignee.name}`
         : "Tayinlash bekor qilindi",
       leadId,
-      userId: me.userId,
+      userId: session.userId,
+      organizationId: orgId,
     },
   });
 
@@ -69,7 +90,7 @@ export async function convertLeadToDealAction(
   _prev: ConvertState,
   formData: FormData
 ): Promise<ConvertState> {
-  const me = await requireUser();
+  const { orgId, session } = await currentOrg();
 
   const parsed = convertSchema.safeParse({
     title: formData.get("title"),
@@ -79,19 +100,19 @@ export async function convertLeadToDealAction(
     return { error: parsed.error.issues[0]?.message ?? "Ma'lumot noto'g'ri" };
   }
 
-  const lead = await prisma.lead.findUnique({ where: { id: leadId } });
+  const lead = await ownLead(leadId, orgId);
   if (!lead) return { error: "Lead topilmadi" };
   if (lead.status === "CONVERTED") {
     return { error: "Bu lead allaqachon konvertatsiya qilingan" };
   }
 
-  // Kontakt: telefon bo'yicha bor bo'lsa ulanadi, bo'lmasa yaratiladi
+  // Kontakt: shu kompaniya ichida telefon bo'yicha bor bo'lsa ulanadi
   let contactId = lead.contactId;
   if (!contactId) {
     const contact = await prisma.contact.upsert({
-      where: { phone: lead.phone },
+      where: { organizationId_phone: { organizationId: orgId, phone: lead.phone } },
       update: {},
-      create: { phone: lead.phone },
+      create: { phone: lead.phone, organizationId: orgId },
     });
     contactId = contact.id;
   }
@@ -103,11 +124,12 @@ export async function convertLeadToDealAction(
       leadId: lead.id,
       contactId,
       assignedToId: lead.assignedToId,
+      organizationId: orgId,
     },
   });
 
-  await prisma.lead.update({
-    where: { id: leadId },
+  await prisma.lead.updateMany({
+    where: { id: leadId, organizationId: orgId },
     data: { status: "CONVERTED", contactId },
   });
 
@@ -117,13 +139,15 @@ export async function convertLeadToDealAction(
         type: "CONVERTED",
         content: `Bitimga aylantirildi: ${deal.title}`,
         leadId,
-        userId: me.userId,
+        userId: session.userId,
+        organizationId: orgId,
       },
       {
         type: "CREATED",
         content: "Bitim leaddan yaratildi",
         dealId: deal.id,
-        userId: me.userId,
+        userId: session.userId,
+        organizationId: orgId,
       },
     ],
   });

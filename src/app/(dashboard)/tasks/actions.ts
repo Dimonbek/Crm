@@ -3,7 +3,7 @@
 import { z } from "zod";
 import { revalidatePath } from "next/cache";
 import { prisma } from "@/lib/prisma";
-import { requireUser } from "@/lib/auth";
+import { currentOrg } from "@/lib/auth";
 import { TASK_STATUSES } from "@/lib/tasks";
 import type { TaskStatus } from "@/generated/prisma/enums";
 
@@ -21,7 +21,7 @@ export async function createTaskAction(
   _prev: CreateTaskState,
   formData: FormData
 ): Promise<CreateTaskState> {
-  await requireUser();
+  const { orgId } = await currentOrg();
 
   const parsed = createSchema.safeParse({
     title: formData.get("title"),
@@ -37,13 +37,21 @@ export async function createTaskAction(
 
   const { title, description, dueDate, priority, assignedToId } = parsed.data;
 
+  // Faqat shu kompaniya xodimiga tayinlash mumkin
+  const assignee = assignedToId
+    ? await prisma.user.findFirst({
+        where: { id: assignedToId, organizationId: orgId },
+      })
+    : null;
+
   await prisma.task.create({
     data: {
       title,
       description: description || null,
       dueDate: dueDate ? new Date(dueDate) : null,
       priority,
-      assignedToId: assignedToId || null,
+      assignedToId: assignee?.id ?? null,
+      organizationId: orgId,
     },
   });
 
@@ -56,11 +64,11 @@ export async function setTaskStatusAction(
   taskId: string,
   status: string
 ): Promise<void> {
-  await requireUser();
+  const { orgId } = await currentOrg();
   if (!TASK_STATUSES.includes(status as TaskStatus)) return;
 
-  await prisma.task.update({
-    where: { id: taskId },
+  await prisma.task.updateMany({
+    where: { id: taskId, organizationId: orgId },
     data: { status: status as TaskStatus },
   });
   revalidatePath("/tasks");
@@ -68,8 +76,10 @@ export async function setTaskStatusAction(
 }
 
 export async function deleteTaskAction(taskId: string): Promise<void> {
-  await requireUser();
-  await prisma.task.delete({ where: { id: taskId } });
+  const { orgId } = await currentOrg();
+  await prisma.task.deleteMany({
+    where: { id: taskId, organizationId: orgId },
+  });
   revalidatePath("/tasks");
   revalidatePath("/");
 }

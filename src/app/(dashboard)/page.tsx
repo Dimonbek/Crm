@@ -1,25 +1,38 @@
 import Link from "next/link";
 import { prisma } from "@/lib/prisma";
-import { requireUser } from "@/lib/auth";
+import { currentOrg } from "@/lib/auth";
 import { LEAD_STATUSES, STATUS_LABEL, STATUS_CLASS } from "@/lib/leads";
 import { formatDate, formatMoney } from "@/lib/format";
 import type { LeadStatus } from "@/generated/prisma/enums";
 
 export default async function DashboardPage() {
-  const user = await requireUser();
+  const { orgId, session: user } = await currentOrg();
 
   const [total, newCount, grouped, recent, activeDeals, openTasks, wonAgg] =
     await Promise.all([
-      prisma.lead.count(),
-      prisma.lead.count({ where: { status: "NEW" } }),
-      prisma.lead.groupBy({ by: ["status"], _count: { _all: true } }),
-      prisma.lead.findMany({ orderBy: { createdAt: "desc" }, take: 6 }),
-      prisma.deal.count({
-        where: { stage: { notIn: ["CLOSED_WON", "CLOSED_LOST"] } },
+      prisma.lead.count({ where: { organizationId: orgId } }),
+      prisma.lead.count({ where: { organizationId: orgId, status: "NEW" } }),
+      prisma.lead.groupBy({
+        by: ["status"],
+        where: { organizationId: orgId },
+        _count: { _all: true },
       }),
-      prisma.task.count({ where: { status: { not: "DONE" } } }),
+      prisma.lead.findMany({
+        where: { organizationId: orgId },
+        orderBy: { createdAt: "desc" },
+        take: 6,
+      }),
+      prisma.deal.count({
+        where: {
+          organizationId: orgId,
+          stage: { notIn: ["CLOSED_WON", "CLOSED_LOST"] },
+        },
+      }),
+      prisma.task.count({
+        where: { organizationId: orgId, status: { not: "DONE" } },
+      }),
       prisma.deal.aggregate({
-        where: { stage: "CLOSED_WON" },
+        where: { organizationId: orgId, stage: "CLOSED_WON" },
         _sum: { amount: true },
       }),
     ]);

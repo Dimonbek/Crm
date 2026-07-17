@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { prisma } from "@/lib/prisma";
-import { requireUser } from "@/lib/auth";
+import { currentOrg } from "@/lib/auth";
 import { formatDate } from "@/lib/format";
 import {
   TASK_STATUSES,
@@ -16,7 +16,7 @@ export default async function TasksPage({
 }: {
   searchParams: Promise<{ status?: string }>;
 }) {
-  await requireUser();
+  const { orgId } = await currentOrg();
   const { status } = await searchParams;
 
   const statusFilter =
@@ -26,12 +26,12 @@ export default async function TasksPage({
 
   const [tasks, users] = await Promise.all([
     prisma.task.findMany({
-      where: { status: statusFilter },
+      where: { organizationId: orgId, status: statusFilter },
       orderBy: [{ status: "asc" }, { dueDate: "asc" }, { createdAt: "desc" }],
       include: { assignedTo: { select: { name: true } } },
     }),
     prisma.user.findMany({
-      where: { active: true },
+      where: { active: true, organizationId: orgId },
       select: { id: true, name: true },
       orderBy: { name: "asc" },
     }),

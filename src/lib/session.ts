@@ -9,6 +9,9 @@ export type SessionPayload = {
   name: string;
   email: string;
   role: string;
+  /// Qaysi kompaniyaga tegishli — barcha so'rovlar shu bo'yicha ajratiladi
+  organizationId: string;
+  organizationName: string;
 };
 
 function getSecret(): Uint8Array {

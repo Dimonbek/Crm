@@ -1,4 +1,5 @@
 import { prisma } from "@/lib/prisma";
+import { currentOrg } from "@/lib/auth";
 import { LEAD_STATUSES, STATUS_LABEL, formatDate } from "@/lib/leads";
 import type { LeadStatus } from "@/generated/prisma/enums";
 import { AddLeadButton, StatusSelect, DeleteLeadButton } from "./leads-client";
@@ -9,6 +10,7 @@ export default async function LeadsPage({
 }: {
   searchParams: Promise<{ q?: string; status?: string }>;
 }) {
+  const { orgId } = await currentOrg();
   const { q, status } = await searchParams;
 
   const statusFilter =
@@ -18,12 +20,13 @@ export default async function LeadsPage({
 
   const leads = await prisma.lead.findMany({
     where: {
+      organizationId: orgId,
       status: statusFilter,
       ...(q
         ? {
             OR: [
-              { phone: { contains: q } },
-              { destination: { contains: q } },
+              { phone: { contains: q, mode: "insensitive" } },
+              { destination: { contains: q, mode: "insensitive" } },
             ],
           }
         : {}),

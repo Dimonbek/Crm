@@ -3,7 +3,7 @@
 import { z } from "zod";
 import { revalidatePath } from "next/cache";
 import { prisma } from "@/lib/prisma";
-import { requireAdmin } from "@/lib/auth";
+import { requireAdmin, currentOrg } from "@/lib/auth";
 import { hashPassword } from "@/lib/password";
 import { ROLES } from "@/lib/roles";
 import type { Role } from "@/generated/prisma/enums";
@@ -22,6 +22,7 @@ export async function createUserAction(
   formData: FormData
 ): Promise<CreateUserState> {
   await requireAdmin();
+  const { orgId } = await currentOrg();
 
   const parsed = createSchema.safeParse({
     name: formData.get("name"),
@@ -43,7 +44,13 @@ export async function createUserAction(
   }
 
   await prisma.user.create({
-    data: { name, email, password: await hashPassword(password), role },
+    data: {
+      name,
+      email,
+      password: await hashPassword(password),
+      role,
+      organizationId: orgId,
+    },
   });
 
   revalidatePath("/users");
@@ -52,13 +59,16 @@ export async function createUserAction(
 
 export async function toggleUserActiveAction(userId: string): Promise<void> {
   const admin = await requireAdmin();
+  const { orgId } = await currentOrg();
   if (admin.userId === userId) return; // o'zini bloklamaslik
 
-  const user = await prisma.user.findUnique({ where: { id: userId } });
+  const user = await prisma.user.findFirst({
+    where: { id: userId, organizationId: orgId },
+  });
   if (!user) return;
 
-  await prisma.user.update({
-    where: { id: userId },
+  await prisma.user.updateMany({
+    where: { id: userId, organizationId: orgId },
     data: { active: !user.active },
   });
   revalidatePath("/users");
@@ -68,11 +78,13 @@ export async function changeUserRoleAction(
   userId: string,
   role: string
 ): Promise<void> {
-  await requireAdmin();
+  const admin = await requireAdmin();
+  const { orgId } = await currentOrg();
+  if (admin.userId === userId) return; // o'z rolini o'zgartirmaslik
   if (!ROLES.includes(role as Role)) return;
 
-  await prisma.user.update({
-    where: { id: userId },
+  await prisma.user.updateMany({
+    where: { id: userId, organizationId: orgId },
     data: { role: role as Role },
   });
   revalidatePath("/users");

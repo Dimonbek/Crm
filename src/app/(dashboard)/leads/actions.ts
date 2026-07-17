@@ -3,7 +3,7 @@
 import { z } from "zod";
 import { revalidatePath } from "next/cache";
 import { prisma } from "@/lib/prisma";
-import { requireUser } from "@/lib/auth";
+import { currentOrg } from "@/lib/auth";
 import { LEAD_STATUSES, STATUS_LABEL } from "@/lib/leads";
 import type { LeadStatus } from "@/generated/prisma/enums";
 
@@ -21,7 +21,7 @@ export async function createLeadAction(
   _prev: CreateLeadState,
   formData: FormData
 ): Promise<CreateLeadState> {
-  await requireUser();
+  const { orgId } = await currentOrg();
 
   const parsed = createSchema.safeParse({
     phone: formData.get("phone"),
@@ -46,6 +46,7 @@ export async function createLeadAction(
       travelers,
       contactTime: contactTime || null,
       source: "manual",
+      organizationId: orgId,
     },
   });
 
@@ -54,6 +55,7 @@ export async function createLeadAction(
       type: "CREATED",
       content: "Lead qo'lda yaratildi",
       leadId: lead.id,
+      organizationId: orgId,
     },
   });
 
@@ -66,19 +68,22 @@ export async function updateLeadStatusAction(
   leadId: string,
   status: string
 ): Promise<void> {
-  await requireUser();
+  const { orgId } = await currentOrg();
   if (!LEAD_STATUSES.includes(status as LeadStatus)) return;
 
-  await prisma.lead.update({
-    where: { id: leadId },
+  // updateMany + organizationId — begona kompaniya leadiga tegib bo'lmaydi
+  const res = await prisma.lead.updateMany({
+    where: { id: leadId, organizationId: orgId },
     data: { status: status as LeadStatus },
   });
+  if (res.count === 0) return;
 
   await prisma.activity.create({
     data: {
       type: "STATUS_CHANGE",
       content: `Status o'zgartirildi: ${STATUS_LABEL[status as LeadStatus]}`,
       leadId,
+      organizationId: orgId,
     },
   });
 
@@ -87,8 +92,10 @@ export async function updateLeadStatusAction(
 }
 
 export async function deleteLeadAction(leadId: string): Promise<void> {
-  await requireUser();
-  await prisma.lead.delete({ where: { id: leadId } });
+  const { orgId } = await currentOrg();
+  await prisma.lead.deleteMany({
+    where: { id: leadId, organizationId: orgId },
+  });
   revalidatePath("/leads");
   revalidatePath("/");
 }
