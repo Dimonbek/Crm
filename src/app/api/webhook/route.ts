@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { z } from "zod";
 import { prisma } from "@/lib/prisma";
 
-// Revator bot leadlarni shu endpointga POST qiladi.
+// Bot leadlarni shu endpointga POST qiladi (har kompaniya o'z tokeni bilan).
 // Himoya: WEBHOOK_SECRET (header `x-webhook-secret` yoki `?secret=`).
 
 const payloadSchema = z.object({

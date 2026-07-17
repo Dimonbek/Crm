@@ -12,9 +12,9 @@ export default async function LoginPage() {
       <div className="w-full max-w-sm">
         <div className="mb-8 text-center">
           <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-primary text-xl font-bold text-primary-fg">
-            R
+            D
           </div>
-          <h1 className="text-2xl font-semibold">Revator CRM</h1>
+          <h1 className="text-2xl font-semibold">DimoCRM</h1>
           <p className="mt-1 text-sm text-muted">Hisobingizga kiring</p>
         </div>
 

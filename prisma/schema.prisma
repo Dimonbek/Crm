@@ -1,4 +1,4 @@
-// Revator CRM platformasi — Prisma schema (PostgreSQL)
+// DimoCRM platformasi — Prisma schema (PostgreSQL)
 // Ko'p kompaniyali (multi-tenant): har bir yozuv Organization ga tegishli.
 
 generator client {

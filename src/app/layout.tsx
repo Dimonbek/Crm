@@ -13,7 +13,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Revator CRM",
+  title: "DimoCRM",
   description: "Tur operator uchun CRM tizimi",
 };
 

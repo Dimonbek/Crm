@@ -16,7 +16,7 @@ export default async function DashboardLayout({
 
       <div className="flex min-w-0 flex-1 flex-col">
         <header className="flex h-16 items-center justify-between gap-4 border-b border-border bg-surface/60 px-5 backdrop-blur">
-          <span className="text-sm text-muted md:hidden">Revator CRM</span>
+          <span className="text-sm text-muted md:hidden">DimoCRM</span>
           <div className="flex flex-1 items-center justify-end gap-4">
             <div className="flex items-center gap-2.5">
               <div className="flex h-8 w-8 items-center justify-center rounded-full bg-surface-2 text-xs font-semibold">

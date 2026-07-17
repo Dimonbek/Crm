@@ -27,9 +27,9 @@ function Nav() {
       <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-4">
         <div className="flex items-center gap-2.5">
           <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary text-sm font-bold text-primary-fg">
-            R
+            D
           </div>
-          <span className="font-semibold">Revator CRM</span>
+          <span className="font-semibold">DimoCRM</span>
         </div>
         <div className="flex items-center gap-2">
           <Link
@@ -59,11 +59,6 @@ function Hero() {
         className="pointer-events-none absolute left-1/2 top-0 h-72 w-[36rem] -translate-x-1/2 rounded-full bg-primary/20 blur-[120px]"
       />
       <div className="relative mx-auto max-w-3xl text-center">
-        <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-border bg-surface px-3 py-1.5 text-xs text-muted">
-          <span className="h-1.5 w-1.5 rounded-full bg-success" />
-          Telegram bot bilan ishlaydigan CRM
-        </div>
-
         <h1 className="text-balance text-3xl font-semibold leading-tight sm:text-5xl">
           Botingiz mijoz topadi.
           <br />
@@ -90,10 +85,6 @@ function Hero() {
             Hisobim bor
           </Link>
         </div>
-
-        <p className="mt-4 text-xs text-muted">
-          Karta kerak emas · 2 daqiqada ulanadi · O&apos;zbek tilida
-        </p>
       </div>
     </section>
   );
@@ -278,9 +269,9 @@ function Footer() {
       <div className="mx-auto flex max-w-5xl flex-col items-center justify-between gap-3 text-sm text-muted sm:flex-row">
         <div className="flex items-center gap-2">
           <div className="flex h-6 w-6 items-center justify-center rounded bg-primary text-xs font-bold text-primary-fg">
-            R
+            D
           </div>
-          <span>Revator CRM</span>
+          <span>DimoCRM</span>
         </div>
         <div className="flex gap-4">
           <Link href="/login" className="transition hover:text-fg">

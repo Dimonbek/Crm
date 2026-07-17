@@ -1,6 +1,6 @@
-# Revator CRM
+# DimoCRM
 
-Tur operator uchun CRM tizimi — Telegram bot (Revator) bilan integratsiya qilinadi.
+Ko'p kompaniyali (multi-tenant) CRM platformasi — har bir biznes o'z Telegram botini ulaydi.
 
 ## Texnologiyalar
 
@@ -44,5 +44,5 @@ Namunaviy ma'lumot uchun: `npm run seed:demo`
 
 ## Bot integratsiyasi
 
-Revator bot leadlarni `POST /api/webhook` ga yuboradi (header `x-webhook-secret`).
+Bot leadlarni `POST /api/webhook` ga yuboradi (header `x-webhook-secret`).
 Bot tomonida `CRM_WEBHOOK_URL` va `CRM_WEBHOOK_SECRET` o'rnatilishi kerak.
