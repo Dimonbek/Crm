@@ -4,7 +4,12 @@ import { prisma } from "@/lib/prisma";
 import { currentOrg } from "@/lib/auth";
 import { formatDate, formatDateTime, timeAgo } from "@/lib/format";
 import { StatusSelect } from "../leads-client";
-import { AssignSelect, NoteForm, ConvertButton } from "./lead-detail-client";
+import {
+  AssignSelect,
+  NoteForm,
+  ConvertButton,
+  SoldButton,
+} from "./lead-detail-client";
 
 export default async function LeadDetailPage({
   params,
@@ -36,7 +41,7 @@ export default async function LeadDetailPage({
 
   if (!lead) notFound();
 
-  const isConverted = lead.status === "CONVERTED";
+  const isSold = lead.status === "CONVERTED";
 
   return (
     <div className="flex flex-col gap-6">
@@ -44,11 +49,13 @@ export default async function LeadDetailPage({
         <Link href="/leads" className="text-sm text-muted hover:text-fg">
           ← Leadlar
         </Link>
-        <ConvertButton
-          leadId={lead.id}
-          disabled={isConverted}
-          defaultTitle={`${lead.destination} — ${lead.phone}`}
-        />
+        <div className="flex items-center gap-2">
+          <ConvertButton
+            leadId={lead.id}
+            defaultTitle={`${lead.destination} — ${lead.phone}`}
+          />
+          <SoldButton leadId={lead.id} sold={isSold} amount={lead.saleAmount} />
+        </div>
       </div>
 
       <div className="grid gap-6 lg:grid-cols-3">
@@ -123,9 +130,9 @@ export default async function LeadDetailPage({
               assignedToId={lead.assignedToId}
               users={users}
             />
-            {isConverted && lead.deal && (
-              <div className="mt-4 rounded-lg border border-success/30 bg-success/10 p-3 text-sm text-success">
-                ✓ Bitimga aylantirilgan: {lead.deal.title}
+            {lead.deal && (
+              <div className="mt-4 rounded-lg border border-border bg-surface-2 p-3 text-sm text-muted">
+                Kanbanда bitim: {lead.deal.title}
               </div>
             )}
           </div>

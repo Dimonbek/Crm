@@ -78,6 +78,72 @@ export async function assignLeadAction(
   revalidatePath(`/leads/${leadId}`);
 }
 
+const soldSchema = z.object({
+  amount: z.coerce.number().min(0, "Summa noto'g'ri"),
+});
+
+export type SoldState = { error?: string };
+
+/** Lidni "Sotildi" deb belgilash + summa. Reklama daromadi shundan hisoblanadi. */
+export async function markSoldAction(
+  leadId: string,
+  _prev: SoldState,
+  formData: FormData
+): Promise<SoldState> {
+  const { orgId, session } = await currentOrg();
+
+  const parsed = soldSchema.safeParse({ amount: formData.get("amount") });
+  if (!parsed.success) {
+    return { error: parsed.error.issues[0]?.message ?? "Summa noto'g'ri" };
+  }
+  if (!(await ownLead(leadId, orgId))) return { error: "Lead topilmadi" };
+
+  await prisma.lead.updateMany({
+    where: { id: leadId, organizationId: orgId },
+    data: { status: "CONVERTED", saleAmount: parsed.data.amount },
+  });
+  await prisma.activity.create({
+    data: {
+      type: "CONVERTED",
+      content: `Sotildi: ${parsed.data.amount.toLocaleString("uz-UZ")} so'm`,
+      leadId,
+      userId: session.userId,
+      organizationId: orgId,
+    },
+  });
+
+  revalidatePath(`/leads/${leadId}`);
+  revalidatePath("/leads");
+  revalidatePath("/campaigns");
+  revalidatePath("/dashboard");
+  return {};
+}
+
+/** "Sotildi" belgilashni bekor qilish */
+export async function unmarkSoldAction(leadId: string): Promise<void> {
+  const { orgId, session } = await currentOrg();
+  if (!(await ownLead(leadId, orgId))) return;
+
+  await prisma.lead.updateMany({
+    where: { id: leadId, organizationId: orgId },
+    data: { status: "CONTACTED", saleAmount: null },
+  });
+  await prisma.activity.create({
+    data: {
+      type: "STATUS_CHANGE",
+      content: "Sotuv bekor qilindi",
+      leadId,
+      userId: session.userId,
+      organizationId: orgId,
+    },
+  });
+
+  revalidatePath(`/leads/${leadId}`);
+  revalidatePath("/leads");
+  revalidatePath("/campaigns");
+  revalidatePath("/dashboard");
+}
+
 const convertSchema = z.object({
   title: z.string().trim().min(1, "Sarlavha kiriting"),
   amount: z.coerce.number().min(0).optional(),
@@ -102,9 +168,6 @@ export async function convertLeadToDealAction(
 
   const lead = await ownLead(leadId, orgId);
   if (!lead) return { error: "Lead topilmadi" };
-  if (lead.status === "CONVERTED") {
-    return { error: "Bu lead allaqachon konvertatsiya qilingan" };
-  }
 
   // Kontakt: shu kompaniya ichida telefon bo'yicha bor bo'lsa ulanadi
   let contactId = lead.contactId;
@@ -128,16 +191,20 @@ export async function convertLeadToDealAction(
     },
   });
 
-  await prisma.lead.updateMany({
-    where: { id: leadId, organizationId: orgId },
-    data: { status: "CONVERTED", contactId },
-  });
+  // Bitim yaratish sotuv EMAS — u faqat Kanbanда jarayonni kuzatish uchun.
+  // Lid statusi o'zgarmaydi; sotuv "Sotildi" tugmasi bilan alohida belgilanadi.
+  if (!lead.contactId) {
+    await prisma.lead.updateMany({
+      where: { id: leadId, organizationId: orgId },
+      data: { contactId },
+    });
+  }
 
   await prisma.activity.createMany({
     data: [
       {
-        type: "CONVERTED",
-        content: `Bitimga aylantirildi: ${deal.title}`,
+        type: "NOTE",
+        content: `Kanbanга bitim qo'shildi: ${deal.title}`,
         leadId,
         userId: session.userId,
         organizationId: orgId,

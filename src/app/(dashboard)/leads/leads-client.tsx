@@ -8,7 +8,11 @@ import {
   deleteLeadAction,
   type CreateLeadState,
 } from "./actions";
-import { LEAD_STATUSES, STATUS_LABEL } from "@/lib/leads";
+import {
+  SELECTABLE_STATUSES,
+  STATUS_LABEL,
+  STATUS_CLASS,
+} from "@/lib/leads";
 import type { LeadStatus } from "@/generated/prisma/enums";
 
 const initial: CreateLeadState = {};
@@ -145,6 +149,18 @@ export function StatusSelect({
 }) {
   const [pending, setPending] = useState(false);
 
+  // "Sotildi" — bu status summa bilan alohida tugma orqali belgilanadi,
+  // shuning uchun dropdown emas, faqat badge ko'rsatamiz.
+  if (status === "CONVERTED") {
+    return (
+      <span
+        className={`inline-block rounded-full border px-2.5 py-1 text-xs ${STATUS_CLASS.CONVERTED}`}
+      >
+        {STATUS_LABEL.CONVERTED}
+      </span>
+    );
+  }
+
   return (
     <select
       defaultValue={status}
@@ -156,7 +172,7 @@ export function StatusSelect({
       }}
       className="rounded-lg border border-border bg-surface-2 px-2.5 py-1.5 text-xs text-fg outline-none transition focus:border-primary disabled:opacity-50"
     >
-      {LEAD_STATUSES.map((s) => (
+      {SELECTABLE_STATUSES.map((s) => (
         <option key={s} value={s}>
           {STATUS_LABEL[s]}
         </option>

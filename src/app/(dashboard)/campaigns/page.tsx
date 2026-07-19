@@ -25,23 +25,23 @@ export default async function CampaignsPage() {
     }),
   ]);
 
-  // Yutilgan bitimlarni kampaniya bo'yicha yig'amiz
-  const wonDeals = await prisma.deal.findMany({
+  // Sotilgan lidlarni kampaniya bo'yicha yig'amiz (status=Sotildi, saleAmount)
+  const soldLeads = await prisma.lead.findMany({
     where: {
       organizationId: orgId,
-      stage: "CLOSED_WON",
-      lead: { campaignId: { not: null } },
+      status: "CONVERTED",
+      campaignId: { not: null },
     },
-    select: { amount: true, lead: { select: { campaignId: true } } },
+    select: { campaignId: true, saleAmount: true },
   });
 
   const salesByCampaign = new Map<string, { count: number; revenue: number }>();
-  for (const d of wonDeals) {
-    const cid = d.lead?.campaignId;
+  for (const l of soldLeads) {
+    const cid = l.campaignId;
     if (!cid) continue;
     const cur = salesByCampaign.get(cid) ?? { count: 0, revenue: 0 };
     cur.count += 1;
-    cur.revenue += d.amount ?? 0;
+    cur.revenue += l.saleAmount ?? 0;
     salesByCampaign.set(cid, cur);
   }
 

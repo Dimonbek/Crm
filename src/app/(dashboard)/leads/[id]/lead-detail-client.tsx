@@ -5,9 +5,107 @@ import {
   addLeadNoteAction,
   assignLeadAction,
   convertLeadToDealAction,
+  markSoldAction,
+  unmarkSoldAction,
   type ConvertState,
+  type SoldState,
 } from "./actions";
 import { Modal, Field } from "@/components/ui";
+import { formatMoney } from "@/lib/format";
+
+const soldInitial: SoldState = {};
+
+/** "Sotildi" — summa bilan. Reklama daromadi shundan hisoblanadi. */
+export function SoldButton({
+  leadId,
+  sold,
+  amount,
+}: {
+  leadId: string;
+  sold: boolean;
+  amount: number | null;
+}) {
+  const [open, setOpen] = useState(false);
+  const [state, formAction, pending] = useActionState(
+    markSoldAction.bind(null, leadId),
+    soldInitial
+  );
+  const [undoing, setUndoing] = useState(false);
+
+  if (sold) {
+    return (
+      <div className="flex items-center gap-3 rounded-lg border border-success/30 bg-success/10 px-4 py-2.5">
+        <span className="text-sm text-success">
+          ✓ Sotildi{amount != null ? ` — ${formatMoney(amount)}` : ""}
+        </span>
+        <button
+          disabled={undoing}
+          onClick={async () => {
+            if (!confirm("Sotuvni bekor qilasizmi?")) return;
+            setUndoing(true);
+            await unmarkSoldAction(leadId);
+            setUndoing(false);
+          }}
+          className="text-xs text-muted underline transition hover:text-fg disabled:opacity-50"
+        >
+          bekor qilish
+        </button>
+      </div>
+    );
+  }
+
+  return (
+    <>
+      <button
+        onClick={() => setOpen(true)}
+        className="rounded-lg bg-success px-4 py-2 text-sm font-medium text-black transition hover:opacity-90"
+      >
+        💰 Sotildi
+      </button>
+
+      <Modal open={open} onClose={() => setOpen(false)} title="Sotuvni belgilash">
+        <form
+          action={(fd) => {
+            formAction(fd);
+          }}
+          className="flex flex-col gap-3.5"
+        >
+          <p className="text-sm text-muted">
+            Mijoz qancha to&apos;ladi? Bu summa reklama daromadiga qo&apos;shiladi.
+          </p>
+          <Field
+            name="amount"
+            label="Sotuv summasi (so'm) *"
+            type="number"
+            placeholder="12000000"
+            required
+          />
+          {state.error && (
+            <p className="rounded-lg border border-danger/40 bg-danger/10 px-3 py-2 text-sm text-danger">
+              {state.error}
+            </p>
+          )}
+          <div className="mt-2 flex justify-end gap-2">
+            <button
+              type="button"
+              onClick={() => setOpen(false)}
+              className="rounded-lg border border-border px-4 py-2 text-sm text-muted transition hover:text-fg"
+            >
+              Bekor qilish
+            </button>
+            <button
+              type="submit"
+              disabled={pending}
+              className="rounded-lg bg-success px-4 py-2 text-sm font-medium text-black transition hover:opacity-90 disabled:opacity-60"
+            >
+              {pending ? "Saqlanmoqda..." : "Sotildi deb belgilash"}
+            </button>
+          </div>
+        </form>
+      </Modal>
+    </>
+  );
+}
 
 export function AssignSelect({
   leadId,
@@ -86,23 +184,18 @@ export function ConvertButton({
     convertLeadToDealAction.bind(null, leadId),
     initial
   );
-
-  // Xatolik bo'lmasa (redirect bo'ladi) modal ochiq qoladi; xatoni ko'rsatamiz
-  useEffect(() => {
-    // no-op
-  }, [state]);
+  void disabled;
 
   return (
     <>
       <button
         onClick={() => setOpen(true)}
-        disabled={disabled}
-        className="rounded-lg bg-success px-4 py-2 text-sm font-medium text-black transition hover:opacity-90 disabled:opacity-50"
+        className="rounded-lg border border-border px-4 py-2 text-sm text-muted transition hover:border-primary/50 hover:text-fg"
       >
-        Bitimga aylantirish →
+        + Kanbanга qo&apos;shish
       </button>
 
-      <Modal open={open} onClose={() => setOpen(false)} title="Bitim yaratish">
+      <Modal open={open} onClose={() => setOpen(false)} title="Bitim yaratish (Kanban)">
         <form action={formAction} className="flex flex-col gap-3.5">
           <Field
             name="title"

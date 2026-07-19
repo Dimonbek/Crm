@@ -70,6 +70,8 @@ export async function updateLeadStatusAction(
 ): Promise<void> {
   const { orgId } = await currentOrg();
   if (!LEAD_STATUSES.includes(status as LeadStatus)) return;
+  // "Sotildi" faqat summa bilan (markSoldAction) orqali belgilanadi
+  if (status === "CONVERTED") return;
 
   // updateMany + organizationId — begona kompaniya leadiga tegib bo'lmaydi
   const res = await prisma.lead.updateMany({

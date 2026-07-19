@@ -11,10 +11,19 @@ export const LEAD_STATUSES: LeadStatus[] = [
 export const STATUS_LABEL: Record<LeadStatus, string> = {
   NEW: "Yangi",
   CONTACTED: "Aloqada",
-  QUALIFIED: "Kvalifikatsiya",
-  CONVERTED: "Konvertatsiya",
+  QUALIFIED: "Qiziqyapti",
+  CONVERTED: "Sotildi",
   LOST: "Yo'qotilgan",
 };
+
+/** Qo'lda tanlanadigan statuslar — "Sotildi" bundan mustasno,
+ *  chunki u summa bilan alohida tugma orqali belgilanadi. */
+export const SELECTABLE_STATUSES: LeadStatus[] = [
+  "NEW",
+  "CONTACTED",
+  "QUALIFIED",
+  "LOST",
+];
 
 // Tailwind class'lari (badge uchun)
 export const STATUS_CLASS: Record<LeadStatus, string> = {

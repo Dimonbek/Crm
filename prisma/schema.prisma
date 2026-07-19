@@ -107,6 +107,8 @@ model Lead {
   contactTime   String? // Bog'lanish uchun qulay vaqt
   source        String     @default("manual") // manual | telegram
   status        LeadStatus @default(NEW)
+  /// "Sotildi" belgilanganда kiritilgan summa — reklama daromadi shundan hisoblanadi
+  saleAmount    Float?
   assignedTo    User?      @relation(fields: [assignedToId], references: [id])
   assignedToId  String?
   contact       Contact?   @relation(fields: [contactId], references: [id])

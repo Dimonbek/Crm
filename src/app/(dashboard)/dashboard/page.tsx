@@ -31,9 +31,10 @@ export default async function DashboardPage() {
       prisma.task.count({
         where: { organizationId: orgId, status: { not: "DONE" } },
       }),
-      prisma.deal.aggregate({
-        where: { organizationId: orgId, stage: "CLOSED_WON" },
-        _sum: { amount: true },
+      // Daromad — sotilgan lidlar summasidan (Sotildi)
+      prisma.lead.aggregate({
+        where: { organizationId: orgId, status: "CONVERTED" },
+        _sum: { saleAmount: true },
       }),
     ]);
 
@@ -45,8 +46,8 @@ export default async function DashboardPage() {
     { label: "Aktiv bitimlar", value: activeDeals, accent: "text-warning" },
     { label: "Ochiq vazifalar", value: openTasks, accent: "text-fg" },
     {
-      label: "Yutilgan summa",
-      value: formatMoney(wonAgg._sum.amount),
+      label: "Sotuv summasi",
+      value: formatMoney(wonAgg._sum.saleAmount),
       accent: "text-success",
     },
   ];
