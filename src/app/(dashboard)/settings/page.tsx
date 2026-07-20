@@ -3,6 +3,7 @@ import { prisma } from "@/lib/prisma";
 import { currentOrg } from "@/lib/auth";
 import { isPlatformAdmin, supportContact } from "@/lib/platform";
 import { formatDate } from "@/lib/format";
+import { ProfileForm, PasswordForm } from "./account-client";
 
 export default async function SettingsPage() {
   const { orgId, session } = await currentOrg();
@@ -20,6 +21,39 @@ export default async function SettingsPage() {
       <div>
         <h1 className="text-2xl font-semibold">Sozlamalar</h1>
         <p className="mt-1 text-sm text-muted">Kompaniya va bot ulanishi</p>
+      </div>
+
+      {/* Hisobim — login va parolni o'zgartirish */}
+      <div className="rounded-2xl border border-border bg-surface p-6">
+        <h2 className="font-medium">Mening hisobim</h2>
+        <p className="mt-1 text-sm text-muted">
+          Kirish ma&apos;lumotlaringizni istalgan vaqtда o&apos;zgartirishingiz
+          mumkin
+        </p>
+
+        {session.impersonating && (
+          <p className="mt-4 rounded-lg border border-warning/40 bg-warning/10 px-3 py-2 text-sm text-warning">
+            Siz boshqa kompaniyani ko&apos;rib turibsiz — hisob sozlamalari
+            o&apos;chirilgan.
+          </p>
+        )}
+
+        <div className="mt-5">
+          <ProfileForm
+            name={session.name}
+            email={session.email}
+            disabled={session.impersonating}
+          />
+        </div>
+
+        <div className="mt-6 border-t border-border pt-6">
+          <h3 className="mb-1 text-sm font-medium">Parolni o&apos;zgartirish</h3>
+          <p className="mb-4 text-sm text-muted">
+            Parolingizni hech kim — biz ham — ko&apos;ra olmaymiz. Uni faqat siz
+            bilasiz.
+          </p>
+          <PasswordForm disabled={session.impersonating} />
+        </div>
       </div>
 
       <div className="rounded-2xl border border-border bg-surface p-6">
