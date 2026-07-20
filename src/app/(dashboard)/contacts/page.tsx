@@ -62,7 +62,7 @@ export default async function ContactsPage({
       <div className="flex flex-wrap items-center justify-between gap-4">
         <div>
           <h1 className="text-2xl font-semibold">Mijozlar</h1>
-          <p className="mt-1 text-sm text-muted">
+          <p className="mt-1 text-sm text-muted-foreground">
             Har bir mijozning to&apos;liq tarixi — ma&apos;lumot o&apos;chmaydi
           </p>
         </div>
@@ -90,10 +90,10 @@ export default async function ContactsPage({
             name="q"
             defaultValue={q ?? ""}
             placeholder="Ism, telefon yoki email..."
-            className="w-64 rounded-lg border border-border bg-surface-2 px-3 py-2 text-sm outline-none transition focus:border-primary"
+            className="w-64 rounded-lg border border-border bg-muted px-3 py-2 text-sm outline-none transition focus:border-primary"
           />
           {f && <input type="hidden" name="f" value={f} />}
-          <button className="rounded-lg border border-border px-3 py-2 text-sm text-muted transition hover:text-fg">
+          <button className="rounded-lg border border-border px-3 py-2 text-sm text-muted-foreground transition hover:text-foreground">
             Qidirish
           </button>
         </form>
@@ -105,10 +105,10 @@ export default async function ContactsPage({
         />
       </div>
 
-      <div className="overflow-x-auto rounded-2xl border border-border bg-surface">
+      <div className="overflow-x-auto rounded-2xl border border-border bg-card">
         <table className="w-full min-w-[860px] text-sm">
           <thead>
-            <tr className="border-b border-border text-left text-xs uppercase tracking-wide text-muted">
+            <tr className="border-b border-border text-left text-xs uppercase tracking-wide text-muted-foreground">
               <th className="px-4 py-3 font-medium">Mijoz</th>
               <th className="px-4 py-3 font-medium">Telefon</th>
               <th className="px-4 py-3 font-medium">Murojaatlar</th>
@@ -120,7 +120,7 @@ export default async function ContactsPage({
           <tbody>
             {filtered.length === 0 && (
               <tr>
-                <td colSpan={6} className="px-4 py-12 text-center text-muted">
+                <td colSpan={6} className="px-4 py-12 text-center text-muted-foreground">
                   Mijoz topilmadi.
                 </td>
               </tr>
@@ -128,7 +128,7 @@ export default async function ContactsPage({
             {filtered.map(({ c, inquiries, purchases, spent, last, repeat }) => (
               <tr
                 key={c.id}
-                className="border-b border-border/60 transition last:border-0 hover:bg-surface-2/50"
+                className="border-b border-border/60 transition last:border-0 hover:bg-muted/50"
               >
                 <td className="px-4 py-3">
                   <Link
@@ -149,16 +149,16 @@ export default async function ContactsPage({
                   {purchases > 0 ? (
                     <span className="text-success">{purchases}</span>
                   ) : (
-                    <span className="text-muted">0</span>
+                    <span className="text-muted-foreground">0</span>
                   )}
                 </td>
                 <td className="px-4 py-3 font-medium">
-                  {spent > 0 ? formatMoney(spent) : <span className="text-muted">—</span>}
+                  {spent > 0 ? formatMoney(spent) : <span className="text-muted-foreground">—</span>}
                 </td>
-                <td className="px-4 py-3 text-muted">
+                <td className="px-4 py-3 text-muted-foreground">
                   {last ? (
                     <>
-                      <div className="text-fg">{last.destination}</div>
+                      <div className="text-foreground">{last.destination}</div>
                       <div className="text-xs">{timeAgo(last.createdAt)}</div>
                     </>
                   ) : (
@@ -177,7 +177,7 @@ export default async function ContactsPage({
 function Kpi({
   label,
   value,
-  accent = "text-fg",
+  accent = "text-foreground",
   hint,
 }: {
   label: string;
@@ -186,10 +186,10 @@ function Kpi({
   hint?: string;
 }) {
   return (
-    <div className="rounded-2xl border border-border bg-surface p-5">
-      <div className="text-sm text-muted">{label}</div>
+    <div className="rounded-2xl border border-border bg-card p-5">
+      <div className="text-sm text-muted-foreground">{label}</div>
       <div className={`mt-2 text-xl font-semibold ${accent}`}>{value}</div>
-      {hint && <div className="mt-1 text-xs text-muted">{hint}</div>}
+      {hint && <div className="mt-1 text-xs text-muted-foreground">{hint}</div>}
     </div>
   );
 }
@@ -208,8 +208,8 @@ function Chip({
       href={href}
       className={`rounded-full border px-3 py-1.5 text-xs transition ${
         active
-          ? "border-primary/40 bg-primary/15 text-fg"
-          : "border-border text-muted hover:text-fg"
+          ? "border-primary/40 bg-primary/15 text-foreground"
+          : "border-border text-muted-foreground hover:text-foreground"
       }`}
     >
       {label}

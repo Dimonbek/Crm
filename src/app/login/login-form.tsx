@@ -12,7 +12,7 @@ export function LoginForm() {
   return (
     <form action={formAction} className="flex flex-col gap-4">
       <div className="flex flex-col gap-1.5">
-        <label htmlFor="login" className="text-sm text-muted">
+        <label htmlFor="login" className="text-sm text-muted-foreground">
           Login yoki email
         </label>
         <input
@@ -22,12 +22,12 @@ export function LoginForm() {
           required
           autoComplete="username"
           placeholder="login yoki siz@example.com"
-          className="rounded-lg border border-border bg-surface-2 px-3.5 py-2.5 text-fg outline-none transition focus:border-primary"
+          className="rounded-lg border border-border bg-muted px-3.5 py-2.5 text-foreground outline-none transition focus:border-primary"
         />
       </div>
 
       <div className="flex flex-col gap-1.5">
-        <label htmlFor="password" className="text-sm text-muted">
+        <label htmlFor="password" className="text-sm text-muted-foreground">
           Parol
         </label>
         <div className="relative">
@@ -38,13 +38,13 @@ export function LoginForm() {
             required
             autoComplete="current-password"
             placeholder="••••••••"
-            className="w-full rounded-lg border border-border bg-surface-2 px-3.5 py-2.5 pr-11 text-fg outline-none transition focus:border-primary"
+            className="w-full rounded-lg border border-border bg-muted px-3.5 py-2.5 pr-11 text-foreground outline-none transition focus:border-primary"
           />
           <button
             type="button"
             onClick={() => setShowPassword((v) => !v)}
             aria-label={showPassword ? "Parolni yashirish" : "Parolni ko'rsatish"}
-            className="absolute inset-y-0 right-0 flex items-center px-3 text-muted transition hover:text-fg"
+            className="absolute inset-y-0 right-0 flex items-center px-3 text-muted-foreground transition hover:text-foreground"
           >
             {showPassword ? "🙈" : "👁"}
           </button>
@@ -52,7 +52,7 @@ export function LoginForm() {
       </div>
 
       {state.error && (
-        <p className="rounded-lg border border-danger/40 bg-danger/10 px-3 py-2 text-sm text-danger">
+        <p className="rounded-lg border border-destructive/40 bg-destructive/10 px-3 py-2 text-sm text-destructive">
           {state.error}
         </p>
       )}
@@ -60,7 +60,7 @@ export function LoginForm() {
       <button
         type="submit"
         disabled={pending}
-        className="mt-2 rounded-lg bg-primary px-4 py-2.5 font-medium text-primary-fg transition hover:bg-primary-hover disabled:opacity-60"
+        className="mt-2 rounded-lg bg-primary px-4 py-2.5 font-medium text-primary-foreground transition hover:bg-primary/90 disabled:opacity-60"
       >
         {pending ? "Kirilmoqda..." : "Kirish"}
       </button>

@@ -18,15 +18,15 @@ export default async function UsersPage() {
       <div className="flex flex-wrap items-center justify-between gap-4">
         <div>
           <h1 className="text-2xl font-semibold">Xodimlar</h1>
-          <p className="mt-1 text-sm text-muted">Jami {users.length} ta xodim</p>
+          <p className="mt-1 text-sm text-muted-foreground">Jami {users.length} ta xodim</p>
         </div>
         <AddUserButton />
       </div>
 
-      <div className="overflow-x-auto rounded-2xl border border-border bg-surface">
+      <div className="overflow-x-auto rounded-2xl border border-border bg-card">
         <table className="w-full min-w-[720px] text-sm">
           <thead>
-            <tr className="border-b border-border text-left text-xs uppercase tracking-wide text-muted">
+            <tr className="border-b border-border text-left text-xs uppercase tracking-wide text-muted-foreground">
               <th className="px-4 py-3 font-medium">Ism</th>
               <th className="px-4 py-3 font-medium">Email</th>
               <th className="px-4 py-3 font-medium">Rol</th>
@@ -42,20 +42,20 @@ export default async function UsersPage() {
               return (
                 <tr
                   key={u.id}
-                  className="border-b border-border/60 transition last:border-0 hover:bg-surface-2/50"
+                  className="border-b border-border/60 transition last:border-0 hover:bg-muted/50"
                 >
                   <td className="px-4 py-3 font-medium">
                     {u.name}
                     {isSelf && (
-                      <span className="ml-2 text-xs text-muted">(siz)</span>
+                      <span className="ml-2 text-xs text-muted-foreground">(siz)</span>
                     )}
                   </td>
-                  <td className="px-4 py-3 text-muted">{u.email}</td>
+                  <td className="px-4 py-3 text-muted-foreground">{u.email}</td>
                   <td className="px-4 py-3">
                     <RoleSelect userId={u.id} role={u.role} disabled={isSelf} />
                   </td>
-                  <td className="px-4 py-3 text-muted">{u._count.leads}</td>
-                  <td className="px-4 py-3 text-muted">{u._count.deals}</td>
+                  <td className="px-4 py-3 text-muted-foreground">{u._count.leads}</td>
+                  <td className="px-4 py-3 text-muted-foreground">{u._count.deals}</td>
                   <td className="px-4 py-3">
                     <ActiveToggle
                       userId={u.id}
@@ -63,7 +63,7 @@ export default async function UsersPage() {
                       disabled={isSelf}
                     />
                   </td>
-                  <td className="px-4 py-3 text-muted">
+                  <td className="px-4 py-3 text-muted-foreground">
                     {formatDate(u.createdAt)}
                   </td>
                 </tr>

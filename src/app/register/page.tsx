@@ -11,20 +11,20 @@ export default async function RegisterPage() {
     <main className="flex min-h-full items-center justify-center px-4 py-12">
       <div className="w-full max-w-sm">
         <div className="mb-8 text-center">
-          <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-primary text-xl font-bold text-primary-fg">
+          <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-primary text-xl font-bold text-primary-foreground">
             D
           </div>
           <h1 className="text-2xl font-semibold">Biznesingizni ulang</h1>
-          <p className="mt-1 text-sm text-muted">
+          <p className="mt-1 text-sm text-muted-foreground">
             Bepul boshlang — karta kerak emas
           </p>
         </div>
 
-        <div className="rounded-2xl border border-border bg-surface p-6 shadow-lg">
+        <div className="rounded-2xl border border-border bg-card p-6 shadow-lg">
           <RegisterForm />
         </div>
 
-        <p className="mt-6 text-center text-sm text-muted">
+        <p className="mt-6 text-center text-sm text-muted-foreground">
           Hisobingiz bormi?{" "}
           <Link href="/login" className="text-primary hover:underline">
             Kirish

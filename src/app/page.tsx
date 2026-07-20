@@ -24,10 +24,10 @@ export default async function LandingPage() {
 
 function Nav() {
   return (
-    <header className="sticky top-0 z-40 border-b border-border/60 bg-bg/80 backdrop-blur">
+    <header className="sticky top-0 z-40 border-b border-border/60 bg-background/80 backdrop-blur">
       <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-4">
         <div className="flex items-center gap-2.5">
-          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary text-sm font-bold text-primary-fg">
+          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary text-sm font-bold text-primary-foreground">
             D
           </div>
           <span className="font-semibold">DimoCRM</span>
@@ -36,13 +36,13 @@ function Nav() {
           <ThemeToggle />
           <Link
             href="/login"
-            className="rounded-lg px-3 py-2 text-sm text-muted transition hover:text-fg"
+            className="rounded-lg px-3 py-2 text-sm text-muted-foreground transition hover:text-foreground"
           >
             Kirish
           </Link>
           <Link
             href="/register"
-            className="rounded-lg bg-primary px-4 py-2 text-sm font-medium text-primary-fg transition hover:bg-primary-hover"
+            className="rounded-lg bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition hover:bg-primary/90"
           >
             Bepul boshlash
           </Link>
@@ -62,7 +62,7 @@ function Hero() {
           <span className="text-primary">CRM</span> ularni sotuvga aylantiradi.
         </h1>
 
-        <p className="mx-auto mt-5 max-w-xl text-pretty text-base text-muted sm:text-lg">
+        <p className="mx-auto mt-5 max-w-xl text-pretty text-base text-muted-foreground sm:text-lg">
           Leadlaringiz tartibsiz Telegram guruhida yo&apos;qolmasin. Mijoz botda
           so&apos;rovnomani to&apos;ldiradi — ma&apos;lumot avtomatik CRM&apos;ga
           tushadi.
@@ -71,13 +71,13 @@ function Hero() {
         <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
           <Link
             href="/register"
-            className="w-full rounded-xl bg-primary px-6 py-3.5 text-center font-medium text-primary-fg transition hover:bg-primary-hover sm:w-auto"
+            className="w-full rounded-xl bg-primary px-6 py-3.5 text-center font-medium text-primary-foreground transition hover:bg-primary/90 sm:w-auto"
           >
             Bepul boshlash →
           </Link>
           <Link
             href="/login"
-            className="w-full rounded-xl border border-border px-6 py-3.5 text-center font-medium text-muted transition hover:border-primary/50 hover:text-fg sm:w-auto"
+            className="w-full rounded-xl border border-border px-6 py-3.5 text-center font-medium text-muted-foreground transition hover:border-primary/50 hover:text-foreground sm:w-auto"
           >
             Hisobim bor
           </Link>
@@ -104,15 +104,15 @@ function Problem() {
           {pains.map((p) => (
             <div
               key={p}
-              className="flex items-start gap-3 rounded-xl border border-border bg-surface p-4"
+              className="flex items-start gap-3 rounded-xl border border-border bg-card p-4"
             >
-              <span className="mt-0.5 text-danger">✕</span>
-              <span className="text-sm text-muted">{p}</span>
+              <span className="mt-0.5 text-destructive">✕</span>
+              <span className="text-sm text-muted-foreground">{p}</span>
             </div>
           ))}
         </div>
-        <p className="mt-8 text-center text-base text-muted">
-          Muammo botда emas — <b className="text-fg">leadlar bilan ishlash tizimi yo&apos;qligida.</b>
+        <p className="mt-8 text-center text-base text-muted-foreground">
+          Muammo botда emas — <b className="text-foreground">leadlar bilan ishlash tizimi yo&apos;qligida.</b>
         </p>
       </div>
     </section>
@@ -138,24 +138,24 @@ function HowItWorks() {
     },
   ];
   return (
-    <section className="border-y border-border/60 bg-surface-2/70 px-4 py-16">
+    <section className="border-y border-border/60 bg-muted/70 px-4 py-16">
       <div className="mx-auto max-w-5xl">
         <h2 className="text-center text-2xl font-semibold sm:text-3xl">
           Qanday ishlaydi
         </h2>
-        <p className="mt-3 text-center text-muted">Uch qadam — tamom</p>
+        <p className="mt-3 text-center text-muted-foreground">Uch qadam — tamom</p>
 
         <div className="mt-10 grid gap-4 md:grid-cols-3">
           {steps.map((s) => (
             <div
               key={s.n}
-              className="rounded-2xl border border-border bg-surface p-6"
+              className="rounded-2xl border border-border bg-card p-6"
             >
               <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary/15 font-semibold text-primary">
                 {s.n}
               </div>
               <h3 className="mt-4 font-medium">{s.title}</h3>
-              <p className="mt-2 text-sm text-muted">{s.desc}</p>
+              <p className="mt-2 text-sm text-muted-foreground">{s.desc}</p>
             </div>
           ))}
         </div>
@@ -183,11 +183,11 @@ function Features() {
           {items.map((f) => (
             <div
               key={f.title}
-              className="rounded-2xl border border-border bg-surface p-5 transition hover:border-primary/40"
+              className="rounded-2xl border border-border bg-card p-5 transition hover:border-primary/40"
             >
               <div className="text-xl text-primary">{f.icon}</div>
               <h3 className="mt-3 font-medium">{f.title}</h3>
-              <p className="mt-1.5 text-sm text-muted">{f.desc}</p>
+              <p className="mt-1.5 text-sm text-muted-foreground">{f.desc}</p>
             </div>
           ))}
         </div>
@@ -204,19 +204,19 @@ function WhyUs() {
     { label: "Bir necha daqiqada ulanadi", us: true, them: false },
   ];
   return (
-    <section className="border-y border-border/60 bg-surface-2/70 px-4 py-16">
+    <section className="border-y border-border/60 bg-muted/70 px-4 py-16">
       <div className="mx-auto max-w-3xl">
         <h2 className="text-center text-2xl font-semibold sm:text-3xl">
           Nega boshqa CRM emas?
         </h2>
-        <p className="mt-3 text-center text-muted">
+        <p className="mt-3 text-center text-muted-foreground">
           Chet el CRM&apos;lari kuchli — lekin Telegram botingizni tanimaydi.
         </p>
 
-        <div className="mt-8 overflow-hidden rounded-2xl border border-border bg-surface">
-          <div className="grid grid-cols-[1fr_auto_auto] gap-2 border-b border-border px-4 py-3 text-xs uppercase tracking-wide text-muted">
+        <div className="mt-8 overflow-hidden rounded-2xl border border-border bg-card">
+          <div className="grid grid-cols-[1fr_auto_auto] gap-2 border-b border-border px-4 py-3 text-xs uppercase tracking-wide text-muted-foreground">
             <div></div>
-            <div className="w-20 text-center font-medium text-fg">Biz</div>
+            <div className="w-20 text-center font-medium text-foreground">Biz</div>
             <div className="w-20 text-center">Boshqalar</div>
           </div>
           {rows.map((r) => (
@@ -226,7 +226,7 @@ function WhyUs() {
             >
               <div className="text-sm">{r.label}</div>
               <div className="w-20 text-center text-success">✓</div>
-              <div className="w-20 text-center text-muted">—</div>
+              <div className="w-20 text-center text-muted-foreground">—</div>
             </div>
           ))}
         </div>
@@ -242,17 +242,17 @@ function FinalCta() {
         <h2 className="text-balance text-2xl font-semibold sm:text-3xl">
           Bugungi leadlaringiz qayerda?
         </h2>
-        <p className="mx-auto mt-4 max-w-lg text-muted">
+        <p className="mx-auto mt-4 max-w-lg text-muted-foreground">
           Ularni tartibga soling — biznesingizni ulang va bugundan boshlab har
           bir mijozni kuzatib boring.
         </p>
         <Link
           href="/register"
-          className="mt-8 inline-block w-full rounded-xl bg-primary px-8 py-4 font-medium text-primary-fg transition hover:bg-primary-hover sm:w-auto"
+          className="mt-8 inline-block w-full rounded-xl bg-primary px-8 py-4 font-medium text-primary-foreground transition hover:bg-primary/90 sm:w-auto"
         >
           Bepul boshlash →
         </Link>
-        <p className="mt-4 text-xs text-muted">
+        <p className="mt-4 text-xs text-muted-foreground">
           Karta kerak emas · Istalgan vaqtda to&apos;xtatasiz
         </p>
       </div>
@@ -263,18 +263,18 @@ function FinalCta() {
 function Footer() {
   return (
     <footer className="border-t border-border/60 px-4 py-8">
-      <div className="mx-auto flex max-w-5xl flex-col items-center justify-between gap-3 text-sm text-muted sm:flex-row">
+      <div className="mx-auto flex max-w-5xl flex-col items-center justify-between gap-3 text-sm text-muted-foreground sm:flex-row">
         <div className="flex items-center gap-2">
-          <div className="flex h-6 w-6 items-center justify-center rounded bg-primary text-xs font-bold text-primary-fg">
+          <div className="flex h-6 w-6 items-center justify-center rounded bg-primary text-xs font-bold text-primary-foreground">
             D
           </div>
           <span>DimoCRM</span>
         </div>
         <div className="flex gap-4">
-          <Link href="/login" className="transition hover:text-fg">
+          <Link href="/login" className="transition hover:text-foreground">
             Kirish
           </Link>
-          <Link href="/register" className="transition hover:text-fg">
+          <Link href="/register" className="transition hover:text-foreground">
             Ro&apos;yxatdan o&apos;tish
           </Link>
         </div>

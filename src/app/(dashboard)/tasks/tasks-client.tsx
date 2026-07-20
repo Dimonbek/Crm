@@ -7,7 +7,7 @@ import {
   deleteTaskAction,
   type CreateTaskState,
 } from "./actions";
-import { Modal, Field, SelectField, FormButtons } from "@/components/ui";
+import { Modal, Field, SelectField, FormButtons } from "@/components/form";
 import {
   TASK_STATUSES,
   TASK_STATUS_LABEL,
@@ -34,7 +34,7 @@ export function AddTaskButton({ users }: { users: Option[] }) {
     <>
       <button
         onClick={() => setOpen(true)}
-        className="rounded-lg bg-primary px-4 py-2 text-sm font-medium text-primary-fg transition hover:bg-primary-hover"
+        className="rounded-lg bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition hover:bg-primary/90"
       >
         + Yangi vazifa
       </button>
@@ -65,7 +65,7 @@ export function AddTaskButton({ users }: { users: Option[] }) {
           />
 
           {state.error && (
-            <p className="rounded-lg border border-danger/40 bg-danger/10 px-3 py-2 text-sm text-danger">
+            <p className="rounded-lg border border-destructive/40 bg-destructive/10 px-3 py-2 text-sm text-destructive">
               {state.error}
             </p>
           )}
@@ -94,7 +94,7 @@ export function TaskStatusSelect({
         await setTaskStatusAction(taskId, e.target.value);
         setPending(false);
       }}
-      className="rounded-lg border border-border bg-surface-2 px-2.5 py-1.5 text-xs text-fg outline-none transition focus:border-primary disabled:opacity-50"
+      className="rounded-lg border border-border bg-muted px-2.5 py-1.5 text-xs text-foreground outline-none transition focus:border-primary disabled:opacity-50"
     >
       {TASK_STATUSES.map((s) => (
         <option key={s} value={s}>
@@ -116,7 +116,7 @@ export function DeleteTaskButton({ taskId }: { taskId: string }) {
         await deleteTaskAction(taskId);
         setPending(false);
       }}
-      className="rounded-lg border border-border px-2.5 py-1.5 text-xs text-muted transition hover:border-danger/50 hover:text-danger disabled:opacity-50"
+      className="rounded-lg border border-border px-2.5 py-1.5 text-xs text-muted-foreground transition hover:border-destructive/50 hover:text-destructive disabled:opacity-50"
     >
       🗑
     </button>

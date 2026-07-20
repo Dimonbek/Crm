@@ -46,7 +46,7 @@ export default async function LeadDetailPage({
   return (
     <div className="flex flex-col gap-6">
       <div className="flex flex-wrap items-center justify-between gap-4">
-        <Link href="/leads" className="text-sm text-muted hover:text-fg">
+        <Link href="/leads" className="text-sm text-muted-foreground hover:text-foreground">
           ← Leadlar
         </Link>
         <div className="flex items-center gap-2">
@@ -61,7 +61,7 @@ export default async function LeadDetailPage({
       <div className="grid gap-6 lg:grid-cols-3">
         {/* Chap: ma'lumot */}
         <div className="flex flex-col gap-6 lg:col-span-2">
-          <div className="rounded-2xl border border-border bg-surface p-6">
+          <div className="rounded-2xl border border-border bg-card p-6">
             <div className="mb-4 flex items-center justify-between">
               <h1 className="text-xl font-semibold">{lead.destination}</h1>
               <StatusSelect
@@ -93,7 +93,7 @@ export default async function LeadDetailPage({
               <Info label="Yaratilgan" value={formatDate(lead.createdAt)} />
               {lead.contact && (
                 <div>
-                  <div className="text-xs text-muted">Kontakt</div>
+                  <div className="text-xs text-muted-foreground">Kontakt</div>
                   <Link
                     href={`/contacts/${lead.contact.id}`}
                     className="mt-1 block text-sm text-primary hover:underline"
@@ -106,17 +106,17 @@ export default async function LeadDetailPage({
           </div>
 
           {/* Izohlar */}
-          <div className="rounded-2xl border border-border bg-surface p-6">
+          <div className="rounded-2xl border border-border bg-card p-6">
             <h2 className="mb-4 font-medium">Izohlar ({lead.notes.length})</h2>
             <NoteForm leadId={lead.id} />
             <div className="mt-4 flex flex-col divide-y divide-border/60">
               {lead.notes.length === 0 && (
-                <p className="py-3 text-sm text-muted">Hali izoh yo&apos;q</p>
+                <p className="py-3 text-sm text-muted-foreground">Hali izoh yo&apos;q</p>
               )}
               {lead.notes.map((note) => (
                 <div key={note.id} className="py-3">
                   <div className="text-sm">{note.content}</div>
-                  <div className="mt-1 text-xs text-muted">
+                  <div className="mt-1 text-xs text-muted-foreground">
                     {note.authorName ?? "Tizim"} · {timeAgo(note.createdAt)}
                   </div>
                 </div>
@@ -127,7 +127,7 @@ export default async function LeadDetailPage({
 
         {/* O'ng: tayinlash + faoliyat */}
         <div className="flex flex-col gap-6">
-          <div className="rounded-2xl border border-border bg-surface p-6">
+          <div className="rounded-2xl border border-border bg-card p-6">
             <h2 className="mb-3 font-medium">Mas&apos;ul menejer</h2>
             <AssignSelect
               leadId={lead.id}
@@ -135,24 +135,24 @@ export default async function LeadDetailPage({
               users={users}
             />
             {lead.deal && (
-              <div className="mt-4 rounded-lg border border-border bg-surface-2 p-3 text-sm text-muted">
+              <div className="mt-4 rounded-lg border border-border bg-muted p-3 text-sm text-muted-foreground">
                 Kanbanда bitim: {lead.deal.title}
               </div>
             )}
           </div>
 
-          <div className="rounded-2xl border border-border bg-surface p-6">
+          <div className="rounded-2xl border border-border bg-card p-6">
             <h2 className="mb-4 font-medium">Faoliyat tarixi</h2>
             <div className="flex flex-col gap-4">
               {lead.activities.length === 0 && (
-                <p className="text-sm text-muted">Faoliyat yo&apos;q</p>
+                <p className="text-sm text-muted-foreground">Faoliyat yo&apos;q</p>
               )}
               {lead.activities.map((a) => (
                 <div key={a.id} className="flex gap-3">
                   <div className="mt-1 h-2 w-2 shrink-0 rounded-full bg-primary" />
                   <div>
                     <div className="text-sm">{a.content}</div>
-                    <div className="text-xs text-muted">
+                    <div className="text-xs text-muted-foreground">
                       {formatDateTime(a.createdAt)}
                     </div>
                   </div>
@@ -169,7 +169,7 @@ export default async function LeadDetailPage({
 function Info({ label, value }: { label: string; value: string }) {
   return (
     <div>
-      <div className="text-xs text-muted">{label}</div>
+      <div className="text-xs text-muted-foreground">{label}</div>
       <div className="mt-1 text-sm">{value}</div>
     </div>
   );

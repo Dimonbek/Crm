@@ -36,15 +36,15 @@ export default async function ContactDetailPage({
 
   return (
     <div className="flex flex-col gap-6">
-      <Link href="/contacts" className="text-sm text-muted hover:text-fg">
+      <Link href="/contacts" className="text-sm text-muted-foreground hover:text-foreground">
         ← Mijozlar
       </Link>
 
       {/* Sarlavha */}
-      <div className="rounded-2xl border border-border bg-surface p-6">
+      <div className="rounded-2xl border border-border bg-card p-6">
         <div className="flex flex-wrap items-start justify-between gap-4">
           <div className="flex items-center gap-4">
-            <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-full bg-surface-2 text-lg font-semibold">
+            <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-full bg-muted text-lg font-semibold">
               {(contact.name || contact.phone).slice(0, 2).toUpperCase()}
             </div>
             <div>
@@ -58,7 +58,7 @@ export default async function ContactDetailPage({
                   </span>
                 )}
               </div>
-              <p className="mt-1 text-sm text-muted">
+              <p className="mt-1 text-sm text-muted-foreground">
                 {contact.phone}
                 {contact.email ? ` · ${contact.email}` : ""}
               </p>
@@ -73,8 +73,8 @@ export default async function ContactDetailPage({
         </div>
 
         {contact.notes && (
-          <div className="mt-5 rounded-lg border border-border bg-surface-2 p-4">
-            <div className="text-xs text-muted">Eslatma</div>
+          <div className="mt-5 rounded-lg border border-border bg-muted p-4">
+            <div className="text-xs text-muted-foreground">Eslatma</div>
             <div className="mt-1 whitespace-pre-wrap text-sm">{contact.notes}</div>
           </div>
         )}
@@ -86,7 +86,7 @@ export default async function ContactDetailPage({
         <Kpi
           label="Xaridlar"
           value={String(sold.length)}
-          accent={sold.length > 0 ? "text-success" : "text-muted"}
+          accent={sold.length > 0 ? "text-success" : "text-muted-foreground"}
         />
         <Kpi
           label="Jami to'lagan"
@@ -100,19 +100,19 @@ export default async function ContactDetailPage({
       </div>
 
       {/* Sayohat tarixi */}
-      <div className="rounded-2xl border border-border bg-surface p-6">
+      <div className="rounded-2xl border border-border bg-card p-6">
         <div className="mb-1 flex items-center justify-between">
           <h2 className="font-medium">Sayohat tarixi</h2>
-          <span className="text-xs text-muted">
+          <span className="text-xs text-muted-foreground">
             {first && `Birinchi murojaat: ${formatDate(first.createdAt)}`}
           </span>
         </div>
-        <p className="mb-5 text-sm text-muted">
+        <p className="mb-5 text-sm text-muted-foreground">
           Mijoz qayerga so&apos;ragan va nima sotib olgan — hammasi saqlanadi
         </p>
 
         {contact.leads.length === 0 ? (
-          <p className="py-4 text-sm text-muted">Hali murojaat yo&apos;q</p>
+          <p className="py-4 text-sm text-muted-foreground">Hali murojaat yo&apos;q</p>
         ) : (
           <div className="relative flex flex-col">
             {contact.leads.map((lead, i) => {
@@ -133,7 +133,7 @@ export default async function ContactDetailPage({
 
                   <Link
                     href={`/leads/${lead.id}`}
-                    className="mb-5 flex-1 rounded-xl border border-border bg-surface-2/50 p-4 transition hover:border-primary/40"
+                    className="mb-5 flex-1 rounded-xl border border-border bg-muted/50 p-4 transition hover:border-primary/40"
                   >
                     <div className="flex flex-wrap items-center justify-between gap-2">
                       <span className="font-medium">{lead.destination}</span>
@@ -150,7 +150,7 @@ export default async function ContactDetailPage({
                         </span>
                       </div>
                     </div>
-                    <div className="mt-1.5 flex flex-wrap gap-x-3 gap-y-1 text-xs text-muted">
+                    <div className="mt-1.5 flex flex-wrap gap-x-3 gap-y-1 text-xs text-muted-foreground">
                       <span>{formatDate(lead.createdAt)}</span>
                       <span>· {lead.travelers} kishi</span>
                       {lead.travelDateText && <span>· {lead.travelDateText}</span>}
@@ -166,7 +166,7 @@ export default async function ContactDetailPage({
 
       {/* Bitimlar (Kanban) */}
       {contact.deals.length > 0 && (
-        <div className="rounded-2xl border border-border bg-surface p-6">
+        <div className="rounded-2xl border border-border bg-card p-6">
           <h2 className="mb-4 font-medium">
             Kanbanдagi bitimlar ({contact.deals.length})
           </h2>
@@ -178,11 +178,11 @@ export default async function ContactDetailPage({
               >
                 <div>
                   <div className="font-medium">{deal.title}</div>
-                  <div className="text-xs text-muted">
+                  <div className="text-xs text-muted-foreground">
                     {timeAgo(deal.createdAt)}
                   </div>
                 </div>
-                <span className="text-sm text-muted">
+                <span className="text-sm text-muted-foreground">
                   {formatMoney(deal.amount)}
                 </span>
               </div>
@@ -192,7 +192,7 @@ export default async function ContactDetailPage({
       )}
 
       {last && (
-        <p className="text-sm text-muted">
+        <p className="text-sm text-muted-foreground">
           Oxirgi faoliyat: {timeAgo(last.createdAt)}
         </p>
       )}
@@ -203,15 +203,15 @@ export default async function ContactDetailPage({
 function Kpi({
   label,
   value,
-  accent = "text-fg",
+  accent = "text-foreground",
 }: {
   label: string;
   value: string;
   accent?: string;
 }) {
   return (
-    <div className="rounded-2xl border border-border bg-surface p-5">
-      <div className="text-sm text-muted">{label}</div>
+    <div className="rounded-2xl border border-border bg-card p-5">
+      <div className="text-sm text-muted-foreground">{label}</div>
       <div className={`mt-2 text-lg font-semibold ${accent}`}>{value}</div>
     </div>
   );

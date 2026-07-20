@@ -10,7 +10,7 @@ import {
   type ConvertState,
   type SoldState,
 } from "./actions";
-import { Modal, Field } from "@/components/ui";
+import { Modal, Field } from "@/components/form";
 import { formatMoney } from "@/lib/format";
 
 const soldInitial: SoldState = {};
@@ -46,7 +46,7 @@ export function SoldButton({
             await unmarkSoldAction(leadId);
             setUndoing(false);
           }}
-          className="text-xs text-muted underline transition hover:text-fg disabled:opacity-50"
+          className="text-xs text-muted-foreground underline transition hover:text-foreground disabled:opacity-50"
         >
           bekor qilish
         </button>
@@ -70,7 +70,7 @@ export function SoldButton({
           }}
           className="flex flex-col gap-3.5"
         >
-          <p className="text-sm text-muted">
+          <p className="text-sm text-muted-foreground">
             Mijoz qancha to&apos;ladi? Bu summa reklama daromadiga qo&apos;shiladi.
           </p>
           <Field
@@ -81,7 +81,7 @@ export function SoldButton({
             required
           />
           {state.error && (
-            <p className="rounded-lg border border-danger/40 bg-danger/10 px-3 py-2 text-sm text-danger">
+            <p className="rounded-lg border border-destructive/40 bg-destructive/10 px-3 py-2 text-sm text-destructive">
               {state.error}
             </p>
           )}
@@ -89,7 +89,7 @@ export function SoldButton({
             <button
               type="button"
               onClick={() => setOpen(false)}
-              className="rounded-lg border border-border px-4 py-2 text-sm text-muted transition hover:text-fg"
+              className="rounded-lg border border-border px-4 py-2 text-sm text-muted-foreground transition hover:text-foreground"
             >
               Bekor qilish
             </button>
@@ -126,7 +126,7 @@ export function AssignSelect({
         await assignLeadAction(leadId, e.target.value);
         setPending(false);
       }}
-      className="rounded-lg border border-border bg-surface-2 px-3 py-2 text-sm text-fg outline-none transition focus:border-primary disabled:opacity-50"
+      className="rounded-lg border border-border bg-muted px-3 py-2 text-sm text-foreground outline-none transition focus:border-primary disabled:opacity-50"
     >
       <option value="">— Tayinlanmagan —</option>
       {users.map((u) => (
@@ -156,11 +156,11 @@ export function NoteForm({ leadId }: { leadId: string }) {
         required
         rows={2}
         placeholder="Izoh yozing..."
-        className="rounded-lg border border-border bg-surface-2 px-3 py-2 text-sm outline-none transition focus:border-primary"
+        className="rounded-lg border border-border bg-muted px-3 py-2 text-sm outline-none transition focus:border-primary"
       />
       <button
         type="submit"
-        className="self-end rounded-lg bg-primary px-4 py-1.5 text-sm font-medium text-primary-fg transition hover:bg-primary-hover"
+        className="self-end rounded-lg bg-primary px-4 py-1.5 text-sm font-medium text-primary-foreground transition hover:bg-primary/90"
       >
         Qo&apos;shish
       </button>
@@ -190,7 +190,7 @@ export function ConvertButton({
     <>
       <button
         onClick={() => setOpen(true)}
-        className="rounded-lg border border-border px-4 py-2 text-sm text-muted transition hover:border-primary/50 hover:text-fg"
+        className="rounded-lg border border-border px-4 py-2 text-sm text-muted-foreground transition hover:border-primary/50 hover:text-foreground"
       >
         + Kanbanга qo&apos;shish
       </button>
@@ -210,7 +210,7 @@ export function ConvertButton({
             placeholder="0"
           />
           {state.error && (
-            <p className="rounded-lg border border-danger/40 bg-danger/10 px-3 py-2 text-sm text-danger">
+            <p className="rounded-lg border border-destructive/40 bg-destructive/10 px-3 py-2 text-sm text-destructive">
               {state.error}
             </p>
           )}
@@ -218,7 +218,7 @@ export function ConvertButton({
             <button
               type="button"
               onClick={() => setOpen(false)}
-              className="rounded-lg border border-border px-4 py-2 text-sm text-muted transition hover:text-fg"
+              className="rounded-lg border border-border px-4 py-2 text-sm text-muted-foreground transition hover:text-foreground"
             >
               Bekor qilish
             </button>

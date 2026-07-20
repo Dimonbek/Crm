@@ -10,7 +10,7 @@ import {
 const initial: AccountState = {};
 
 const inputCls =
-  "w-full rounded-lg border border-border bg-surface-2 px-3 py-2 text-sm text-fg outline-none transition focus:border-primary";
+  "w-full rounded-lg border border-border bg-muted px-3 py-2 text-sm text-foreground outline-none transition focus:border-primary";
 
 export function ProfileForm({
   name,
@@ -32,7 +32,7 @@ export function ProfileForm({
     <form action={formAction} className="flex flex-col gap-3.5">
       <div className="grid gap-3.5 sm:grid-cols-2">
         <div className="flex flex-col gap-1.5">
-          <label htmlFor="name" className="text-sm text-muted">
+          <label htmlFor="name" className="text-sm text-muted-foreground">
             Ismingiz
           </label>
           <input
@@ -45,7 +45,7 @@ export function ProfileForm({
           />
         </div>
         <div className="flex flex-col gap-1.5">
-          <label htmlFor="username" className="text-sm text-muted">
+          <label htmlFor="username" className="text-sm text-muted-foreground">
             Login
           </label>
           <input
@@ -56,12 +56,12 @@ export function ProfileForm({
             placeholder="mirsun"
             className={inputCls}
           />
-          <span className="text-xs text-muted">
+          <span className="text-xs text-muted-foreground">
             Shu login bilan ham kira olasiz
           </span>
         </div>
         <div className="flex flex-col gap-1.5 sm:col-span-2">
-          <label htmlFor="email" className="text-sm text-muted">
+          <label htmlFor="email" className="text-sm text-muted-foreground">
             Email
           </label>
           <input
@@ -81,7 +81,7 @@ export function ProfileForm({
       <button
         type="submit"
         disabled={pending || disabled}
-        className="self-start rounded-lg bg-primary px-4 py-2 text-sm font-medium text-primary-fg transition hover:bg-primary-hover disabled:opacity-60"
+        className="self-start rounded-lg bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition hover:bg-primary/90 disabled:opacity-60"
       >
         {pending ? "Saqlanmoqda..." : "Saqlash"}
       </button>
@@ -99,7 +99,7 @@ export function PasswordForm({ disabled }: { disabled?: boolean }) {
   return (
     <form action={formAction} className="flex flex-col gap-3.5">
       <div className="flex flex-col gap-1.5">
-        <label htmlFor="current" className="text-sm text-muted">
+        <label htmlFor="current" className="text-sm text-muted-foreground">
           Joriy parol
         </label>
         <div className="relative">
@@ -116,7 +116,7 @@ export function PasswordForm({ disabled }: { disabled?: boolean }) {
             type="button"
             onClick={() => setShow((v) => !v)}
             aria-label={show ? "Yashirish" : "Ko'rsatish"}
-            className="absolute inset-y-0 right-0 flex items-center px-3 text-muted transition hover:text-fg"
+            className="absolute inset-y-0 right-0 flex items-center px-3 text-muted-foreground transition hover:text-foreground"
           >
             {show ? "🙈" : "👁"}
           </button>
@@ -125,7 +125,7 @@ export function PasswordForm({ disabled }: { disabled?: boolean }) {
 
       <div className="grid gap-3.5 sm:grid-cols-2">
         <div className="flex flex-col gap-1.5">
-          <label htmlFor="next" className="text-sm text-muted">
+          <label htmlFor="next" className="text-sm text-muted-foreground">
             Yangi parol
           </label>
           <input
@@ -140,7 +140,7 @@ export function PasswordForm({ disabled }: { disabled?: boolean }) {
           />
         </div>
         <div className="flex flex-col gap-1.5">
-          <label htmlFor="confirm" className="text-sm text-muted">
+          <label htmlFor="confirm" className="text-sm text-muted-foreground">
             Yangi parolni takrorlang
           </label>
           <input
@@ -160,7 +160,7 @@ export function PasswordForm({ disabled }: { disabled?: boolean }) {
       <button
         type="submit"
         disabled={pending || disabled}
-        className="self-start rounded-lg bg-primary px-4 py-2 text-sm font-medium text-primary-fg transition hover:bg-primary-hover disabled:opacity-60"
+        className="self-start rounded-lg bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition hover:bg-primary/90 disabled:opacity-60"
       >
         {pending ? "O'zgartirilmoqda..." : "Parolni o'zgartirish"}
       </button>
@@ -171,7 +171,7 @@ export function PasswordForm({ disabled }: { disabled?: boolean }) {
 function Feedback({ state }: { state: AccountState }) {
   if (state.error) {
     return (
-      <p className="rounded-lg border border-danger/40 bg-danger/10 px-3 py-2 text-sm text-danger">
+      <p className="rounded-lg border border-destructive/40 bg-destructive/10 px-3 py-2 text-sm text-destructive">
         {state.error}
       </p>
     );

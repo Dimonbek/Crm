@@ -50,14 +50,14 @@ export default async function AdminPage() {
       <div className="flex flex-wrap items-center justify-between gap-4">
         <div>
           <h1 className="text-2xl font-semibold">Admin panel</h1>
-          <p className="mt-1 text-sm text-muted">
+          <p className="mt-1 text-sm text-muted-foreground">
             Platformadagi barcha kompaniyalar va ularning botlari
           </p>
         </div>
         <div className="flex items-center gap-2">
           <Link
             href="/dashboard"
-            className="rounded-lg border border-border px-4 py-2 text-sm text-muted transition hover:text-fg"
+            className="rounded-lg border border-border px-4 py-2 text-sm text-muted-foreground transition hover:text-foreground"
           >
             ← CRM
           </Link>
@@ -75,10 +75,10 @@ export default async function AdminPage() {
         />
       </div>
 
-      <div className="overflow-x-auto rounded-2xl border border-border bg-surface">
+      <div className="overflow-x-auto rounded-2xl border border-border bg-card">
         <table className="w-full min-w-[1000px] text-sm">
           <thead>
-            <tr className="border-b border-border text-left text-xs uppercase tracking-wide text-muted">
+            <tr className="border-b border-border text-left text-xs uppercase tracking-wide text-muted-foreground">
               <th className="px-4 py-3 font-medium">Kompaniya</th>
               <th className="px-4 py-3 font-medium">Telegram bot</th>
               <th className="px-4 py-3 font-medium">Login</th>
@@ -92,7 +92,7 @@ export default async function AdminPage() {
           <tbody>
             {orgs.length === 0 && (
               <tr>
-                <td colSpan={8} className="px-4 py-12 text-center text-muted">
+                <td colSpan={8} className="px-4 py-12 text-center text-muted-foreground">
                   Hali kompaniya yo&apos;q.
                 </td>
               </tr>
@@ -105,12 +105,12 @@ export default async function AdminPage() {
               return (
                 <tr
                   key={o.id}
-                  className="border-b border-border/60 transition last:border-0 hover:bg-surface-2/50"
+                  className="border-b border-border/60 transition last:border-0 hover:bg-muted/50"
                 >
                   <td className="px-4 py-3">
                     <ViewOrgButton orgId={o.id} orgName={o.name} />
                     <div className="flex items-center gap-2">
-                      <code className="text-xs text-muted">{o.slug}</code>
+                      <code className="text-xs text-muted-foreground">{o.slug}</code>
                       {!connected && (
                         <span className="rounded-full border border-warning/30 bg-warning/15 px-1.5 py-0.5 text-xs text-warning">
                           bot ulanmagan
@@ -123,7 +123,7 @@ export default async function AdminPage() {
                   </td>
                   <td className="px-4 py-3">
                     <div className="flex items-center gap-1.5">
-                      <span className="text-xs text-muted">
+                      <span className="text-xs text-muted-foreground">
                         {admin?.email ?? "—"}
                       </span>
                       {admin && (
@@ -133,21 +133,21 @@ export default async function AdminPage() {
                         />
                       )}
                     </div>
-                    <div className="text-xs text-muted">
+                    <div className="text-xs text-muted-foreground">
                       {o._count.users} xodim
                     </div>
                   </td>
                   <td className="px-4 py-3 font-medium">{o.leads.length}</td>
-                  <td className="px-4 py-3 text-muted">{o._count.contacts}</td>
+                  <td className="px-4 py-3 text-muted-foreground">{o._count.contacts}</td>
                   <td className="px-4 py-3">
                     {revenue > 0 ? (
                       <span className="text-success">{formatMoney(revenue)}</span>
                     ) : (
-                      <span className="text-muted">—</span>
+                      <span className="text-muted-foreground">—</span>
                     )}
-                    <div className="text-xs text-muted">{sold.length} sotuv</div>
+                    <div className="text-xs text-muted-foreground">{sold.length} sotuv</div>
                   </td>
-                  <td className="px-4 py-3 text-muted">
+                  <td className="px-4 py-3 text-muted-foreground">
                     {formatDate(o.createdAt)}
                   </td>
                   <td className="px-4 py-3">
@@ -172,16 +172,16 @@ export default async function AdminPage() {
         </table>
       </div>
 
-      <div className="rounded-2xl border border-border bg-surface p-6">
+      <div className="rounded-2xl border border-border bg-card p-6">
         <h2 className="font-medium">Yangi mijozni ulash tartibi</h2>
-        <ol className="mt-3 flex list-decimal flex-col gap-2 pl-5 text-sm text-muted">
+        <ol className="mt-3 flex list-decimal flex-col gap-2 pl-5 text-sm text-muted-foreground">
           <li>
-            <b className="text-fg">+ Yangi kompaniya</b> — mijoz nomi, login va
+            <b className="text-foreground">+ Yangi kompaniya</b> — mijoz nomi, login va
             parolni kiritasiz (mijoz ro&apos;yxatdan o&apos;tishi shart emas)
           </li>
           <li>
-            <b className="text-fg">🔑 Bot sozlamasi</b> — 2 qatorni nusxalab,
-            botning Railway <b className="text-fg">Variables</b> bo&apos;limiga
+            <b className="text-foreground">🔑 Bot sozlamasi</b> — 2 qatorni nusxalab,
+            botning Railway <b className="text-foreground">Variables</b> bo&apos;limiga
             qo&apos;yasiz
           </li>
           <li>Bot qayta ishga tushadi — leadlar shu kompaniyaga tusha boshlaydi</li>
@@ -195,15 +195,15 @@ export default async function AdminPage() {
 function Kpi({
   label,
   value,
-  accent = "text-fg",
+  accent = "text-foreground",
 }: {
   label: string;
   value: string;
   accent?: string;
 }) {
   return (
-    <div className="rounded-2xl border border-border bg-surface p-5">
-      <div className="text-sm text-muted">{label}</div>
+    <div className="rounded-2xl border border-border bg-card p-5">
+      <div className="text-sm text-muted-foreground">{label}</div>
       <div className={`mt-2 text-xl font-semibold ${accent}`}>{value}</div>
     </div>
   );

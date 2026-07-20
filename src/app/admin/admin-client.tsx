@@ -10,7 +10,7 @@ import {
   viewAsOrgAction,
   type AdminState,
 } from "./actions";
-import { Modal, Field, FormButtons } from "@/components/ui";
+import { Modal, Field, FormButtons } from "@/components/form";
 
 /** Kompaniya ichiga kirish — uning CRM'ini ko'rish */
 export function ViewOrgButton({
@@ -61,7 +61,7 @@ export function DeleteOrgButton({
           setError(null);
           setOpen(true);
         }}
-        className="rounded border border-border px-2 py-1 text-xs text-muted transition hover:border-danger/50 hover:text-danger"
+        className="rounded border border-border px-2 py-1 text-xs text-muted-foreground transition hover:border-destructive/50 hover:text-destructive"
         title="Kompaniyani o'chirish"
       >
         🗑
@@ -73,26 +73,26 @@ export function DeleteOrgButton({
         title="Kompaniyani o'chirish"
       >
         <div className="flex flex-col gap-4">
-          <div className="rounded-lg border border-danger/40 bg-danger/10 p-4 text-sm text-danger">
+          <div className="rounded-lg border border-destructive/40 bg-destructive/10 p-4 text-sm text-destructive">
             <b>{orgName}</b> va uning barcha ma&apos;lumoti butunlay
             o&apos;chadi: {leadCount} lead, mijozlar, bitimlar, xodimlar.
             <div className="mt-1.5">Buni qaytarib bo&apos;lmaydi.</div>
           </div>
 
           <div className="flex flex-col gap-1.5">
-            <label className="text-sm text-muted">
+            <label className="text-sm text-muted-foreground">
               Tasdiqlash uchun kompaniya nomini yozing:
             </label>
             <input
               value={name}
               onChange={(e) => setName(e.target.value)}
               placeholder={orgName}
-              className="rounded-lg border border-border bg-surface-2 px-3 py-2 text-sm outline-none transition focus:border-danger"
+              className="rounded-lg border border-border bg-muted px-3 py-2 text-sm outline-none transition focus:border-destructive"
             />
           </div>
 
           {error && (
-            <p className="rounded-lg border border-danger/40 bg-danger/10 px-3 py-2 text-sm text-danger">
+            <p className="rounded-lg border border-destructive/40 bg-destructive/10 px-3 py-2 text-sm text-destructive">
               {error}
             </p>
           )}
@@ -100,7 +100,7 @@ export function DeleteOrgButton({
           <div className="flex justify-end gap-2">
             <button
               onClick={() => setOpen(false)}
-              className="rounded-lg border border-border px-4 py-2 text-sm text-muted transition hover:text-fg"
+              className="rounded-lg border border-border px-4 py-2 text-sm text-muted-foreground transition hover:text-foreground"
             >
               Bekor qilish
             </button>
@@ -114,7 +114,7 @@ export function DeleteOrgButton({
                 if (res?.error) setError(res.error);
                 else setOpen(false);
               }}
-              className="rounded-lg bg-danger px-4 py-2 text-sm font-medium text-white transition hover:opacity-90 disabled:opacity-40"
+              className="rounded-lg bg-destructive px-4 py-2 text-sm font-medium text-white transition hover:opacity-90 disabled:opacity-40"
             >
               {pending ? "O'chirilmoqda..." : "Butunlay o'chirish"}
             </button>
@@ -139,7 +139,7 @@ export function AddOrgButton() {
     <>
       <button
         onClick={() => setOpen(true)}
-        className="rounded-lg bg-primary px-4 py-2 text-sm font-medium text-primary-fg transition hover:bg-primary-hover"
+        className="rounded-lg bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition hover:bg-primary/90"
       >
         + Yangi kompaniya
       </button>
@@ -161,7 +161,7 @@ export function AddOrgButton() {
             label="Telegram bot (ixtiyoriy)"
             placeholder="MirSunTravelBot"
           />
-          <div className="my-1 border-t border-border pt-3 text-sm text-muted">
+          <div className="my-1 border-t border-border pt-3 text-sm text-muted-foreground">
             Mijoz shu ma&apos;lumotlar bilan kiradi:
           </div>
           <Field
@@ -190,7 +190,7 @@ export function AddOrgButton() {
           />
 
           {state.error && (
-            <p className="rounded-lg border border-danger/40 bg-danger/10 px-3 py-2 text-sm text-danger">
+            <p className="rounded-lg border border-destructive/40 bg-destructive/10 px-3 py-2 text-sm text-destructive">
               {state.error}
             </p>
           )}
@@ -228,7 +228,7 @@ export function BotCell({
 
   return (
     <div className="flex items-center gap-1.5">
-      <span className="text-muted">@</span>
+      <span className="text-muted-foreground">@</span>
       <input
         value={value}
         onChange={(e) => setValue(e.target.value)}
@@ -236,7 +236,7 @@ export function BotCell({
         onKeyDown={(e) => e.key === "Enter" && e.currentTarget.blur()}
         disabled={saving}
         placeholder="bot username"
-        className="w-40 rounded-lg border border-border bg-surface-2 px-2 py-1 text-sm outline-none transition focus:border-primary disabled:opacity-50"
+        className="w-40 rounded-lg border border-border bg-muted px-2 py-1 text-sm outline-none transition focus:border-primary disabled:opacity-50"
       />
       {saved && <span className="text-xs text-success">✓</span>}
     </div>
@@ -261,7 +261,7 @@ export function BotEnvButton({
     <>
       <button
         onClick={() => setOpen(true)}
-        className="rounded border border-border px-2 py-1 text-xs text-muted transition hover:border-primary hover:text-fg"
+        className="rounded border border-border px-2 py-1 text-xs text-muted-foreground transition hover:border-primary hover:text-foreground"
       >
         🔑 Bot sozlamasi
       </button>
@@ -272,13 +272,13 @@ export function BotEnvButton({
         title={`${orgName} — botni ulash`}
       >
         <div className="flex flex-col gap-4">
-          <p className="text-sm text-muted">
-            Shu 2 qatorni botning Railway <b className="text-fg">Variables</b>{" "}
+          <p className="text-sm text-muted-foreground">
+            Shu 2 qatorni botning Railway <b className="text-foreground">Variables</b>{" "}
             bo&apos;limiga qo&apos;ying — bot leadlarni shu kompaniyaga yubora
             boshlaydi.
           </p>
 
-          <pre className="overflow-x-auto rounded-lg border border-border bg-surface-2 p-3 text-xs text-fg">
+          <pre className="overflow-x-auto rounded-lg border border-border bg-muted p-3 text-xs text-foreground">
             {envText}
           </pre>
 
@@ -292,12 +292,12 @@ export function BotEnvButton({
                 /* ruxsat yo'q */
               }
             }}
-            className="rounded-lg bg-primary px-4 py-2 text-sm font-medium text-primary-fg transition hover:bg-primary-hover"
+            className="rounded-lg bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition hover:bg-primary/90"
           >
             {copied ? "✓ Nusxalandi" : "Ikkalasini nusxalash"}
           </button>
 
-          <p className="text-xs text-muted">
+          <p className="text-xs text-muted-foreground">
             Kalit maxfiy — faqat siz va o&apos;sha bot bilishi kerak.
           </p>
         </div>
@@ -322,7 +322,7 @@ export function RegenerateButton({ orgId }: { orgId: string }) {
         await regenerateTokenAction(orgId);
         setPending(false);
       }}
-      className="rounded border border-border px-2 py-1 text-xs text-muted transition hover:border-warning/50 hover:text-warning disabled:opacity-50"
+      className="rounded border border-border px-2 py-1 text-xs text-muted-foreground transition hover:border-warning/50 hover:text-warning disabled:opacity-50"
       title="Kalitni yangilash"
     >
       ↻
@@ -349,7 +349,7 @@ export function ResetPasswordButton({
         setPending(false);
         alert("Parol yangilandi");
       }}
-      className="rounded border border-border px-2 py-1 text-xs text-muted transition hover:border-primary hover:text-fg disabled:opacity-40"
+      className="rounded border border-border px-2 py-1 text-xs text-muted-foreground transition hover:border-primary hover:text-foreground disabled:opacity-40"
       title="Parolni yangilash"
     >
       🔒

@@ -7,7 +7,7 @@ import {
   changeUserRoleAction,
   type CreateUserState,
 } from "./actions";
-import { Modal, Field, SelectField, FormButtons } from "@/components/ui";
+import { Modal, Field, SelectField, FormButtons } from "@/components/form";
 import { ROLES, ROLE_LABEL } from "@/lib/roles";
 import type { Role } from "@/generated/prisma/enums";
 
@@ -28,7 +28,7 @@ export function AddUserButton() {
     <>
       <button
         onClick={() => setOpen(true)}
-        className="rounded-lg bg-primary px-4 py-2 text-sm font-medium text-primary-fg transition hover:bg-primary-hover"
+        className="rounded-lg bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition hover:bg-primary/90"
       >
         + Yangi foydalanuvchi
       </button>
@@ -58,7 +58,7 @@ export function AddUserButton() {
           />
 
           {state.error && (
-            <p className="rounded-lg border border-danger/40 bg-danger/10 px-3 py-2 text-sm text-danger">
+            <p className="rounded-lg border border-destructive/40 bg-destructive/10 px-3 py-2 text-sm text-destructive">
               {state.error}
             </p>
           )}
@@ -89,7 +89,7 @@ export function RoleSelect({
         await changeUserRoleAction(userId, e.target.value);
         setPending(false);
       }}
-      className="rounded-lg border border-border bg-surface-2 px-2.5 py-1.5 text-xs text-fg outline-none transition focus:border-primary disabled:opacity-50"
+      className="rounded-lg border border-border bg-muted px-2.5 py-1.5 text-xs text-foreground outline-none transition focus:border-primary disabled:opacity-50"
     >
       {ROLES.map((r) => (
         <option key={r} value={r}>
@@ -121,7 +121,7 @@ export function ActiveToggle({
       className={`rounded-full border px-2.5 py-0.5 text-xs transition disabled:opacity-40 ${
         active
           ? "border-success/30 bg-success/15 text-success"
-          : "border-border bg-surface-2 text-muted"
+          : "border-border bg-muted text-muted-foreground"
       }`}
     >
       {active ? "Faol" : "Bloklangan"}

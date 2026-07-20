@@ -78,7 +78,7 @@ export default async function CampaignsPage() {
       <div className="flex flex-wrap items-center justify-between gap-4">
         <div>
           <h1 className="text-2xl font-semibold">Reklama kampaniyalari</h1>
-          <p className="mt-1 text-sm text-muted">
+          <p className="mt-1 text-sm text-muted-foreground">
             Qaysi reklama foyda, qaysi zarar keltirayotganini ko&apos;ring
           </p>
         </div>
@@ -101,17 +101,17 @@ export default async function CampaignsPage() {
           <Kpi
             label="Sof foyda"
             value={formatMoney(totalM.profit)}
-            accent={totalM.profit >= 0 ? "text-success" : "text-danger"}
+            accent={totalM.profit >= 0 ? "text-success" : "text-destructive"}
             hint={totalM.roi != null ? `ROI ${totalM.roi.toFixed(0)}%` : undefined}
           />
         </div>
       )}
 
       {/* Jadval */}
-      <div className="overflow-x-auto rounded-2xl border border-border bg-surface">
+      <div className="overflow-x-auto rounded-2xl border border-border bg-card">
         <table className="w-full min-w-[980px] text-sm">
           <thead>
-            <tr className="border-b border-border text-left text-xs uppercase tracking-wide text-muted">
+            <tr className="border-b border-border text-left text-xs uppercase tracking-wide text-muted-foreground">
               <th className="px-4 py-3 font-medium">Kampaniya</th>
               <th className="px-4 py-3 font-medium">Byudjet</th>
               <th className="px-4 py-3 font-medium">Leadlar</th>
@@ -127,7 +127,7 @@ export default async function CampaignsPage() {
           <tbody>
             {rows.length === 0 && (
               <tr>
-                <td colSpan={10} className="px-4 py-12 text-center text-muted">
+                <td colSpan={10} className="px-4 py-12 text-center text-muted-foreground">
                   Hali kampaniya yo&apos;q. Reklama berishdan oldin kampaniya
                   yarating — shunda qaysi reklama pul keltirganini bilasiz.
                 </td>
@@ -138,14 +138,14 @@ export default async function CampaignsPage() {
               return (
                 <tr
                   key={c.id}
-                  className="border-b border-border/60 transition last:border-0 hover:bg-surface-2/50"
+                  className="border-b border-border/60 transition last:border-0 hover:bg-muted/50"
                 >
                   <td className="px-4 py-3">
                     <div className="font-medium">{c.name}</div>
                     <div className="mt-0.5 flex items-center gap-2">
-                      <code className="text-xs text-muted">{c.code}</code>
+                      <code className="text-xs text-muted-foreground">{c.code}</code>
                       {c.channel && (
-                        <span className="rounded bg-surface-2 px-1.5 py-0.5 text-xs text-muted">
+                        <span className="rounded bg-muted px-1.5 py-0.5 text-xs text-muted-foreground">
                           {c.channel}
                         </span>
                       )}
@@ -156,18 +156,18 @@ export default async function CampaignsPage() {
                     <BudgetCell campaignId={c.id} budget={c.budget} />
                   </td>
                   <td className="px-4 py-3 font-medium">{m.leads}</td>
-                  <td className="px-4 py-3 text-muted">
+                  <td className="px-4 py-3 text-muted-foreground">
                     {m.cpl != null ? formatMoney(m.cpl) : "—"}
                   </td>
                   <td className="px-4 py-3">
                     {m.sales}
                     {m.conversion != null && m.leads > 0 && (
-                      <span className="ml-1.5 text-xs text-muted">
+                      <span className="ml-1.5 text-xs text-muted-foreground">
                         ({m.conversion.toFixed(0)}%)
                       </span>
                     )}
                   </td>
-                  <td className="px-4 py-3 text-muted">
+                  <td className="px-4 py-3 text-muted-foreground">
                     {m.cac != null ? formatMoney(m.cac) : "—"}
                   </td>
                   <td className="px-4 py-3 text-success">
@@ -176,17 +176,17 @@ export default async function CampaignsPage() {
                   <td
                     className={`px-4 py-3 font-medium ${
                       c.budget === 0
-                        ? "text-muted"
+                        ? "text-muted-foreground"
                         : m.profit >= 0
                           ? "text-success"
-                          : "text-danger"
+                          : "text-destructive"
                     }`}
                   >
                     {c.budget === 0 && m.revenue === 0
                       ? "—"
                       : formatMoney(m.profit)}
                     {m.roi != null && (
-                      <div className="text-xs font-normal text-muted">
+                      <div className="text-xs font-normal text-muted-foreground">
                         ROI {m.roi.toFixed(0)}%
                       </div>
                     )}
@@ -207,22 +207,22 @@ export default async function CampaignsPage() {
           </tbody>
           {rows.length > 0 && (
             <tfoot>
-              <tr className="border-t border-border bg-surface-2/40 font-medium">
+              <tr className="border-t border-border bg-muted/40 font-medium">
                 <td className="px-4 py-3">Jami</td>
                 <td className="px-4 py-3">{formatMoney(totals.budget)}</td>
                 <td className="px-4 py-3">{totals.leads}</td>
-                <td className="px-4 py-3 text-muted">
+                <td className="px-4 py-3 text-muted-foreground">
                   {totalM.cpl != null ? formatMoney(totalM.cpl) : "—"}
                 </td>
                 <td className="px-4 py-3">{totals.sales}</td>
-                <td className="px-4 py-3 text-muted">
+                <td className="px-4 py-3 text-muted-foreground">
                   {totalM.cac != null ? formatMoney(totalM.cac) : "—"}
                 </td>
                 <td className="px-4 py-3 text-success">
                   {formatMoney(totals.revenue)}
                 </td>
                 <td
-                  className={`px-4 py-3 ${totalM.profit >= 0 ? "text-success" : "text-danger"}`}
+                  className={`px-4 py-3 ${totalM.profit >= 0 ? "text-success" : "text-destructive"}`}
                 >
                   {formatMoney(totalM.profit)}
                 </td>
@@ -235,17 +235,17 @@ export default async function CampaignsPage() {
       </div>
 
       {noCampaign > 0 && (
-        <p className="text-sm text-muted">
-          <b className="text-fg">{noCampaign}</b> ta lead kampaniyasiz kelgan —
+        <p className="text-sm text-muted-foreground">
+          <b className="text-foreground">{noCampaign}</b> ta lead kampaniyasiz kelgan —
           ular reklama havolasisiz (to&apos;g&apos;ridan-to&apos;g&apos;ri botga)
           yozgan.
         </p>
       )}
 
       {/* Sozlash */}
-      <div className="rounded-2xl border border-border bg-surface p-6">
+      <div className="rounded-2xl border border-border bg-card p-6">
         <h2 className="font-medium">Reklama havolalarini yasash</h2>
-        <p className="mt-1 text-sm text-muted">
+        <p className="mt-1 text-sm text-muted-foreground">
           Bot username&apos;ini kiriting — har bir kampaniya uchun tayyor havola
           olasiz.
         </p>
@@ -253,23 +253,23 @@ export default async function CampaignsPage() {
           <BotUsernameForm current={org?.botUsername ?? null} />
         </div>
 
-        <div className="mt-6 rounded-lg border border-border bg-surface-2 p-4">
+        <div className="mt-6 rounded-lg border border-border bg-muted p-4">
           <div className="text-sm font-medium">Qanday ishlaydi</div>
-          <ol className="mt-2 flex list-decimal flex-col gap-1.5 pl-5 text-sm text-muted">
+          <ol className="mt-2 flex list-decimal flex-col gap-1.5 pl-5 text-sm text-muted-foreground">
             <li>
               Har bir reklama uchun alohida kampaniya yarating (masalan
               &quot;Instagram iyul&quot;)
             </li>
             <li>
-              Uning <b className="text-fg">havolasini</b> nusxalab, reklamaga
+              Uning <b className="text-foreground">havolasini</b> nusxalab, reklamaga
               qo&apos;ying — Instagram bio, story, post
             </li>
             <li>
               Mijoz havolani bosib botga kirsa, lead{" "}
-              <b className="text-fg">avtomatik shu kampaniyaga</b> bog&apos;lanadi
+              <b className="text-foreground">avtomatik shu kampaniyaga</b> bog&apos;lanadi
             </li>
             <li>
-              Reklamaga sarflagan pulingizni <b className="text-fg">Byudjet</b>{" "}
+              Reklamaga sarflagan pulingizni <b className="text-foreground">Byudjet</b>{" "}
               ustuniga yozing — qolganini CRM hisoblaydi
             </li>
           </ol>
@@ -282,7 +282,7 @@ export default async function CampaignsPage() {
 function Kpi({
   label,
   value,
-  accent = "text-fg",
+  accent = "text-foreground",
   hint,
 }: {
   label: string;
@@ -291,10 +291,10 @@ function Kpi({
   hint?: string;
 }) {
   return (
-    <div className="rounded-2xl border border-border bg-surface p-5">
-      <div className="text-sm text-muted">{label}</div>
+    <div className="rounded-2xl border border-border bg-card p-5">
+      <div className="text-sm text-muted-foreground">{label}</div>
       <div className={`mt-2 text-xl font-semibold ${accent}`}>{value}</div>
-      {hint && <div className="mt-1 text-xs text-muted">{hint}</div>}
+      {hint && <div className="mt-1 text-xs text-muted-foreground">{hint}</div>}
     </div>
   );
 }

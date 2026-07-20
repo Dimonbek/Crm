@@ -9,7 +9,7 @@ import {
   saveBotUsernameAction,
   type CampaignState,
 } from "./actions";
-import { Modal, Field, FormButtons } from "@/components/ui";
+import { Modal, Field, FormButtons } from "@/components/form";
 
 const initial: CampaignState = {};
 
@@ -28,7 +28,7 @@ export function AddCampaignButton() {
     <>
       <button
         onClick={() => setOpen(true)}
-        className="rounded-lg bg-primary px-4 py-2 text-sm font-medium text-primary-fg transition hover:bg-primary-hover"
+        className="rounded-lg bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition hover:bg-primary/90"
       >
         + Yangi kampaniya
       </button>
@@ -50,7 +50,7 @@ export function AddCampaignButton() {
           />
 
           {state.error && (
-            <p className="rounded-lg border border-danger/40 bg-danger/10 px-3 py-2 text-sm text-danger">
+            <p className="rounded-lg border border-destructive/40 bg-destructive/10 px-3 py-2 text-sm text-destructive">
               {state.error}
             </p>
           )}
@@ -96,7 +96,7 @@ export function BudgetCell({
         onKeyDown={(e) => e.key === "Enter" && e.currentTarget.blur()}
         disabled={saving}
         inputMode="numeric"
-        className="w-28 rounded-lg border border-border bg-surface-2 px-2 py-1 text-sm text-fg outline-none transition focus:border-primary disabled:opacity-50"
+        className="w-28 rounded-lg border border-border bg-muted px-2 py-1 text-sm text-foreground outline-none transition focus:border-primary disabled:opacity-50"
       />
       {saved && <span className="text-xs text-success">✓</span>}
     </div>
@@ -117,7 +117,7 @@ export function CopyLink({ link }: { link: string }) {
         }
       }}
       title={link}
-      className="rounded border border-border px-2 py-1 text-xs text-muted transition hover:border-primary hover:text-fg"
+      className="rounded border border-border px-2 py-1 text-xs text-muted-foreground transition hover:border-primary hover:text-foreground"
     >
       {copied ? "✓ Nusxalandi" : "🔗 Havola"}
     </button>
@@ -144,7 +144,7 @@ export function CampaignRowActions({
         className={`rounded-full border px-2 py-0.5 text-xs transition disabled:opacity-40 ${
           active
             ? "border-success/30 bg-success/15 text-success"
-            : "border-border bg-surface-2 text-muted"
+            : "border-border bg-muted text-muted-foreground"
         }`}
       >
         {active ? "Faol" : "To'xtatilgan"}
@@ -157,7 +157,7 @@ export function CampaignRowActions({
           await deleteCampaignAction(campaignId);
           setPending(false);
         }}
-        className="rounded border border-border px-2 py-1 text-xs text-muted transition hover:border-danger/50 hover:text-danger disabled:opacity-50"
+        className="rounded border border-border px-2 py-1 text-xs text-muted-foreground transition hover:border-destructive/50 hover:text-destructive disabled:opacity-50"
       >
         🗑
       </button>
@@ -183,30 +183,30 @@ export function BotUsernameForm({ current }: { current: string | null }) {
   return (
     <form action={formAction} className="flex flex-wrap items-end gap-2">
       <div className="flex flex-col gap-1.5">
-        <label htmlFor="botUsername" className="text-sm text-muted">
+        <label htmlFor="botUsername" className="text-sm text-muted-foreground">
           Telegram bot username
         </label>
         <div className="flex items-center gap-1.5">
-          <span className="text-muted">@</span>
+          <span className="text-muted-foreground">@</span>
           <input
             id="botUsername"
             name="botUsername"
             defaultValue={current ?? ""}
             placeholder="RivaTourBot"
-            className="w-56 rounded-lg border border-border bg-surface-2 px-3 py-2 text-sm text-fg outline-none transition focus:border-primary"
+            className="w-56 rounded-lg border border-border bg-muted px-3 py-2 text-sm text-foreground outline-none transition focus:border-primary"
           />
         </div>
       </div>
       <button
         type="submit"
         disabled={pending}
-        className="rounded-lg border border-border px-4 py-2 text-sm text-muted transition hover:border-primary hover:text-fg disabled:opacity-60"
+        className="rounded-lg border border-border px-4 py-2 text-sm text-muted-foreground transition hover:border-primary hover:text-foreground disabled:opacity-60"
       >
         {pending ? "..." : "Saqlash"}
       </button>
       {saved && <span className="pb-2 text-sm text-success">✓ Saqlandi</span>}
       {state.error && (
-        <span className="pb-2 text-sm text-danger">{state.error}</span>
+        <span className="pb-2 text-sm text-destructive">{state.error}</span>
       )}
     </form>
   );

@@ -44,7 +44,7 @@ export default async function DashboardPage() {
   const kpis = [
     { label: "Yangi leadlar", value: newCount, accent: "text-primary" },
     { label: "Aktiv bitimlar", value: activeDeals, accent: "text-warning" },
-    { label: "Ochiq vazifalar", value: openTasks, accent: "text-fg" },
+    { label: "Ochiq vazifalar", value: openTasks, accent: "text-foreground" },
     {
       label: "Sotuv summasi",
       value: formatMoney(wonAgg._sum.saleAmount),
@@ -58,7 +58,7 @@ export default async function DashboardPage() {
         <h1 className="text-2xl font-semibold">
           Salom, {user.name.split(" ")[0]} 👋
         </h1>
-        <p className="mt-1 text-sm text-muted">
+        <p className="mt-1 text-sm text-muted-foreground">
           Bugungi umumiy holat bilan tanishing
         </p>
       </div>
@@ -68,9 +68,9 @@ export default async function DashboardPage() {
         {kpis.map((k) => (
           <div
             key={k.label}
-            className="rounded-2xl border border-border bg-surface p-5"
+            className="rounded-2xl border border-border bg-card p-5"
           >
-            <div className="text-sm text-muted">{k.label}</div>
+            <div className="text-sm text-muted-foreground">{k.label}</div>
             <div
               className={`mt-2 font-semibold ${k.accent} ${
                 typeof k.value === "number" ? "text-3xl" : "text-xl"
@@ -84,7 +84,7 @@ export default async function DashboardPage() {
 
       <div className="grid gap-4 lg:grid-cols-2">
         {/* Status taqsimoti */}
-        <div className="rounded-2xl border border-border bg-surface p-5">
+        <div className="rounded-2xl border border-border bg-card p-5">
           <h2 className="mb-4 font-medium">Status bo&apos;yicha taqsimot</h2>
           <div className="flex flex-col gap-3">
             {LEAD_STATUSES.map((s) => {
@@ -98,11 +98,11 @@ export default async function DashboardPage() {
                     >
                       {STATUS_LABEL[s]}
                     </span>
-                    <span className="text-muted">
+                    <span className="text-muted-foreground">
                       {count} ({pct}%)
                     </span>
                   </div>
-                  <div className="h-2 overflow-hidden rounded-full bg-surface-2">
+                  <div className="h-2 overflow-hidden rounded-full bg-muted">
                     <div
                       className="h-full rounded-full bg-primary"
                       style={{ width: `${pct}%` }}
@@ -115,7 +115,7 @@ export default async function DashboardPage() {
         </div>
 
         {/* Oxirgi leadlar */}
-        <div className="rounded-2xl border border-border bg-surface p-5">
+        <div className="rounded-2xl border border-border bg-card p-5">
           <div className="mb-4 flex items-center justify-between">
             <h2 className="font-medium">Oxirgi leadlar</h2>
             <Link href="/leads" className="text-sm text-primary hover:underline">
@@ -124,7 +124,7 @@ export default async function DashboardPage() {
           </div>
           <div className="flex flex-col divide-y divide-border/60">
             {recent.length === 0 && (
-              <p className="py-6 text-center text-sm text-muted">
+              <p className="py-6 text-center text-sm text-muted-foreground">
                 Hali lead yo&apos;q
               </p>
             )}
@@ -135,7 +135,7 @@ export default async function DashboardPage() {
               >
                 <div className="min-w-0">
                   <div className="truncate font-medium">{lead.destination}</div>
-                  <div className="text-xs text-muted">{lead.phone}</div>
+                  <div className="text-xs text-muted-foreground">{lead.phone}</div>
                 </div>
                 <div className="flex items-center gap-3 text-xs">
                   <span
@@ -143,7 +143,7 @@ export default async function DashboardPage() {
                   >
                     {STATUS_LABEL[lead.status]}
                   </span>
-                  <span className="whitespace-nowrap text-muted">
+                  <span className="whitespace-nowrap text-muted-foreground">
                     {formatDate(lead.createdAt)}
                   </span>
                 </div>

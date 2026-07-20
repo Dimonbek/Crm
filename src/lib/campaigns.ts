@@ -47,16 +47,16 @@ export function computeMetrics(
 /** Kampaniya foydali/zararli — qisqa xulosa */
 export function verdict(m: CampaignMetrics, budget: number) {
   if (budget === 0) return { label: "Byudjet kiritilmagan", tone: "muted" as const };
-  if (m.leads === 0) return { label: "Lead yo'q", tone: "danger" as const };
+  if (m.leads === 0) return { label: "Lead yo'q", tone: "destructive" as const };
   if (m.profit > 0) return { label: "Foyda", tone: "success" as const };
-  if (m.sales === 0) return { label: "Sotuv yo'q", tone: "danger" as const };
-  return { label: "Zarar", tone: "danger" as const };
+  if (m.sales === 0) return { label: "Sotuv yo'q", tone: "destructive" as const };
+  return { label: "Zarar", tone: "destructive" as const };
 }
 
 export const TONE_CLASS = {
   success: "bg-success/15 text-success border-success/30",
-  danger: "bg-danger/15 text-danger border-danger/30",
-  muted: "bg-surface-2 text-muted border-border",
+  destructive: "bg-destructive/15 text-destructive border-destructive/30",
+  muted: "bg-muted text-muted-foreground border-border",
 };
 
 /** Reklama havolasi: t.me/bot?start=kod */

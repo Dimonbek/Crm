@@ -10,7 +10,7 @@ export const TASK_STATUS_LABEL: Record<TaskStatus, string> = {
 };
 
 export const TASK_STATUS_CLASS: Record<TaskStatus, string> = {
-  TODO: "bg-surface-2 text-muted border-border",
+  TODO: "bg-muted text-muted-foreground border-border",
   IN_PROGRESS: "bg-warning/15 text-warning border-warning/30",
   DONE: "bg-success/15 text-success border-success/30",
 };
@@ -23,8 +23,8 @@ export const PRIORITY_LABEL: Record<Priority, string> = {
 };
 
 export const PRIORITY_CLASS: Record<Priority, string> = {
-  LOW: "bg-surface-2 text-muted border-border",
+  LOW: "bg-muted text-muted-foreground border-border",
   MEDIUM: "bg-primary/15 text-primary border-primary/30",
   HIGH: "bg-warning/15 text-warning border-warning/30",
-  URGENT: "bg-danger/15 text-danger border-danger/30",
+  URGENT: "bg-destructive/15 text-destructive border-destructive/30",
 };

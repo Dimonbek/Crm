@@ -10,12 +10,12 @@ export function RegisterForm() {
   const [showPassword, setShowPassword] = useState(false);
 
   const inputCls =
-    "w-full rounded-lg border border-border bg-surface-2 px-3.5 py-2.5 text-fg outline-none transition focus:border-primary";
+    "w-full rounded-lg border border-border bg-muted px-3.5 py-2.5 text-foreground outline-none transition focus:border-primary";
 
   return (
     <form action={formAction} className="flex flex-col gap-4">
       <div className="flex flex-col gap-1.5">
-        <label htmlFor="company" className="text-sm text-muted">
+        <label htmlFor="company" className="text-sm text-muted-foreground">
           Kompaniya nomi
         </label>
         <input
@@ -28,7 +28,7 @@ export function RegisterForm() {
       </div>
 
       <div className="flex flex-col gap-1.5">
-        <label htmlFor="name" className="text-sm text-muted">
+        <label htmlFor="name" className="text-sm text-muted-foreground">
           Ismingiz
         </label>
         <input
@@ -41,7 +41,7 @@ export function RegisterForm() {
       </div>
 
       <div className="flex flex-col gap-1.5">
-        <label htmlFor="email" className="text-sm text-muted">
+        <label htmlFor="email" className="text-sm text-muted-foreground">
           Email
         </label>
         <input
@@ -56,7 +56,7 @@ export function RegisterForm() {
       </div>
 
       <div className="flex flex-col gap-1.5">
-        <label htmlFor="password" className="text-sm text-muted">
+        <label htmlFor="password" className="text-sm text-muted-foreground">
           Parol
         </label>
         <div className="relative">
@@ -73,7 +73,7 @@ export function RegisterForm() {
             type="button"
             onClick={() => setShowPassword((v) => !v)}
             aria-label={showPassword ? "Parolni yashirish" : "Parolni ko'rsatish"}
-            className="absolute inset-y-0 right-0 flex items-center px-3 text-muted transition hover:text-fg"
+            className="absolute inset-y-0 right-0 flex items-center px-3 text-muted-foreground transition hover:text-foreground"
           >
             {showPassword ? "🙈" : "👁"}
           </button>
@@ -81,7 +81,7 @@ export function RegisterForm() {
       </div>
 
       {state.error && (
-        <p className="rounded-lg border border-danger/40 bg-danger/10 px-3 py-2 text-sm text-danger">
+        <p className="rounded-lg border border-destructive/40 bg-destructive/10 px-3 py-2 text-sm text-destructive">
           {state.error}
         </p>
       )}
@@ -89,7 +89,7 @@ export function RegisterForm() {
       <button
         type="submit"
         disabled={pending}
-        className="mt-1 rounded-lg bg-primary px-4 py-2.5 font-medium text-primary-fg transition hover:bg-primary-hover disabled:opacity-60"
+        className="mt-1 rounded-lg bg-primary px-4 py-2.5 font-medium text-primary-foreground transition hover:bg-primary/90 disabled:opacity-60"
       >
         {pending ? "Yaratilmoqda..." : "Bepul boshlash"}
       </button>

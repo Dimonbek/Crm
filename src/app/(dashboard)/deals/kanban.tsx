@@ -9,7 +9,7 @@ import {
 } from "./actions";
 import { DEAL_STAGES, STAGE_LABEL, STAGE_ACCENT } from "@/lib/deals";
 import { formatMoney } from "@/lib/format";
-import { Modal, Field, SelectField, FormButtons } from "@/components/ui";
+import { Modal, Field, SelectField, FormButtons } from "@/components/form";
 import type { DealStage } from "@/generated/prisma/enums";
 
 export type DealCard = {
@@ -61,7 +61,7 @@ export function Kanban({
       <div className="flex flex-wrap items-center justify-between gap-4">
         <div>
           <h1 className="text-2xl font-semibold">Bitimlar</h1>
-          <p className="mt-1 text-sm text-muted">
+          <p className="mt-1 text-sm text-muted-foreground">
             Jami {deals.length} ta bitim · kartani ustunlar orasida suring
           </p>
         </div>
@@ -81,7 +81,7 @@ export function Kanban({
               }}
               onDragLeave={() => setOverStage((s) => (s === stage ? null : s))}
               onDrop={() => handleDrop(stage)}
-              className={`flex w-72 shrink-0 flex-col rounded-2xl border border-t-2 border-border bg-surface/50 ${STAGE_ACCENT[stage]} ${
+              className={`flex w-72 shrink-0 flex-col rounded-2xl border border-t-2 border-border bg-card/50 ${STAGE_ACCENT[stage]} ${
                 overStage === stage ? "ring-2 ring-primary/40" : ""
               }`}
             >
@@ -89,12 +89,12 @@ export function Kanban({
                 <span className="text-sm font-medium">
                   {STAGE_LABEL[stage]}
                 </span>
-                <span className="rounded-full bg-surface-2 px-2 py-0.5 text-xs text-muted">
+                <span className="rounded-full bg-muted px-2 py-0.5 text-xs text-muted-foreground">
                   {items.length}
                 </span>
               </div>
               {sum > 0 && (
-                <div className="px-4 pb-2 text-xs text-muted">
+                <div className="px-4 pb-2 text-xs text-muted-foreground">
                   {formatMoney(sum)}
                 </div>
               )}
@@ -105,7 +105,7 @@ export function Kanban({
                     draggable
                     onDragStart={() => setDragId(deal.id)}
                     onDragEnd={() => setDragId(null)}
-                    className={`group cursor-grab rounded-xl border border-border bg-surface p-3 active:cursor-grabbing ${
+                    className={`group cursor-grab rounded-xl border border-border bg-card p-3 active:cursor-grabbing ${
                       dragId === deal.id ? "opacity-50" : ""
                     }`}
                   >
@@ -118,14 +118,14 @@ export function Kanban({
                         {formatMoney(deal.amount)}
                       </div>
                     )}
-                    <div className="mt-2 flex flex-wrap gap-1.5 text-xs text-muted">
+                    <div className="mt-2 flex flex-wrap gap-1.5 text-xs text-muted-foreground">
                       {deal.contactName && (
-                        <span className="rounded bg-surface-2 px-1.5 py-0.5">
+                        <span className="rounded bg-muted px-1.5 py-0.5">
                           {deal.contactName}
                         </span>
                       )}
                       {deal.assigneeName && (
-                        <span className="rounded bg-surface-2 px-1.5 py-0.5">
+                        <span className="rounded bg-muted px-1.5 py-0.5">
                           👤 {deal.assigneeName}
                         </span>
                       )}
@@ -152,7 +152,7 @@ function DeleteDeal({ id }: { id: string }) {
         await deleteDealAction(id);
         setPending(false);
       }}
-      className="text-xs text-muted opacity-0 transition group-hover:opacity-100 hover:text-danger"
+      className="text-xs text-muted-foreground opacity-0 transition group-hover:opacity-100 hover:text-destructive"
     >
       ✕
     </button>
@@ -182,7 +182,7 @@ function AddDealButton({
     <>
       <button
         onClick={() => setOpen(true)}
-        className="rounded-lg bg-primary px-4 py-2 text-sm font-medium text-primary-fg transition hover:bg-primary-hover"
+        className="rounded-lg bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition hover:bg-primary/90"
       >
         + Yangi bitim
       </button>
@@ -215,7 +215,7 @@ function AddDealButton({
           />
 
           {state.error && (
-            <p className="rounded-lg border border-danger/40 bg-danger/10 px-3 py-2 text-sm text-danger">
+            <p className="rounded-lg border border-destructive/40 bg-destructive/10 px-3 py-2 text-sm text-destructive">
               {state.error}
             </p>
           )}

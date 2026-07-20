@@ -6,7 +6,7 @@ import {
   updateContactAction,
   type ContactState,
 } from "./actions";
-import { Modal, Field, FormButtons } from "@/components/ui";
+import { Modal, Field, FormButtons } from "@/components/form";
 
 const initial: ContactState = {};
 
@@ -25,7 +25,7 @@ export function AddContactButton() {
     <>
       <button
         onClick={() => setOpen(true)}
-        className="rounded-lg bg-primary px-4 py-2 text-sm font-medium text-primary-fg transition hover:bg-primary-hover"
+        className="rounded-lg bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition hover:bg-primary/90"
       >
         + Yangi mijoz
       </button>
@@ -38,7 +38,7 @@ export function AddContactButton() {
           <Field name="notes" label="Eslatma" textarea placeholder="Qo'shimcha ma'lumot..." />
 
           {state.error && (
-            <p className="rounded-lg border border-danger/40 bg-danger/10 px-3 py-2 text-sm text-danger">
+            <p className="rounded-lg border border-destructive/40 bg-destructive/10 px-3 py-2 text-sm text-destructive">
               {state.error}
             </p>
           )}
@@ -75,7 +75,7 @@ export function EditContactButton({
     <>
       <button
         onClick={() => setOpen(true)}
-        className="rounded-lg border border-border px-3 py-1.5 text-sm text-muted transition hover:border-primary/50 hover:text-fg"
+        className="rounded-lg border border-border px-3 py-1.5 text-sm text-muted-foreground transition hover:border-primary/50 hover:text-foreground"
       >
         ✎ Tahrirlash
       </button>
@@ -99,7 +99,7 @@ export function EditContactButton({
           />
 
           {state.error && (
-            <p className="rounded-lg border border-danger/40 bg-danger/10 px-3 py-2 text-sm text-danger">
+            <p className="rounded-lg border border-destructive/40 bg-destructive/10 px-3 py-2 text-sm text-destructive">
               {state.error}
             </p>
           )}

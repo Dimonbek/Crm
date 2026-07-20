@@ -23,8 +23,8 @@ export default async function DashboardLayout({
         {user.impersonating && (
           <ImpersonationBanner orgName={user.organizationName} />
         )}
-        <header className="flex h-16 items-center justify-between gap-4 border-b border-border bg-surface/60 px-5 backdrop-blur">
-          <span className="text-sm text-muted md:hidden">DimoCRM</span>
+        <header className="flex h-16 items-center justify-between gap-4 border-b border-border bg-card/60 px-5 backdrop-blur">
+          <span className="text-sm text-muted-foreground md:hidden">DimoCRM</span>
           <div className="flex flex-1 items-center justify-end gap-3">
             <ThemeToggle />
             {platformAdmin && (
@@ -36,12 +36,12 @@ export default async function DashboardLayout({
               </Link>
             )}
             <div className="flex items-center gap-2.5">
-              <div className="flex h-8 w-8 items-center justify-center rounded-full bg-surface-2 text-xs font-semibold">
+              <div className="flex h-8 w-8 items-center justify-center rounded-full bg-muted text-xs font-semibold">
                 {initials}
               </div>
               <div className="hidden text-right sm:block">
                 <div className="text-sm leading-tight">{user.name}</div>
-                <div className="text-xs leading-tight text-muted">
+                <div className="text-xs leading-tight text-muted-foreground">
                   {user.role}
                 </div>
               </div>
@@ -49,7 +49,7 @@ export default async function DashboardLayout({
             <form action={logoutAction}>
               <button
                 type="submit"
-                className="rounded-lg border border-border px-3 py-1.5 text-sm text-muted transition hover:border-danger/50 hover:text-danger"
+                className="rounded-lg border border-border px-3 py-1.5 text-sm text-muted-foreground transition hover:border-destructive/50 hover:text-destructive"
               >
                 Chiqish
               </button>
