@@ -81,7 +81,7 @@ export function ProfileForm({
       <button
         type="submit"
         disabled={pending || disabled}
-        className="self-start rounded-lg bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition hover:bg-primary/90 disabled:opacity-60"
+        className="self-start inline-flex h-9 items-center justify-center gap-2 rounded-md bg-primary px-4 text-sm font-medium text-primary-foreground shadow-xs transition-all hover:bg-primary/90 disabled:pointer-events-none disabled:opacity-50"
       >
         {pending ? "Saqlanmoqda..." : "Saqlash"}
       </button>
@@ -160,7 +160,7 @@ export function PasswordForm({ disabled }: { disabled?: boolean }) {
       <button
         type="submit"
         disabled={pending || disabled}
-        className="self-start rounded-lg bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition hover:bg-primary/90 disabled:opacity-60"
+        className="self-start inline-flex h-9 items-center justify-center gap-2 rounded-md bg-primary px-4 text-sm font-medium text-primary-foreground shadow-xs transition-all hover:bg-primary/90 disabled:pointer-events-none disabled:opacity-50"
       >
         {pending ? "O'zgartirilmoqda..." : "Parolni o'zgartirish"}
       </button>

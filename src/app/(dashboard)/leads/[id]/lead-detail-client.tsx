@@ -89,7 +89,7 @@ export function SoldButton({
             <button
               type="button"
               onClick={() => setOpen(false)}
-              className="rounded-lg border border-border px-4 py-2 text-sm text-muted-foreground transition hover:text-foreground"
+              className="inline-flex h-9 items-center justify-center gap-2 rounded-md border border-input bg-background px-4 text-sm font-medium shadow-xs transition-all hover:bg-accent hover:text-accent-foreground disabled:pointer-events-none disabled:opacity-50"
             >
               Bekor qilish
             </button>
@@ -218,7 +218,7 @@ export function ConvertButton({
             <button
               type="button"
               onClick={() => setOpen(false)}
-              className="rounded-lg border border-border px-4 py-2 text-sm text-muted-foreground transition hover:text-foreground"
+              className="inline-flex h-9 items-center justify-center gap-2 rounded-md border border-input bg-background px-4 text-sm font-medium shadow-xs transition-all hover:bg-accent hover:text-accent-foreground disabled:pointer-events-none disabled:opacity-50"
             >
               Bekor qilish
             </button>

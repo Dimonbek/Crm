@@ -89,7 +89,7 @@ export function RegisterForm() {
       <button
         type="submit"
         disabled={pending}
-        className="mt-1 rounded-lg bg-primary px-4 py-2.5 font-medium text-primary-foreground transition hover:bg-primary/90 disabled:opacity-60"
+        className="mt-1 inline-flex h-10 w-full items-center justify-center rounded-md bg-primary px-4 text-sm font-medium text-primary-foreground shadow-xs transition-all hover:bg-primary/90 disabled:pointer-events-none disabled:opacity-50"
       >
         {pending ? "Yaratilmoqda..." : "Bepul boshlash"}
       </button>
