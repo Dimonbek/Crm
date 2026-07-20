@@ -3,6 +3,7 @@ import { currentOrg } from "@/lib/auth";
 import { isPlatformAdmin } from "@/lib/platform";
 import { Sidebar } from "./sidebar";
 import { logoutAction } from "./actions";
+import { ImpersonationBanner } from "./impersonation-banner";
 
 export default async function DashboardLayout({
   children,
@@ -18,6 +19,9 @@ export default async function DashboardLayout({
       <Sidebar role={user.role} orgName={user.organizationName} />
 
       <div className="flex min-w-0 flex-1 flex-col">
+        {user.impersonating && (
+          <ImpersonationBanner orgName={user.organizationName} />
+        )}
         <header className="flex h-16 items-center justify-between gap-4 border-b border-border bg-surface/60 px-5 backdrop-blur">
           <span className="text-sm text-muted md:hidden">DimoCRM</span>
           <div className="flex flex-1 items-center justify-end gap-4">

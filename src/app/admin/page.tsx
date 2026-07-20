@@ -9,6 +9,8 @@ import {
   BotEnvButton,
   RegenerateButton,
   ResetPasswordButton,
+  ViewOrgButton,
+  DeleteOrgButton,
 } from "./admin-client";
 
 export default async function AdminPage() {
@@ -106,7 +108,7 @@ export default async function AdminPage() {
                   className="border-b border-border/60 transition last:border-0 hover:bg-surface-2/50"
                 >
                   <td className="px-4 py-3">
-                    <div className="font-medium">{o.name}</div>
+                    <ViewOrgButton orgId={o.id} orgName={o.name} />
                     <div className="flex items-center gap-2">
                       <code className="text-xs text-muted">{o.slug}</code>
                       {!connected && (
@@ -156,6 +158,11 @@ export default async function AdminPage() {
                         token={o.webhookToken}
                       />
                       <RegenerateButton orgId={o.id} />
+                      <DeleteOrgButton
+                        orgId={o.id}
+                        orgName={o.name}
+                        leadCount={o.leads.length}
+                      />
                     </div>
                   </td>
                 </tr>

@@ -6,9 +6,124 @@ import {
   setBotUsernameAction,
   regenerateTokenAction,
   resetPasswordAction,
+  deleteOrgAction,
+  viewAsOrgAction,
   type AdminState,
 } from "./actions";
 import { Modal, Field, FormButtons } from "@/components/ui";
+
+/** Kompaniya ichiga kirish — uning CRM'ini ko'rish */
+export function ViewOrgButton({
+  orgId,
+  orgName,
+}: {
+  orgId: string;
+  orgName: string;
+}) {
+  const [pending, setPending] = useState(false);
+  return (
+    <button
+      disabled={pending}
+      onClick={async () => {
+        setPending(true);
+        await viewAsOrgAction(orgId);
+      }}
+      className="text-left font-medium transition hover:text-primary disabled:opacity-60"
+      title={`${orgName} CRM'ini ochish`}
+    >
+      {pending ? "Ochilmoqda..." : orgName}
+    </button>
+  );
+}
+
+/** Kompaniyani butunlay o'chirish — nom yozib tasdiqlanadi */
+export function DeleteOrgButton({
+  orgId,
+  orgName,
+  leadCount,
+}: {
+  orgId: string;
+  orgName: string;
+  leadCount: number;
+}) {
+  const [open, setOpen] = useState(false);
+  const [name, setName] = useState("");
+  const [error, setError] = useState<string | null>(null);
+  const [pending, setPending] = useState(false);
+
+  const match = name.trim() === orgName.trim();
+
+  return (
+    <>
+      <button
+        onClick={() => {
+          setName("");
+          setError(null);
+          setOpen(true);
+        }}
+        className="rounded border border-border px-2 py-1 text-xs text-muted transition hover:border-danger/50 hover:text-danger"
+        title="Kompaniyani o'chirish"
+      >
+        🗑
+      </button>
+
+      <Modal
+        open={open}
+        onClose={() => setOpen(false)}
+        title="Kompaniyani o'chirish"
+      >
+        <div className="flex flex-col gap-4">
+          <div className="rounded-lg border border-danger/40 bg-danger/10 p-4 text-sm text-danger">
+            <b>{orgName}</b> va uning barcha ma&apos;lumoti butunlay
+            o&apos;chadi: {leadCount} lead, mijozlar, bitimlar, xodimlar.
+            <div className="mt-1.5">Buni qaytarib bo&apos;lmaydi.</div>
+          </div>
+
+          <div className="flex flex-col gap-1.5">
+            <label className="text-sm text-muted">
+              Tasdiqlash uchun kompaniya nomini yozing:
+            </label>
+            <input
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              placeholder={orgName}
+              className="rounded-lg border border-border bg-surface-2 px-3 py-2 text-sm outline-none transition focus:border-danger"
+            />
+          </div>
+
+          {error && (
+            <p className="rounded-lg border border-danger/40 bg-danger/10 px-3 py-2 text-sm text-danger">
+              {error}
+            </p>
+          )}
+
+          <div className="flex justify-end gap-2">
+            <button
+              onClick={() => setOpen(false)}
+              className="rounded-lg border border-border px-4 py-2 text-sm text-muted transition hover:text-fg"
+            >
+              Bekor qilish
+            </button>
+            <button
+              disabled={!match || pending}
+              onClick={async () => {
+                setPending(true);
+                setError(null);
+                const res = await deleteOrgAction(orgId, name);
+                setPending(false);
+                if (res?.error) setError(res.error);
+                else setOpen(false);
+              }}
+              className="rounded-lg bg-danger px-4 py-2 text-sm font-medium text-black transition hover:opacity-90 disabled:opacity-40"
+            >
+              {pending ? "O'chirilmoqda..." : "Butunlay o'chirish"}
+            </button>
+          </div>
+        </div>
+      </Modal>
+    </>
+  );
+}
 
 const initial: AdminState = {};
 

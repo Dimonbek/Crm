@@ -12,6 +12,8 @@ export type SessionPayload = {
   /// Qaysi kompaniyaga tegishli — barcha so'rovlar shu bo'yicha ajratiladi
   organizationId: string;
   organizationName: string;
+  /// Platforma egasi boshqa kompaniyani ko'rib turgan bo'lsa
+  impersonating?: boolean;
 };
 
 function getSecret(): Uint8Array {
