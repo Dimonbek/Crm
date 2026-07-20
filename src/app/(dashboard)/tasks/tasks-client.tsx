@@ -1,13 +1,22 @@
 "use client";
 
 import { useEffect, useState, useActionState } from "react";
+import { Plus, Trash2 } from "lucide-react";
 import {
   createTaskAction,
   setTaskStatusAction,
   deleteTaskAction,
   type CreateTaskState,
 } from "./actions";
-import { Modal, Field, SelectField, FormButtons } from "@/components/form";
+import {
+  Modal,
+  Field,
+  SelectField,
+  FormButtons,
+  FormMessage,
+  selectClass,
+} from "@/components/form";
+import { Button } from "@/components/ui/button";
 import {
   TASK_STATUSES,
   TASK_STATUS_LABEL,
@@ -21,10 +30,7 @@ const initial: CreateTaskState = {};
 
 export function AddTaskButton({ users }: { users: Option[] }) {
   const [open, setOpen] = useState(false);
-  const [state, formAction, pending] = useActionState(
-    createTaskAction,
-    initial
-  );
+  const [state, formAction, pending] = useActionState(createTaskAction, initial);
 
   useEffect(() => {
     if (state.ok) setOpen(false);
@@ -32,17 +38,25 @@ export function AddTaskButton({ users }: { users: Option[] }) {
 
   return (
     <>
-      <button
-        onClick={() => setOpen(true)}
-        className="inline-flex h-9 items-center justify-center gap-2 rounded-md bg-primary px-4 text-sm font-medium text-primary-foreground shadow-xs transition-all hover:bg-primary/90 disabled:pointer-events-none disabled:opacity-50"
-      >
-        + Yangi vazifa
-      </button>
+      <Button onClick={() => setOpen(true)}>
+        <Plus className="size-4" />
+        Yangi vazifa
+      </Button>
 
       <Modal open={open} onClose={() => setOpen(false)} title="Yangi vazifa">
-        <form action={formAction} className="flex flex-col gap-3.5">
-          <Field name="title" label="Sarlavha *" placeholder="Mijozga qo'ng'iroq qilish" required />
-          <Field name="description" label="Tavsif" textarea placeholder="Tafsilotlar..." />
+        <form action={formAction} className="flex flex-col gap-4">
+          <Field
+            name="title"
+            label="Sarlavha *"
+            placeholder="Mijozga qo'ng'iroq qilish"
+            required
+          />
+          <Field
+            name="description"
+            label="Tavsif"
+            textarea
+            placeholder="Tafsilotlar..."
+          />
           <div className="grid grid-cols-2 gap-3">
             <Field name="dueDate" label="Muddat" type="date" />
             <SelectField
@@ -64,12 +78,7 @@ export function AddTaskButton({ users }: { users: Option[] }) {
             ]}
           />
 
-          {state.error && (
-            <p className="rounded-lg border border-destructive/40 bg-destructive/10 px-3 py-2 text-sm text-destructive">
-              {state.error}
-            </p>
-          )}
-
+          <FormMessage error={state.error} />
           <FormButtons pending={pending} onCancel={() => setOpen(false)} />
         </form>
       </Modal>
@@ -94,7 +103,7 @@ export function TaskStatusSelect({
         await setTaskStatusAction(taskId, e.target.value);
         setPending(false);
       }}
-      className="rounded-lg border border-border bg-muted px-2.5 py-1.5 text-xs text-foreground outline-none transition focus:border-primary disabled:opacity-50"
+      className={`${selectClass} h-8 w-auto text-xs`}
     >
       {TASK_STATUSES.map((s) => (
         <option key={s} value={s}>
@@ -108,17 +117,20 @@ export function TaskStatusSelect({
 export function DeleteTaskButton({ taskId }: { taskId: string }) {
   const [pending, setPending] = useState(false);
   return (
-    <button
+    <Button
+      variant="ghost"
+      size="icon"
       disabled={pending}
+      title="O'chirish"
+      className="text-muted-foreground hover:text-destructive"
       onClick={async () => {
         if (!confirm("Vazifani o'chirasizmi?")) return;
         setPending(true);
         await deleteTaskAction(taskId);
         setPending(false);
       }}
-      className="rounded-lg border border-border px-2.5 py-1.5 text-xs text-muted-foreground transition hover:border-destructive/50 hover:text-destructive disabled:opacity-50"
     >
-      🗑
-    </button>
+      <Trash2 className="size-4" />
+    </Button>
   );
 }

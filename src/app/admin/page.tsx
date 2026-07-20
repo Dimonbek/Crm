@@ -3,6 +3,17 @@ import { headers } from "next/headers";
 import { prisma } from "@/lib/prisma";
 import { requirePlatformAdmin } from "@/lib/platform";
 import { formatDate, formatMoney } from "@/lib/format";
+import { PageHeader, StatCard, TableCard } from "@/components/page";
+import { Badge } from "@/components/ui/badge";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 import {
   AddOrgButton,
   BotCell,
@@ -47,55 +58,53 @@ export default async function AdminPage() {
 
   return (
     <div className="mx-auto flex max-w-7xl flex-col gap-6 px-4 py-8">
-      <div className="flex flex-wrap items-center justify-between gap-4">
-        <div>
-          <h1 className="text-2xl font-semibold">Admin panel</h1>
-          <p className="mt-1 text-sm text-muted-foreground">
-            Platformadagi barcha kompaniyalar va ularning botlari
-          </p>
-        </div>
-        <div className="flex items-center gap-2">
+      <PageHeader
+        title="Admin panel"
+        description="Platformadagi barcha kompaniyalar va ularning botlari"
+        action={
+          <div className="flex items-center gap-2">
           <Link
             href="/dashboard"
             className="inline-flex h-9 items-center justify-center gap-2 rounded-md border border-input bg-background px-4 text-sm font-medium shadow-xs transition-all hover:bg-accent hover:text-accent-foreground disabled:pointer-events-none disabled:opacity-50"
           >
             ← CRM
           </Link>
-          <AddOrgButton />
-        </div>
-      </div>
+            <AddOrgButton />
+          </div>
+        }
+      />
 
       <div className="grid gap-4 sm:grid-cols-3">
-        <Kpi label="Kompaniyalar" value={String(orgs.length)} />
-        <Kpi label="Jami leadlar" value={String(totalLeads)} />
-        <Kpi
+        <StatCard label="Kompaniyalar" value={orgs.length} />
+        <StatCard label="Jami leadlar" value={totalLeads} />
+        <StatCard
           label="Platformadagi sotuvlar"
           value={formatMoney(totalRevenue)}
           accent="text-success"
         />
       </div>
 
-      <div className="overflow-x-auto rounded-2xl border border-border bg-card">
-        <table className="w-full min-w-[1000px] text-sm">
-          <thead>
-            <tr className="border-b border-border text-left text-xs uppercase tracking-wide text-muted-foreground">
-              <th className="px-4 py-3 font-medium">Kompaniya</th>
-              <th className="px-4 py-3 font-medium">Telegram bot</th>
-              <th className="px-4 py-3 font-medium">Login</th>
-              <th className="px-4 py-3 font-medium">Leadlar</th>
-              <th className="px-4 py-3 font-medium">Mijozlar</th>
-              <th className="px-4 py-3 font-medium">Sotuv</th>
-              <th className="px-4 py-3 font-medium">Yaratilgan</th>
-              <th className="px-4 py-3 font-medium">Bot ulash</th>
-            </tr>
-          </thead>
-          <tbody>
+      <TableCard>
+        <Table className="min-w-[1000px]">
+          <TableHeader>
+            <TableRow>
+              <TableHead>Kompaniya</TableHead>
+              <TableHead>Telegram bot</TableHead>
+              <TableHead>Login</TableHead>
+              <TableHead>Leadlar</TableHead>
+              <TableHead>Mijozlar</TableHead>
+              <TableHead>Sotuv</TableHead>
+              <TableHead>Yaratilgan</TableHead>
+              <TableHead>Bot ulash</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
             {orgs.length === 0 && (
-              <tr>
-                <td colSpan={8} className="px-4 py-12 text-center text-muted-foreground">
+              <TableRow>
+                <TableCell colSpan={8} className="text-muted-foreground h-32 text-center">
                   Hali kompaniya yo&apos;q.
-                </td>
-              </tr>
+                </TableCell>
+              </TableRow>
             )}
             {orgs.map((o) => {
               const sold = o.leads.filter((l) => l.status === "CONVERTED");
@@ -103,25 +112,22 @@ export default async function AdminPage() {
               const admin = o.users[0];
               const connected = !!o.botUsername;
               return (
-                <tr
-                  key={o.id}
-                  className="border-b border-border/60 transition last:border-0 hover:bg-muted/50"
-                >
-                  <td className="px-4 py-3">
+                <TableRow key={o.id}>
+                  <TableCell>
                     <ViewOrgButton orgId={o.id} orgName={o.name} />
                     <div className="flex items-center gap-2">
                       <code className="text-xs text-muted-foreground">{o.slug}</code>
                       {!connected && (
-                        <span className="rounded-full border border-warning/30 bg-warning/15 px-1.5 py-0.5 text-xs text-warning">
+                        <Badge variant="outline" className="border-warning/30 bg-warning/15 text-warning">
                           bot ulanmagan
-                        </span>
+                        </Badge>
                       )}
                     </div>
-                  </td>
-                  <td className="px-4 py-3">
+                  </TableCell>
+                  <TableCell>
                     <BotCell orgId={o.id} botUsername={o.botUsername} />
-                  </td>
-                  <td className="px-4 py-3">
+                  </TableCell>
+                  <TableCell>
                     <div className="flex items-center gap-1.5">
                       <span className="text-xs text-muted-foreground">
                         {admin?.email ?? "—"}
@@ -136,21 +142,21 @@ export default async function AdminPage() {
                     <div className="text-xs text-muted-foreground">
                       {o._count.users} xodim
                     </div>
-                  </td>
-                  <td className="px-4 py-3 font-medium">{o.leads.length}</td>
-                  <td className="px-4 py-3 text-muted-foreground">{o._count.contacts}</td>
-                  <td className="px-4 py-3">
+                  </TableCell>
+                  <TableCell className="font-medium">{o.leads.length}</TableCell>
+                  <TableCell className="text-muted-foreground">{o._count.contacts}</TableCell>
+                  <TableCell>
                     {revenue > 0 ? (
                       <span className="text-success">{formatMoney(revenue)}</span>
                     ) : (
                       <span className="text-muted-foreground">—</span>
                     )}
                     <div className="text-xs text-muted-foreground">{sold.length} sotuv</div>
-                  </td>
-                  <td className="px-4 py-3 text-muted-foreground">
+                  </TableCell>
+                  <TableCell className="text-muted-foreground">
                     {formatDate(o.createdAt)}
-                  </td>
-                  <td className="px-4 py-3">
+                  </TableCell>
+                  <TableCell>
                     <div className="flex items-center gap-1.5">
                       <BotEnvButton
                         orgName={o.name}
@@ -164,17 +170,20 @@ export default async function AdminPage() {
                         leadCount={o.leads.length}
                       />
                     </div>
-                  </td>
-                </tr>
+                  </TableCell>
+                </TableRow>
               );
             })}
-          </tbody>
-        </table>
-      </div>
+          </TableBody>
+        </Table>
+      </TableCard>
 
-      <div className="rounded-2xl border border-border bg-card p-6">
-        <h2 className="font-medium">Yangi mijozni ulash tartibi</h2>
-        <ol className="mt-3 flex list-decimal flex-col gap-2 pl-5 text-sm text-muted-foreground">
+      <Card>
+        <CardHeader>
+          <CardTitle>Yangi mijozni ulash tartibi</CardTitle>
+        </CardHeader>
+        <CardContent>
+        <ol className=" flex list-decimal flex-col gap-2 pl-5 text-sm text-muted-foreground">
           <li>
             <b className="text-foreground">+ Yangi kompaniya</b> — mijoz nomi, login va
             parolni kiritasiz (mijoz ro&apos;yxatdan o&apos;tishi shart emas)
@@ -187,7 +196,8 @@ export default async function AdminPage() {
           <li>Bot qayta ishga tushadi — leadlar shu kompaniyaga tusha boshlaydi</li>
           <li>Mijozga login/parolni berasiz — u faqat o&apos;z ma&apos;lumotini ko&apos;radi</li>
         </ol>
-      </div>
+        </CardContent>
+      </Card>
     </div>
   );
 }
