@@ -23,7 +23,7 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  // Mavzu cookie'дan o'qiladi — server darhol to'g'ri chizadi
+  // Mavzu cookie'dan o'qiladi — server darhol to'g'ri chizadi
   const theme = (await cookies()).get("theme")?.value;
   const dark = theme === "dark";
 

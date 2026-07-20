@@ -136,7 +136,7 @@ export default async function LeadDetailPage({
             />
             {lead.deal && (
               <div className="mt-4 rounded-lg border border-border bg-muted p-3 text-sm text-muted-foreground">
-                Kanbanда bitim: {lead.deal.title}
+                Kanbanda bitim: {lead.deal.title}
               </div>
             )}
           </div>

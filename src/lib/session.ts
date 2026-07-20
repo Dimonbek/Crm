@@ -48,7 +48,7 @@ export async function getSession(): Promise<SessionPayload | null> {
   try {
     const { payload } = await jwtVerify(token, getSecret());
     const session = payload as unknown as SessionPayload;
-    // Multi-tenant'gacha yaratilgan eski sessiyalarда kompaniya yo'q —
+    // Multi-tenant'gacha yaratilgan eski sessiyalarda kompaniya yo'q —
     // ularni yaroqsiz deb hisoblaymiz (foydalanuvchi qaytadan kiradi).
     if (!session.organizationId || !session.organizationName) return null;
     return session;

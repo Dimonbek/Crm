@@ -9,7 +9,7 @@ type Theme = "light" | "dark";
 
 /**
  * Kun/tun almashtirish (shadcn `.dark` sinfi).
- * Tanlov cookie'да saqlanadi — server sahifani darhol to'g'ri mavzuда chizadi.
+ * Tanlov cookie'da saqlanadi — server sahifani darhol to'g'ri mavzuda chizadi.
  */
 export function ThemeToggle() {
   const [theme, setTheme] = useState<Theme>("light");

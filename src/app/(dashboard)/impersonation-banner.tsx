@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { stopViewingAction } from "@/app/admin/actions";
 
-/** Platforma egasi boshqa kompaniyani ko'rib turganда chiqadi */
+/** Platforma egasi boshqa kompaniyani ko'rib turganda chiqadi */
 export function ImpersonationBanner({ orgName }: { orgName: string }) {
   const [pending, setPending] = useState(false);
 

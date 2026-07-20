@@ -83,7 +83,7 @@ export function Field({
 /**
  * Native <select> — shadcn uslubida.
  * Radix Select emas, chunki formalar FormData bilan yuboriladi
- * va native select mobil qurilmalarда qulayroq.
+ * va native select mobil qurilmalarda qulayroq.
  */
 export const selectClass = cn(
   "border-input bg-transparent dark:bg-input/30 flex h-9 w-full min-w-0 rounded-md border px-3 py-1 text-sm shadow-xs transition-[color,box-shadow] outline-none",

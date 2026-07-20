@@ -16,7 +16,7 @@ export default async function RegisterPage() {
           </div>
           <h1 className="text-2xl font-semibold">Biznesingizni ulang</h1>
           <p className="mt-1 text-sm text-muted-foreground">
-            Bepul boshlang — karta kerak emas
+            Bepul boshlang
           </p>
         </div>
 

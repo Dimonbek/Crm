@@ -112,7 +112,7 @@ function Problem() {
           ))}
         </div>
         <p className="mt-8 text-center text-base text-muted-foreground">
-          Muammo botда emas — <b className="text-foreground">leadlar bilan ishlash tizimi yo&apos;qligida.</b>
+          Muammo botda emas — <b className="text-foreground">leadlar bilan ishlash tizimi yo&apos;qligida.</b>
         </p>
       </div>
     </section>
@@ -200,7 +200,6 @@ function WhyUs() {
   const rows = [
     { label: "Telegram bot bilan tayyor integratsiya", us: true, them: false },
     { label: "To'liq o'zbek tilida", us: true, them: false },
-    { label: "Bepul boshlanadi, karta kerak emas", us: true, them: false },
     { label: "Bir necha daqiqada ulanadi", us: true, them: false },
   ];
   return (
@@ -252,9 +251,6 @@ function FinalCta() {
         >
           Bepul boshlash →
         </Link>
-        <p className="mt-4 text-xs text-muted-foreground">
-          Karta kerak emas · Istalgan vaqtda to&apos;xtatasiz
-        </p>
       </div>
     </section>
   );

@@ -191,7 +191,7 @@ export async function convertLeadToDealAction(
     },
   });
 
-  // Bitim yaratish sotuv EMAS — u faqat Kanbanда jarayonni kuzatish uchun.
+  // Bitim yaratish sotuv EMAS — u faqat Kanbanda jarayonni kuzatish uchun.
   // Lid statusi o'zgarmaydi; sotuv "Sotildi" tugmasi bilan alohida belgilanadi.
   if (!lead.contactId) {
     await prisma.lead.updateMany({
@@ -204,7 +204,7 @@ export async function convertLeadToDealAction(
     data: [
       {
         type: "NOTE",
-        content: `Kanbanга bitim qo'shildi: ${deal.title}`,
+        content: `Kanbanga bitim qo'shildi: ${deal.title}`,
         leadId,
         userId: session.userId,
         organizationId: orgId,

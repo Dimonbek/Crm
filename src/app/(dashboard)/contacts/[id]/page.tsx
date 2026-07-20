@@ -168,7 +168,7 @@ export default async function ContactDetailPage({
       {contact.deals.length > 0 && (
         <div className="rounded-2xl border border-border bg-card p-6">
           <h2 className="mb-4 font-medium">
-            Kanbanдagi bitimlar ({contact.deals.length})
+            Kanbandagi bitimlar ({contact.deals.length})
           </h2>
           <div className="flex flex-col divide-y divide-border/60">
             {contact.deals.map((deal) => (

@@ -192,7 +192,7 @@ export function ConvertButton({
         onClick={() => setOpen(true)}
         className="rounded-lg border border-border px-4 py-2 text-sm text-muted-foreground transition hover:border-primary/50 hover:text-foreground"
       >
-        + Kanbanга qo&apos;shish
+        + Kanbanga qo&apos;shish
       </button>
 
       <Modal open={open} onClose={() => setOpen(false)} title="Bitim yaratish (Kanban)">

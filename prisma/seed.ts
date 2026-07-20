@@ -10,7 +10,7 @@ const prisma = new PrismaClient({ adapter });
 async function main() {
   const email = (process.env.ADMIN_EMAIL || "admin@revator.uz").toLowerCase();
   const password = process.env.ADMIN_PASSWORD || "admin123";
-  const orgName = process.env.ADMIN_ORG || "Revator";
+  const orgName = process.env.ADMIN_ORG || "Rivatour";
   const orgSlug = orgName.toLowerCase().replace(/[^a-z0-9]+/g, "-");
 
   // Birinchi kompaniya (platformaning 1-mijozi)

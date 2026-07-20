@@ -33,7 +33,7 @@ export default async function SettingsPage() {
       <div className="rounded-2xl border border-border bg-card p-6">
         <h2 className="font-medium">Mening hisobim</h2>
         <p className="mt-1 text-sm text-muted-foreground">
-          Kirish ma&apos;lumotlaringizni istalgan vaqtда o&apos;zgartirishingiz
+          Kirish ma&apos;lumotlaringizni istalgan vaqtda o&apos;zgartirishingiz
           mumkin
         </p>
 
@@ -123,7 +123,7 @@ export default async function SettingsPage() {
               paydo bo&apos;ladi
             </li>
             <li>
-              Sotilganда lidni ochib <b className="text-foreground">💰 Sotildi</b> bosasiz
+              Sotilganda lidni ochib <b className="text-foreground">💰 Sotildi</b> bosasiz
               va summani yozasiz
             </li>
             <li>
@@ -137,7 +137,7 @@ export default async function SettingsPage() {
 
       {platformAdmin && (
         <p className="text-sm text-muted-foreground">
-          Bot ulash kalitlari <b className="text-foreground">Admin panel</b>да
+          Bot ulash kalitlari <b className="text-foreground">Admin panel</b>da
           boshqariladi.
         </p>
       )}
