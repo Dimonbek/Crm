@@ -38,6 +38,13 @@ export async function createLeadAction(
   const { phone, destination, travelDate, travelers, contactTime } =
     parsed.data;
 
+  // Har bir lead kontaktga bog'lanadi — mijoz tarixi shu orqali to'planadi
+  const contact = await prisma.contact.upsert({
+    where: { organizationId_phone: { organizationId: orgId, phone } },
+    update: {},
+    create: { phone, organizationId: orgId },
+  });
+
   const lead = await prisma.lead.create({
     data: {
       phone,
@@ -47,6 +54,7 @@ export async function createLeadAction(
       contactTime: contactTime || null,
       source: "manual",
       organizationId: orgId,
+      contactId: contact.id,
     },
   });
 
