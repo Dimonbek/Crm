@@ -1,4 +1,6 @@
+import Link from "next/link";
 import { currentOrg } from "@/lib/auth";
+import { isPlatformAdmin } from "@/lib/platform";
 import { Sidebar } from "./sidebar";
 import { logoutAction } from "./actions";
 
@@ -9,6 +11,7 @@ export default async function DashboardLayout({
 }) {
   const { session: user } = await currentOrg();
   const initials = (user.name || "?").slice(0, 2).toUpperCase();
+  const platformAdmin = isPlatformAdmin(user.email);
 
   return (
     <div className="flex min-h-full">
@@ -18,6 +21,14 @@ export default async function DashboardLayout({
         <header className="flex h-16 items-center justify-between gap-4 border-b border-border bg-surface/60 px-5 backdrop-blur">
           <span className="text-sm text-muted md:hidden">DimoCRM</span>
           <div className="flex flex-1 items-center justify-end gap-4">
+            {platformAdmin && (
+              <Link
+                href="/admin"
+                className="rounded-lg border border-primary/40 bg-primary/10 px-3 py-1.5 text-sm text-primary transition hover:bg-primary/20"
+              >
+                ◆ Admin panel
+              </Link>
+            )}
             <div className="flex items-center gap-2.5">
               <div className="flex h-8 w-8 items-center justify-center rounded-full bg-surface-2 text-xs font-semibold">
                 {initials}
