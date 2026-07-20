@@ -18,7 +18,7 @@ export const STAGE_LABEL: Record<DealStage, string> = {
 
 export const STAGE_ACCENT: Record<DealStage, string> = {
   QUALIFICATION: "border-t-primary",
-  PROPOSAL: "border-t-sky-400",
+  PROPOSAL: "border-t-muted",
   NEGOTIATION: "border-t-warning",
   CLOSED_WON: "border-t-success",
   CLOSED_LOST: "border-t-danger",

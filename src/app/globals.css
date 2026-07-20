@@ -1,21 +1,38 @@
 @import "tailwindcss";
 
-@theme inline {
-  --color-bg: #0b0f17;
-  --color-surface: #131a26;
-  --color-surface-2: #1b2536;
-  --color-border: #26324a;
-  --color-fg: #e8edf5;
-  --color-muted: #8a97ad;
-  --color-primary: #4f7cff;
-  --color-primary-hover: #3d6bf0;
+/* ── Kunduzgi (oq) mavzu — asosiy qiymatlar ── */
+@theme {
+  --color-bg: #fafafa;
+  --color-surface: #ffffff;
+  --color-surface-2: #f4f4f5;
+  --color-border: #e4e4e7;
+  --color-fg: #09090b;
+  --color-muted: #71717a;
+  --color-primary: #18181b; /* qora — asosiy urg'u */
+  --color-primary-hover: #000000;
   --color-primary-fg: #ffffff;
-  --color-success: #34d399;
-  --color-warning: #fbbf24;
-  --color-danger: #f87171;
+  --color-success: #15803d;
+  --color-warning: #a16207;
+  --color-danger: #b91c1c;
 
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+}
+
+/* ── Tungi (qora) mavzu — o'sha o'zgaruvchilar qayta yoziladi ── */
+:root[data-theme="dark"] {
+  --color-bg: #09090b;
+  --color-surface: #111113;
+  --color-surface-2: #1c1c1f;
+  --color-border: #2a2a2e;
+  --color-fg: #fafafa;
+  --color-muted: #a1a1aa;
+  --color-primary: #fafafa; /* oq — qora fonда urg'u */
+  --color-primary-hover: #ffffff;
+  --color-primary-fg: #09090b;
+  --color-success: #4ade80;
+  --color-warning: #fbbf24;
+  --color-danger: #f87171;
 }
 
 html,
@@ -27,6 +44,21 @@ body {
   background: var(--color-bg);
   color: var(--color-fg);
   font-family: var(--font-sans), system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Mavzu almashganда silliq o'tish */
+body,
+aside,
+header,
+table,
+input,
+select,
+textarea {
+  transition:
+    background-color 0.15s ease,
+    border-color 0.15s ease,
+    color 0.15s ease;
 }
 
 /* Nozik scrollbar */

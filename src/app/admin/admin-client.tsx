@@ -114,7 +114,7 @@ export function DeleteOrgButton({
                 if (res?.error) setError(res.error);
                 else setOpen(false);
               }}
-              className="rounded-lg bg-danger px-4 py-2 text-sm font-medium text-black transition hover:opacity-90 disabled:opacity-40"
+              className="rounded-lg bg-danger px-4 py-2 text-sm font-medium text-white transition hover:opacity-90 disabled:opacity-40"
             >
               {pending ? "O'chirilmoqda..." : "Butunlay o'chirish"}
             </button>
@@ -172,10 +172,15 @@ export function AddOrgButton() {
           />
           <Field
             name="email"
-            label="Email (login) *"
+            label="Email *"
             type="email"
             placeholder="mijoz@kompaniya.uz"
             required
+          />
+          <Field
+            name="username"
+            label="Qisqa login (ixtiyoriy)"
+            placeholder="mirsun — email o'rniga shu bilan ham kiradi"
           />
           <Field
             name="password"

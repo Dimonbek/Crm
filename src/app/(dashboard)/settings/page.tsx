@@ -8,7 +8,13 @@ import { ProfileForm, PasswordForm } from "./account-client";
 export default async function SettingsPage() {
   const { orgId, session } = await currentOrg();
 
-  const org = await prisma.organization.findUnique({ where: { id: orgId } });
+  const [org, me] = await Promise.all([
+    prisma.organization.findUnique({ where: { id: orgId } }),
+    prisma.user.findUnique({
+      where: { id: session.userId },
+      select: { username: true },
+    }),
+  ]);
   if (!org) notFound();
 
   const leadCount = await prisma.lead.count({ where: { organizationId: orgId } });
@@ -42,6 +48,7 @@ export default async function SettingsPage() {
           <ProfileForm
             name={session.name}
             email={session.email}
+            username={me?.username}
             disabled={session.impersonating}
           />
         </div>

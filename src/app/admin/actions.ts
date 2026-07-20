@@ -13,6 +13,7 @@ const createSchema = z.object({
   company: z.string().trim().min(2, "Kompaniya nomini kiriting"),
   adminName: z.string().trim().min(2, "Mas'ul shaxs ismini kiriting"),
   email: z.string().email("Email noto'g'ri"),
+  username: z.string().trim().optional(),
   password: z.string().min(6, "Parol kamida 6 ta belgi"),
   botUsername: z.string().trim().optional(),
 });
@@ -30,6 +31,7 @@ export async function createOrgAction(
     company: formData.get("company"),
     adminName: formData.get("adminName"),
     email: formData.get("email"),
+    username: formData.get("username"),
     password: formData.get("password"),
     botUsername: formData.get("botUsername"),
   });
@@ -40,12 +42,19 @@ export async function createOrgAction(
 
   const { company, adminName, password } = parsed.data;
   const email = parsed.data.email.toLowerCase();
+  const username = parsed.data.username?.toLowerCase().trim() || null;
   const botUsername =
     parsed.data.botUsername?.replace(/^@/, "").trim() || undefined;
 
-  const existing = await prisma.user.findUnique({ where: { email } });
+  if (username && !/^[a-z0-9_.-]{3,32}$/.test(username)) {
+    return { error: "Login faqat harf, raqam va _ . - dan iborat bo'lsin" };
+  }
+
+  const existing = await prisma.user.findFirst({
+    where: username ? { OR: [{ email }, { username }] } : { email },
+  });
   if (existing) {
-    return { error: "Bu email allaqachon ro'yxatdan o'tgan" };
+    return { error: "Bu email yoki login allaqachon band" };
   }
 
   await prisma.organization.create({
@@ -58,6 +67,7 @@ export async function createOrgAction(
         create: {
           name: adminName,
           email,
+          username,
           password: await hashPassword(password),
           role: "ADMIN",
         },

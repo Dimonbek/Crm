@@ -29,7 +29,7 @@ export const SELECTABLE_STATUSES: LeadStatus[] = [
 export const STATUS_CLASS: Record<LeadStatus, string> = {
   NEW: "bg-primary/15 text-primary border-primary/30",
   CONTACTED: "bg-warning/15 text-warning border-warning/30",
-  QUALIFIED: "bg-sky-500/15 text-sky-400 border-sky-500/30",
+  QUALIFIED: "bg-warning/15 text-warning border-warning/30",
   CONVERTED: "bg-success/15 text-success border-success/30",
   LOST: "bg-danger/15 text-danger border-danger/30",
 };

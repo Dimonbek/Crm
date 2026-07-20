@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { getSession } from "@/lib/session";
+import { ThemeToggle } from "@/components/theme-toggle";
 
 export default async function LandingPage() {
   // Kirgan foydalanuvchi to'g'ridan-to'g'ri CRM ga tushadi
@@ -32,6 +33,7 @@ function Nav() {
           <span className="font-semibold">DimoCRM</span>
         </div>
         <div className="flex items-center gap-2">
+          <ThemeToggle />
           <Link
             href="/login"
             className="rounded-lg px-3 py-2 text-sm text-muted transition hover:text-fg"
@@ -53,11 +55,6 @@ function Nav() {
 function Hero() {
   return (
     <section className="relative overflow-hidden px-4 py-16 sm:py-24">
-      {/* fon yorug'ligi */}
-      <div
-        aria-hidden
-        className="pointer-events-none absolute left-1/2 top-0 h-72 w-[36rem] -translate-x-1/2 rounded-full bg-primary/20 blur-[120px]"
-      />
       <div className="relative mx-auto max-w-3xl text-center">
         <h1 className="text-balance text-3xl font-semibold leading-tight sm:text-5xl">
           Botingiz mijoz topadi.
@@ -141,7 +138,7 @@ function HowItWorks() {
     },
   ];
   return (
-    <section className="border-y border-border/60 bg-surface/30 px-4 py-16">
+    <section className="border-y border-border/60 bg-surface-2/70 px-4 py-16">
       <div className="mx-auto max-w-5xl">
         <h2 className="text-center text-2xl font-semibold sm:text-3xl">
           Qanday ishlaydi
@@ -207,7 +204,7 @@ function WhyUs() {
     { label: "Bir necha daqiqada ulanadi", us: true, them: false },
   ];
   return (
-    <section className="border-y border-border/60 bg-surface/30 px-4 py-16">
+    <section className="border-y border-border/60 bg-surface-2/70 px-4 py-16">
       <div className="mx-auto max-w-3xl">
         <h2 className="text-center text-2xl font-semibold sm:text-3xl">
           Nega boshqa CRM emas?

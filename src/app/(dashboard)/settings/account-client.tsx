@@ -15,10 +15,12 @@ const inputCls =
 export function ProfileForm({
   name,
   email,
+  username,
   disabled,
 }: {
   name: string;
   email: string;
+  username?: string | null;
   disabled?: boolean;
 }) {
   const [state, formAction, pending] = useActionState(
@@ -43,8 +45,24 @@ export function ProfileForm({
           />
         </div>
         <div className="flex flex-col gap-1.5">
+          <label htmlFor="username" className="text-sm text-muted">
+            Login
+          </label>
+          <input
+            id="username"
+            name="username"
+            defaultValue={username ?? ""}
+            disabled={disabled}
+            placeholder="mirsun"
+            className={inputCls}
+          />
+          <span className="text-xs text-muted">
+            Shu login bilan ham kira olasiz
+          </span>
+        </div>
+        <div className="flex flex-col gap-1.5 sm:col-span-2">
           <label htmlFor="email" className="text-sm text-muted">
-            Login (email)
+            Email
           </label>
           <input
             id="email"

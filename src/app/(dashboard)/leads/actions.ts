@@ -101,6 +101,48 @@ export async function updateLeadStatusAction(
   revalidatePath("/dashboard");
 }
 
+/** Ro'yxatdan turib "Sotildi" belgilash — summa bilan */
+export async function markLeadSoldAction(
+  leadId: string,
+  amount: number
+): Promise<void> {
+  const { orgId, session } = await currentOrg();
+  if (!Number.isFinite(amount) || amount < 0) return;
+
+  const res = await prisma.lead.updateMany({
+    where: { id: leadId, organizationId: orgId },
+    data: { status: "CONVERTED", saleAmount: amount },
+  });
+  if (res.count === 0) return;
+
+  await prisma.activity.create({
+    data: {
+      type: "CONVERTED",
+      content: `Sotildi: ${amount.toLocaleString("uz-UZ")} so'm`,
+      leadId,
+      userId: session.userId,
+      organizationId: orgId,
+    },
+  });
+
+  revalidatePath("/leads");
+  revalidatePath(`/leads/${leadId}`);
+  revalidatePath("/campaigns");
+  revalidatePath("/dashboard");
+}
+
+/** Sotuvni bekor qilish */
+export async function unmarkLeadSoldAction(leadId: string): Promise<void> {
+  const { orgId } = await currentOrg();
+  await prisma.lead.updateMany({
+    where: { id: leadId, organizationId: orgId },
+    data: { status: "CONTACTED", saleAmount: null },
+  });
+  revalidatePath("/leads");
+  revalidatePath("/campaigns");
+  revalidatePath("/dashboard");
+}
+
 export async function deleteLeadAction(leadId: string): Promise<void> {
   const { orgId } = await currentOrg();
   await prisma.lead.deleteMany({

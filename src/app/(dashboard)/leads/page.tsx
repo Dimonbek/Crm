@@ -129,7 +129,11 @@ export default async function LeadsPage({
                   {lead.contactTime ?? "—"}
                 </td>
                 <td className="px-4 py-3">
-                  <StatusSelect leadId={lead.id} status={lead.status} />
+                  <StatusSelect
+                    leadId={lead.id}
+                    status={lead.status}
+                    saleAmount={lead.saleAmount}
+                  />
                 </td>
                 <td className="px-4 py-3 text-muted">
                   {formatDate(lead.createdAt)}

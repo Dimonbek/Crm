@@ -12,6 +12,7 @@ export type AccountState = { error?: string; ok?: string };
 const profileSchema = z.object({
   name: z.string().trim().min(2, "Ismni kiriting"),
   email: z.string().email("Email noto'g'ri"),
+  username: z.string().trim().optional(),
 });
 
 /** Ism va login (email) ni o'zgartirish */
@@ -24,6 +25,7 @@ export async function updateProfileAction(
   const parsed = profileSchema.safeParse({
     name: formData.get("name"),
     email: formData.get("email"),
+    username: formData.get("username"),
   });
   if (!parsed.success) {
     return { error: parsed.error.issues[0]?.message ?? "Ma'lumot noto'g'ri" };
@@ -31,18 +33,26 @@ export async function updateProfileAction(
 
   const { name } = parsed.data;
   const email = parsed.data.email.toLowerCase();
+  const username = parsed.data.username?.toLowerCase().trim() || null;
 
-  // Email band emasligini tekshiramiz
-  if (email !== session.email.toLowerCase()) {
-    const taken = await prisma.user.findUnique({ where: { email } });
-    if (taken) {
-      return { error: "Bu email allaqachon band" };
-    }
+  if (username && !/^[a-z0-9_.-]{3,32}$/.test(username)) {
+    return { error: "Login faqat harf, raqam va _ . - dan iborat bo'lsin" };
+  }
+
+  // Email yoki login band emasligini tekshiramiz (o'zinikidan boshqa)
+  const taken = await prisma.user.findFirst({
+    where: {
+      id: { not: session.userId },
+      OR: username ? [{ email }, { username }] : [{ email }],
+    },
+  });
+  if (taken) {
+    return { error: "Bu email yoki login allaqachon band" };
   }
 
   const user = await prisma.user.update({
     where: { id: session.userId },
-    data: { name, email },
+    data: { name, email, username },
     include: { organization: { select: { id: true, name: true } } },
   });
 

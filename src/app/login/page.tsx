@@ -18,7 +18,7 @@ export default async function LoginPage() {
           <p className="mt-1 text-sm text-muted">Hisobingizga kiring</p>
         </div>
 
-        <div className="rounded-2xl border border-border bg-surface p-6 shadow-xl shadow-black/20">
+        <div className="rounded-2xl border border-border bg-surface p-6 shadow-lg">
           <LoginForm />
         </div>
 

@@ -20,7 +20,7 @@ export default async function RegisterPage() {
           </p>
         </div>
 
-        <div className="rounded-2xl border border-border bg-surface p-6 shadow-xl shadow-black/20">
+        <div className="rounded-2xl border border-border bg-surface p-6 shadow-lg">
           <RegisterForm />
         </div>
 

@@ -64,7 +64,11 @@ export default async function LeadDetailPage({
           <div className="rounded-2xl border border-border bg-surface p-6">
             <div className="mb-4 flex items-center justify-between">
               <h1 className="text-xl font-semibold">{lead.destination}</h1>
-              <StatusSelect leadId={lead.id} status={lead.status} />
+              <StatusSelect
+                leadId={lead.id}
+                status={lead.status}
+                saleAmount={lead.saleAmount}
+              />
             </div>
             <div className="grid gap-4 sm:grid-cols-2">
               <Info label="Telefon" value={lead.phone} />

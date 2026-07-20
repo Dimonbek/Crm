@@ -4,6 +4,7 @@ import { isPlatformAdmin } from "@/lib/platform";
 import { Sidebar } from "./sidebar";
 import { logoutAction } from "./actions";
 import { ImpersonationBanner } from "./impersonation-banner";
+import { ThemeToggle } from "@/components/theme-toggle";
 
 export default async function DashboardLayout({
   children,
@@ -24,7 +25,8 @@ export default async function DashboardLayout({
         )}
         <header className="flex h-16 items-center justify-between gap-4 border-b border-border bg-surface/60 px-5 backdrop-blur">
           <span className="text-sm text-muted md:hidden">DimoCRM</span>
-          <div className="flex flex-1 items-center justify-end gap-4">
+          <div className="flex flex-1 items-center justify-end gap-3">
+            <ThemeToggle />
             {platformAdmin && (
               <Link
                 href="/admin"

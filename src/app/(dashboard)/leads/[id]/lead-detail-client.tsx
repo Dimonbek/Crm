@@ -58,7 +58,7 @@ export function SoldButton({
     <>
       <button
         onClick={() => setOpen(true)}
-        className="rounded-lg bg-success px-4 py-2 text-sm font-medium text-black transition hover:opacity-90"
+        className="rounded-lg bg-success px-4 py-2 text-sm font-medium text-white transition hover:opacity-90"
       >
         💰 Sotildi
       </button>
@@ -96,7 +96,7 @@ export function SoldButton({
             <button
               type="submit"
               disabled={pending}
-              className="rounded-lg bg-success px-4 py-2 text-sm font-medium text-black transition hover:opacity-90 disabled:opacity-60"
+              className="rounded-lg bg-success px-4 py-2 text-sm font-medium text-white transition hover:opacity-90 disabled:opacity-60"
             >
               {pending ? "Saqlanmoqda..." : "Sotildi deb belgilash"}
             </button>
@@ -225,7 +225,7 @@ export function ConvertButton({
             <button
               type="submit"
               disabled={pending}
-              className="rounded-lg bg-success px-4 py-2 text-sm font-medium text-black transition hover:opacity-90 disabled:opacity-60"
+              className="rounded-lg bg-success px-4 py-2 text-sm font-medium text-white transition hover:opacity-90 disabled:opacity-60"
             >
               {pending ? "Yaratilmoqda..." : "Yaratish"}
             </button>

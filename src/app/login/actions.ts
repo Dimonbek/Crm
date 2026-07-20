@@ -7,7 +7,7 @@ import { verifyPassword } from "@/lib/password";
 import { createSession } from "@/lib/session";
 
 const schema = z.object({
-  email: z.string().email("Email noto'g'ri"),
+  login: z.string().trim().min(1, "Login yoki emailni kiriting"),
   password: z.string().min(1, "Parol kiriting"),
 });
 
@@ -18,7 +18,7 @@ export async function loginAction(
   formData: FormData
 ): Promise<LoginState> {
   const parsed = schema.safeParse({
-    email: formData.get("email"),
+    login: formData.get("login"),
     password: formData.get("password"),
   });
 
@@ -26,14 +26,17 @@ export async function loginAction(
     return { error: parsed.error.issues[0]?.message ?? "Ma'lumot noto'g'ri" };
   }
 
-  const email = parsed.data.email.toLowerCase();
+  const login = parsed.data.login.toLowerCase();
   const { password } = parsed.data;
-  const user = await prisma.user.findUnique({
-    where: { email },
+
+  // Email yoki qisqa login bilan kirish mumkin
+  const user = await prisma.user.findFirst({
+    where: { OR: [{ email: login }, { username: login }] },
     include: { organization: true },
   });
+
   if (!user || !(await verifyPassword(password, user.password))) {
-    return { error: "Email yoki parol noto'g'ri" };
+    return { error: "Login yoki parol noto'g'ri" };
   }
   if (!user.active) {
     return { error: "Hisobingiz bloklangan. Administratorga murojaat qiling." };
