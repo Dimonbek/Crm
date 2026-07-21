@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState, useActionState } from "react";
+import { Plus, X, User } from "lucide-react";
 import {
   createDealAction,
   moveDealStageAction,
@@ -9,7 +10,17 @@ import {
 } from "./actions";
 import { DEAL_STAGES, STAGE_LABEL, STAGE_ACCENT } from "@/lib/deals";
 import { formatMoney } from "@/lib/format";
-import { Modal, Field, SelectField, FormButtons } from "@/components/form";
+import {
+  Modal,
+  Field,
+  SelectField,
+  FormButtons,
+  FormMessage,
+} from "@/components/form";
+import { PageHeader } from "@/components/page";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { cn } from "@/lib/utils";
 import type { DealStage } from "@/generated/prisma/enums";
 
 export type DealCard = {
@@ -50,23 +61,17 @@ export function Kanban({
     if (!current || current.stage === stage) return;
 
     // Optimistik
-    setDeals((prev) =>
-      prev.map((d) => (d.id === id ? { ...d, stage } : d))
-    );
+    setDeals((prev) => prev.map((d) => (d.id === id ? { ...d, stage } : d)));
     await moveDealStageAction(id, stage);
   }
 
   return (
-    <div className="flex flex-col gap-5">
-      <div className="flex flex-wrap items-center justify-between gap-4">
-        <div>
-          <h1 className="text-2xl font-semibold">Bitimlar</h1>
-          <p className="mt-1 text-sm text-muted-foreground">
-            Jami {deals.length} ta bitim · kartani ustunlar orasida suring
-          </p>
-        </div>
-        <AddDealButton contacts={contacts} users={users} />
-      </div>
+    <div className="flex flex-col gap-6">
+      <PageHeader
+        title="Bitimlar"
+        description={`Jami ${deals.length} ta bitim · kartani ustunlar orasida suring`}
+        action={<AddDealButton contacts={contacts} users={users} />}
+      />
 
       <div className="flex gap-4 overflow-x-auto pb-4">
         {DEAL_STAGES.map((stage) => {
@@ -81,20 +86,20 @@ export function Kanban({
               }}
               onDragLeave={() => setOverStage((s) => (s === stage ? null : s))}
               onDrop={() => handleDrop(stage)}
-              className={`flex w-72 shrink-0 flex-col rounded-2xl border border-t-2 border-border bg-card/50 ${STAGE_ACCENT[stage]} ${
-                overStage === stage ? "ring-2 ring-primary/40" : ""
-              }`}
+              className={cn(
+                "bg-muted/40 flex w-72 shrink-0 flex-col rounded-xl border border-t-2",
+                STAGE_ACCENT[stage],
+                overStage === stage && "ring-ring/50 ring-2"
+              )}
             >
               <div className="flex items-center justify-between px-4 py-3">
-                <span className="text-sm font-medium">
-                  {STAGE_LABEL[stage]}
-                </span>
-                <span className="rounded-full bg-muted px-2 py-0.5 text-xs text-muted-foreground">
+                <span className="text-sm font-medium">{STAGE_LABEL[stage]}</span>
+                <Badge variant="secondary" className="tabular-nums">
                   {items.length}
-                </span>
+                </Badge>
               </div>
               {sum > 0 && (
-                <div className="px-4 pb-2 text-xs text-muted-foreground">
+                <div className="text-muted-foreground px-4 pb-2 text-xs tabular-nums">
                   {formatMoney(sum)}
                 </div>
               )}
@@ -105,29 +110,31 @@ export function Kanban({
                     draggable
                     onDragStart={() => setDragId(deal.id)}
                     onDragEnd={() => setDragId(null)}
-                    className={`group cursor-grab rounded-xl border border-border bg-card p-3 active:cursor-grabbing ${
-                      dragId === deal.id ? "opacity-50" : ""
-                    }`}
+                    className={cn(
+                      "bg-card group cursor-grab rounded-lg border p-3 shadow-xs transition-shadow hover:shadow-sm active:cursor-grabbing",
+                      dragId === deal.id && "opacity-50"
+                    )}
                   >
                     <div className="flex items-start justify-between gap-2">
                       <div className="text-sm font-medium">{deal.title}</div>
                       <DeleteDeal id={deal.id} />
                     </div>
                     {deal.amount != null && (
-                      <div className="mt-1 text-sm text-success">
+                      <div className="text-success mt-1 text-sm font-medium tabular-nums">
                         {formatMoney(deal.amount)}
                       </div>
                     )}
-                    <div className="mt-2 flex flex-wrap gap-1.5 text-xs text-muted-foreground">
+                    <div className="mt-2 flex flex-wrap gap-1.5">
                       {deal.contactName && (
-                        <span className="rounded bg-muted px-1.5 py-0.5">
+                        <Badge variant="secondary" className="font-normal">
                           {deal.contactName}
-                        </span>
+                        </Badge>
                       )}
                       {deal.assigneeName && (
-                        <span className="rounded bg-muted px-1.5 py-0.5">
-                          👤 {deal.assigneeName}
-                        </span>
+                        <Badge variant="secondary" className="font-normal">
+                          <User className="size-3" />
+                          {deal.assigneeName}
+                        </Badge>
                       )}
                     </div>
                   </div>
@@ -144,18 +151,21 @@ export function Kanban({
 function DeleteDeal({ id }: { id: string }) {
   const [pending, setPending] = useState(false);
   return (
-    <button
+    <Button
+      variant="ghost"
+      size="icon"
       disabled={pending}
+      title="Bitimni o'chirish"
+      className="text-muted-foreground hover:text-destructive size-6 opacity-0 transition group-hover:opacity-100"
       onClick={async () => {
         if (!confirm("Bitimni o'chirasizmi?")) return;
         setPending(true);
         await deleteDealAction(id);
         setPending(false);
       }}
-      className="text-xs text-muted-foreground opacity-0 transition group-hover:opacity-100 hover:text-destructive"
     >
-      ✕
-    </button>
+      <X className="size-3.5" />
+    </Button>
   );
 }
 
@@ -169,10 +179,7 @@ function AddDealButton({
   users: Option[];
 }) {
   const [open, setOpen] = useState(false);
-  const [state, formAction, pending] = useActionState(
-    createDealAction,
-    initial
-  );
+  const [state, formAction, pending] = useActionState(createDealAction, initial);
 
   useEffect(() => {
     if (state.ok) setOpen(false);
@@ -180,26 +187,37 @@ function AddDealButton({
 
   return (
     <>
-      <button
-        onClick={() => setOpen(true)}
-        className="inline-flex h-9 items-center justify-center gap-2 rounded-md bg-primary px-4 text-sm font-medium text-primary-foreground shadow-xs transition-all hover:bg-primary/90 disabled:pointer-events-none disabled:opacity-50"
-      >
-        + Yangi bitim
-      </button>
+      <Button onClick={() => setOpen(true)}>
+        <Plus className="size-4" />
+        Yangi bitim
+      </Button>
 
       <Modal open={open} onClose={() => setOpen(false)} title="Yangi bitim">
-        <form action={formAction} className="flex flex-col gap-3.5">
-          <Field name="title" label="Sarlavha *" placeholder="Antalya tur paketi" required />
-          <Field name="amount" label="Summa (so'm)" type="number" placeholder="0" />
+        <form action={formAction} className="flex flex-col gap-4">
+          <Field
+            name="title"
+            label="Sarlavha *"
+            placeholder="Antalya tur paketi"
+            required
+          />
+          <Field
+            name="amount"
+            label="Summa (so'm)"
+            type="number"
+            placeholder="0"
+          />
           <SelectField
             name="stage"
             label="Bosqich"
             defaultValue="QUALIFICATION"
-            options={DEAL_STAGES.map((s) => ({ value: s, label: STAGE_LABEL[s] }))}
+            options={DEAL_STAGES.map((s) => ({
+              value: s,
+              label: STAGE_LABEL[s],
+            }))}
           />
           <SelectField
             name="contactId"
-            label="Kontakt"
+            label="Mijoz"
             options={[
               { value: "", label: "— Yo'q —" },
               ...contacts.map((c) => ({ value: c.id, label: c.name })),
@@ -214,12 +232,7 @@ function AddDealButton({
             ]}
           />
 
-          {state.error && (
-            <p className="rounded-lg border border-destructive/40 bg-destructive/10 px-3 py-2 text-sm text-destructive">
-              {state.error}
-            </p>
-          )}
-
+          <FormMessage error={state.error} />
           <FormButtons pending={pending} onCancel={() => setOpen(false)} />
         </form>
       </Modal>
