@@ -22,6 +22,7 @@ import {
   ResetPasswordButton,
   ViewOrgButton,
   DeleteOrgButton,
+  OrgDealsToggle,
 } from "./admin-client";
 
 export default async function AdminPage() {
@@ -85,7 +86,7 @@ export default async function AdminPage() {
       </div>
 
       <TableCard>
-        <Table className="min-w-[1000px]">
+        <Table className="min-w-[1100px]">
           <TableHeader>
             <TableRow>
               <TableHead>Kompaniya</TableHead>
@@ -94,6 +95,7 @@ export default async function AdminPage() {
               <TableHead>Leadlar</TableHead>
               <TableHead>Mijozlar</TableHead>
               <TableHead>Sotuv</TableHead>
+              <TableHead>Bitimlar</TableHead>
               <TableHead>Yaratilgan</TableHead>
               <TableHead>Bot ulash</TableHead>
             </TableRow>
@@ -101,7 +103,7 @@ export default async function AdminPage() {
           <TableBody>
             {orgs.length === 0 && (
               <TableRow>
-                <TableCell colSpan={8} className="text-muted-foreground h-32 text-center">
+                <TableCell colSpan={9} className="text-muted-foreground h-32 text-center">
                   Hali kompaniya yo&apos;q.
                 </TableCell>
               </TableRow>
@@ -152,6 +154,9 @@ export default async function AdminPage() {
                       <span className="text-muted-foreground">—</span>
                     )}
                     <div className="text-xs text-muted-foreground">{sold.length} sotuv</div>
+                  </TableCell>
+                  <TableCell>
+                    <OrgDealsToggle orgId={o.id} enabled={o.dealsEnabled} />
                   </TableCell>
                   <TableCell className="text-muted-foreground">
                     {formatDate(o.createdAt)}

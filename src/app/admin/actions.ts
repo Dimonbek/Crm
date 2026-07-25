@@ -98,6 +98,21 @@ export async function setBotUsernameAction(
   revalidatePath("/admin");
 }
 
+/** Kompaniya uchun "Bitimlar" (Kanban) bo'limini yoqish/o'chirish */
+export async function setOrgDealsAction(
+  orgId: string,
+  enabled: boolean
+): Promise<void> {
+  await requirePlatformAdmin();
+  await prisma.organization.update({
+    where: { id: orgId },
+    data: { dealsEnabled: enabled },
+  });
+  revalidatePath("/admin");
+  // Kompaniya CRM'ining menyusi keyingi ochilishда yangilanadi
+  revalidatePath("/", "layout");
+}
+
 /** Bot kalitini yangilash (eski kalit ishlamay qoladi) */
 export async function regenerateTokenAction(orgId: string): Promise<void> {
   await requirePlatformAdmin();

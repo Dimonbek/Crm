@@ -8,9 +8,54 @@ import {
   resetPasswordAction,
   deleteOrgAction,
   viewAsOrgAction,
+  setOrgDealsAction,
   type AdminState,
 } from "./actions";
 import { Modal, Field, FormButtons } from "@/components/form";
+
+/** Kompaniya uchun "Bitimlar" bo'limini yoqish/o'chirish (platforma admin) */
+export function OrgDealsToggle({
+  orgId,
+  enabled: initial,
+}: {
+  orgId: string;
+  enabled: boolean;
+}) {
+  const [enabled, setEnabled] = useState(initial);
+  const [pending, setPending] = useState(false);
+
+  async function flip() {
+    const next = !enabled;
+    setEnabled(next); // optimistik
+    setPending(true);
+    try {
+      await setOrgDealsAction(orgId, next);
+    } catch {
+      setEnabled(!next); // xato bo'lsa qaytaramiz
+    } finally {
+      setPending(false);
+    }
+  }
+
+  return (
+    <button
+      type="button"
+      onClick={flip}
+      disabled={pending}
+      aria-pressed={enabled}
+      title={enabled ? "Bitimlar yoqilgan — bosib o'chiring" : "Bitimlar o'chirilgan — bosib yoqing"}
+      className={`relative inline-flex h-6 w-11 shrink-0 items-center rounded-full transition disabled:opacity-50 ${
+        enabled ? "bg-primary" : "bg-muted-foreground/30"
+      }`}
+    >
+      <span
+        className={`inline-block h-5 w-5 transform rounded-full bg-white shadow transition ${
+          enabled ? "translate-x-5" : "translate-x-1"
+        }`}
+      />
+    </button>
+  );
+}
 
 /** Kompaniya ichiga kirish — uning CRM'ini ko'rish */
 export function ViewOrgButton({
