@@ -4,6 +4,7 @@ import { currentOrg } from "@/lib/auth";
 import { isPlatformAdmin, supportContact } from "@/lib/platform";
 import { formatDate } from "@/lib/format";
 import { ProfileForm, PasswordForm } from "./account-client";
+import { DealsToggle } from "./sections-client";
 
 export default async function SettingsPage() {
   const { orgId, session } = await currentOrg();
@@ -62,6 +63,23 @@ export default async function SettingsPage() {
           <PasswordForm disabled={session.impersonating} />
         </div>
       </div>
+
+      {/* Bo'limlar — menyudagi bo'limlarni yoqish/o'chirish (faqat admin) */}
+      {session.role === "ADMIN" && (
+        <div className="rounded-2xl border border-border bg-card p-6">
+          <h2 className="font-medium">Bo&apos;limlar</h2>
+          <p className="mt-1 text-sm text-muted-foreground">
+            Kerak bo&apos;lmagan bo&apos;limni menyudan vaqtincha yashiring —
+            xohlagan vaqtingizda qaytarasiz
+          </p>
+          <div className="mt-5">
+            <DealsToggle
+              initial={org.dealsEnabled}
+              disabled={session.impersonating}
+            />
+          </div>
+        </div>
+      )}
 
       <div className="rounded-2xl border border-border bg-card p-6">
         <h2 className="mb-4 font-medium">Kompaniya</h2>

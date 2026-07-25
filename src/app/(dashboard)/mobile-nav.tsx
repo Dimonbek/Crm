@@ -10,13 +10,15 @@ import { navItemsFor } from "./sidebar";
 export function MobileNav({
   role,
   orgName,
+  dealsEnabled = true,
 }: {
   role: string;
   orgName?: string;
+  dealsEnabled?: boolean;
 }) {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
-  const items = navItemsFor(role);
+  const items = navItemsFor(role, { dealsEnabled });
   const label = orgName?.trim() || "CRM";
 
   // Sahifa o'zgarganda drawer yopiladi

@@ -23,6 +23,9 @@ model Organization {
   /// Telegram bot username (@siz) — reklama havolalarini yasash uchun
   botUsername String?
 
+  /// "Bitimlar" (Kanban) bo'limi ko'rsatilsinmi — Sozlamalardan yoqib/o'chiriladi
+  dealsEnabled Boolean @default(true)
+
   users      User[]
   contacts   Contact[]
   leads      Lead[]

@@ -15,23 +15,28 @@ const nav = [
 const adminNav = [{ href: "/users", label: "Xodimlar", icon: "◆" }];
 const commonNav = [{ href: "/settings", label: "Sozlamalar", icon: "⚙" }];
 
-// Desktop sidebar va mobil menyu bir xil ro'yxatdan foydalanadi
-export function navItemsFor(role: string) {
+// Desktop sidebar va mobil menyu bir xil ro'yxatdan foydalanadi.
+// dealsEnabled=false bo'lsa "Bitimlar" bo'limi ro'yxatdan chiqariladi.
+export function navItemsFor(role: string, opts?: { dealsEnabled?: boolean }) {
+  const dealsEnabled = opts?.dealsEnabled ?? true;
+  const base = dealsEnabled ? nav : nav.filter((i) => i.href !== "/deals");
   return role === "ADMIN"
-    ? [...nav, ...adminNav, ...commonNav]
-    : [...nav, ...commonNav];
+    ? [...base, ...adminNav, ...commonNav]
+    : [...base, ...commonNav];
 }
 
 export function Sidebar({
   role,
   orgName,
+  dealsEnabled = true,
 }: {
   role: string;
   orgName?: string;
+  dealsEnabled?: boolean;
 }) {
   const pathname = usePathname();
   const label = orgName?.trim() || "CRM";
-  const items = navItemsFor(role);
+  const items = navItemsFor(role, { dealsEnabled });
 
   return (
     <aside className="hidden w-60 shrink-0 flex-col border-r border-border bg-card md:flex">

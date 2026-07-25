@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { currentOrg } from "@/lib/auth";
+import { prisma } from "@/lib/prisma";
 import { isPlatformAdmin } from "@/lib/platform";
 import { Sidebar } from "./sidebar";
 import { MobileNav } from "./mobile-nav";
@@ -12,20 +13,33 @@ export default async function DashboardLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const { session: user } = await currentOrg();
+  const { orgId, session: user } = await currentOrg();
   const initials = (user.name || "?").slice(0, 2).toUpperCase();
   const platformAdmin = isPlatformAdmin(user.email);
+  const org = await prisma.organization.findUnique({
+    where: { id: orgId },
+    select: { dealsEnabled: true },
+  });
+  const dealsEnabled = org?.dealsEnabled ?? true;
 
   return (
     <div className="flex min-h-full">
-      <Sidebar role={user.role} orgName={user.organizationName} />
+      <Sidebar
+        role={user.role}
+        orgName={user.organizationName}
+        dealsEnabled={dealsEnabled}
+      />
 
       <div className="flex min-w-0 flex-1 flex-col">
         {user.impersonating && (
           <ImpersonationBanner orgName={user.organizationName} />
         )}
         <header className="flex h-16 items-center justify-between gap-4 border-b border-border bg-card/60 px-5 backdrop-blur">
-          <MobileNav role={user.role} orgName={user.organizationName} />
+          <MobileNav
+            role={user.role}
+            orgName={user.organizationName}
+            dealsEnabled={dealsEnabled}
+          />
           <div className="flex flex-1 items-center justify-end gap-3">
             <ThemeToggle />
             {platformAdmin && (

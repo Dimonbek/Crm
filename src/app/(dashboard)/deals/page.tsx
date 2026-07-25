@@ -1,9 +1,17 @@
+import { redirect } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import { currentOrg } from "@/lib/auth";
 import { Kanban, type DealCard } from "./kanban";
 
 export default async function DealsPage() {
   const { orgId } = await currentOrg();
+
+  // Bo'lim o'chirilgan bo'lsa — bu sahifa ochilmaydi
+  const guard = await prisma.organization.findUnique({
+    where: { id: orgId },
+    select: { dealsEnabled: true },
+  });
+  if (!guard?.dealsEnabled) redirect("/dashboard");
 
   const [deals, contacts, users] = await Promise.all([
     prisma.deal.findMany({
