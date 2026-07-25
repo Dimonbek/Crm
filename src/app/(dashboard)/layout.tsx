@@ -2,6 +2,7 @@ import Link from "next/link";
 import { currentOrg } from "@/lib/auth";
 import { isPlatformAdmin } from "@/lib/platform";
 import { Sidebar } from "./sidebar";
+import { MobileNav } from "./mobile-nav";
 import { logoutAction } from "./actions";
 import { ImpersonationBanner } from "./impersonation-banner";
 import { ThemeToggle } from "@/components/theme-toggle";
@@ -24,7 +25,7 @@ export default async function DashboardLayout({
           <ImpersonationBanner orgName={user.organizationName} />
         )}
         <header className="flex h-16 items-center justify-between gap-4 border-b border-border bg-card/60 px-5 backdrop-blur">
-          <span className="text-sm text-muted-foreground md:hidden">DimoCRM</span>
+          <MobileNav role={user.role} orgName={user.organizationName} />
           <div className="flex flex-1 items-center justify-end gap-3">
             <ThemeToggle />
             {platformAdmin && (

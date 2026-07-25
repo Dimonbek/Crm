@@ -15,6 +15,13 @@ const nav = [
 const adminNav = [{ href: "/users", label: "Xodimlar", icon: "◆" }];
 const commonNav = [{ href: "/settings", label: "Sozlamalar", icon: "⚙" }];
 
+// Desktop sidebar va mobil menyu bir xil ro'yxatdan foydalanadi
+export function navItemsFor(role: string) {
+  return role === "ADMIN"
+    ? [...nav, ...adminNav, ...commonNav]
+    : [...nav, ...commonNav];
+}
+
 export function Sidebar({
   role,
   orgName,
@@ -24,8 +31,7 @@ export function Sidebar({
 }) {
   const pathname = usePathname();
   const label = orgName?.trim() || "CRM";
-  const items =
-    role === "ADMIN" ? [...nav, ...adminNav, ...commonNav] : [...nav, ...commonNav];
+  const items = navItemsFor(role);
 
   return (
     <aside className="hidden w-60 shrink-0 flex-col border-r border-border bg-card md:flex">
