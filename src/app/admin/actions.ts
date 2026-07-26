@@ -98,6 +98,21 @@ export async function setBotUsernameAction(
   revalidatePath("/admin");
 }
 
+/** Kompaniya soha turini o'zgartirish — lead yorliqlari shunga qarab ko'rinadi */
+export async function setOrgIndustryAction(
+  orgId: string,
+  industry: string
+): Promise<void> {
+  await requirePlatformAdmin();
+  const value = industry === "clinic" ? "clinic" : "travel";
+  await prisma.organization.update({
+    where: { id: orgId },
+    data: { industry: value },
+  });
+  revalidatePath("/admin");
+  revalidatePath("/leads");
+}
+
 /** Kompaniya uchun "Bitimlar" (Kanban) bo'limini yoqish/o'chirish */
 export async function setOrgDealsAction(
   orgId: string,

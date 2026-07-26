@@ -1,5 +1,6 @@
 import { prisma } from "@/lib/prisma";
 import { currentOrg } from "@/lib/auth";
+import { leadLabels } from "@/lib/industry";
 import { LEAD_STATUSES, STATUS_LABEL, formatDate } from "@/lib/leads";
 import type { LeadStatus } from "@/generated/prisma/enums";
 import { AddLeadButton, StatusSelect, DeleteLeadButton } from "./leads-client";
@@ -12,6 +13,12 @@ export default async function LeadsPage({
 }) {
   const { orgId } = await currentOrg();
   const { q, status } = await searchParams;
+
+  const org = await prisma.organization.findUnique({
+    where: { id: orgId },
+    select: { industry: true },
+  });
+  const L = leadLabels(org?.industry);
 
   const statusFilter =
     status && LEAD_STATUSES.includes(status as LeadStatus)
@@ -82,9 +89,9 @@ export default async function LeadsPage({
           <thead>
             <tr className="border-b border-border text-left text-xs uppercase tracking-wide text-muted-foreground">
               <th className="px-4 py-3 font-medium">Telefon</th>
-              <th className="px-4 py-3 font-medium">Manzil</th>
-              <th className="px-4 py-3 font-medium">Sana</th>
-              <th className="px-4 py-3 font-medium">Kishi</th>
+              <th className="px-4 py-3 font-medium">{L.destinationHeader}</th>
+              <th className="px-4 py-3 font-medium">{L.dateHeader}</th>
+              <th className="px-4 py-3 font-medium">{L.travelersHeader}</th>
               <th className="px-4 py-3 font-medium">Vaqt</th>
               <th className="px-4 py-3 font-medium">Status</th>
               <th className="px-4 py-3 font-medium">Yaratilgan</th>
@@ -122,7 +129,9 @@ export default async function LeadsPage({
                   </Link>
                 </td>
                 <td className="px-4 py-3 text-muted-foreground">
-                  {formatDate(lead.travelDate)}
+                  {lead.travelDate
+                    ? formatDate(lead.travelDate)
+                    : lead.travelDateText || "—"}
                 </td>
                 <td className="px-4 py-3 text-muted-foreground">{lead.travelers}</td>
                 <td className="px-4 py-3 text-muted-foreground">

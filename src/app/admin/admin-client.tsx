@@ -9,6 +9,7 @@ import {
   deleteOrgAction,
   viewAsOrgAction,
   setOrgDealsAction,
+  setOrgIndustryAction,
   type AdminState,
 } from "./actions";
 import { Modal, Field, FormButtons } from "@/components/form";
@@ -54,6 +55,44 @@ export function OrgDealsToggle({
         }`}
       />
     </button>
+  );
+}
+
+/** Kompaniya soha turi — lead yorliqlarini belgilaydi (sayohat / klinika) */
+export function OrgIndustrySelect({
+  orgId,
+  industry: initial,
+}: {
+  orgId: string;
+  industry: string;
+}) {
+  const [industry, setIndustry] = useState(initial === "clinic" ? "clinic" : "travel");
+  const [pending, setPending] = useState(false);
+
+  async function change(next: string) {
+    const prev = industry;
+    setIndustry(next); // optimistik
+    setPending(true);
+    try {
+      await setOrgIndustryAction(orgId, next);
+    } catch {
+      setIndustry(prev);
+    } finally {
+      setPending(false);
+    }
+  }
+
+  return (
+    <select
+      value={industry}
+      onChange={(e) => change(e.target.value)}
+      disabled={pending}
+      title="Soha turi — lead yorliqlari shunga qarab o'zgaradi"
+      className="rounded-lg border border-border bg-muted px-2 py-1 text-sm outline-none transition focus:border-primary disabled:opacity-50"
+    >
+      <option value="travel">✈️ Sayohat</option>
+      <option value="clinic">🏥 Klinika</option>
+    </select>
   );
 }
 

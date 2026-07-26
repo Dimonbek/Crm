@@ -2,6 +2,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import { currentOrg } from "@/lib/auth";
+import { leadLabels } from "@/lib/industry";
 import { formatDate, formatDateTime, timeAgo } from "@/lib/format";
 import { StatusSelect } from "../leads-client";
 import {
@@ -19,7 +20,7 @@ export default async function LeadDetailPage({
   const { orgId } = await currentOrg();
   const { id } = await params;
 
-  const [lead, users] = await Promise.all([
+  const [lead, users, org] = await Promise.all([
     // findFirst + organizationId — begona lead ochilmaydi (404 beradi)
     prisma.lead.findFirst({
       where: { id, organizationId: orgId },
@@ -37,9 +38,15 @@ export default async function LeadDetailPage({
       select: { id: true, name: true },
       orderBy: { name: "asc" },
     }),
+    prisma.organization.findUnique({
+      where: { id: orgId },
+      select: { industry: true },
+    }),
   ]);
 
   if (!lead) notFound();
+
+  const L = leadLabels(org?.industry);
 
   const isSold = lead.status === "CONVERTED";
 
@@ -73,15 +80,15 @@ export default async function LeadDetailPage({
             <div className="grid gap-4 sm:grid-cols-2">
               <Info label="Telefon" value={lead.phone} />
               <Info
-                label="Sayohat sanasi"
+                label={L.dateLabel}
                 value={
                   lead.travelDate
                     ? formatDate(lead.travelDate)
                     : lead.travelDateText || "—"
                 }
               />
-              <Info label="Necha kishi" value={String(lead.travelers)} />
-              <Info label="Bog'lanish vaqti" value={lead.contactTime || "—"} />
+              <Info label={L.travelersLabel} value={String(lead.travelers)} />
+              <Info label={L.contactTimeLabel} value={lead.contactTime || "—"} />
               <Info
                 label="Manba"
                 value={

@@ -23,6 +23,9 @@ model Organization {
   /// Telegram bot username (@siz) — reklama havolalarini yasash uchun
   botUsername String?
 
+  /// Soha turi — lead yorliqlarini belgilaydi: "travel" (sayohat) yoki "clinic" (klinika)
+  industry String @default("travel")
+
   /// "Bitimlar" (Kanban) bo'limi ko'rsatilsinmi — Sozlamalardan yoqib/o'chiriladi
   dealsEnabled Boolean @default(true)
 

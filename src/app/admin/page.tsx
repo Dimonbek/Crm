@@ -23,6 +23,7 @@ import {
   ViewOrgButton,
   DeleteOrgButton,
   OrgDealsToggle,
+  OrgIndustrySelect,
 } from "./admin-client";
 
 export default async function AdminPage() {
@@ -91,6 +92,7 @@ export default async function AdminPage() {
             <TableRow>
               <TableHead>Kompaniya</TableHead>
               <TableHead>Telegram bot</TableHead>
+              <TableHead>Soha</TableHead>
               <TableHead>Login</TableHead>
               <TableHead>Leadlar</TableHead>
               <TableHead>Mijozlar</TableHead>
@@ -103,7 +105,7 @@ export default async function AdminPage() {
           <TableBody>
             {orgs.length === 0 && (
               <TableRow>
-                <TableCell colSpan={9} className="text-muted-foreground h-32 text-center">
+                <TableCell colSpan={10} className="text-muted-foreground h-32 text-center">
                   Hali kompaniya yo&apos;q.
                 </TableCell>
               </TableRow>
@@ -128,6 +130,9 @@ export default async function AdminPage() {
                   </TableCell>
                   <TableCell>
                     <BotCell orgId={o.id} botUsername={o.botUsername} />
+                  </TableCell>
+                  <TableCell>
+                    <OrgIndustrySelect orgId={o.id} industry={o.industry} />
                   </TableCell>
                   <TableCell>
                     <div className="flex items-center gap-1.5">
