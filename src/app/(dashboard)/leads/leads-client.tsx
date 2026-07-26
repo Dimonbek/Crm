@@ -12,6 +12,7 @@ import {
   type CreateLeadState,
 } from "./actions";
 import { formatMoney } from "@/lib/format";
+import { useCurrency } from "@/lib/currency";
 import { SELECTABLE_STATUSES, STATUS_LABEL, STATUS_CLASS } from "@/lib/leads";
 import type { LeadStatus } from "@/generated/prisma/enums";
 import {
@@ -88,6 +89,7 @@ export function StatusSelect({
   status: LeadStatus;
   saleAmount?: number | null;
 }) {
+  const currency = useCurrency();
   const [pending, setPending] = useState(false);
   const [askAmount, setAskAmount] = useState(false);
   const [amount, setAmount] = useState("");
@@ -98,7 +100,7 @@ export function StatusSelect({
       <div className="flex items-center gap-1.5">
         <Badge variant="outline" className={STATUS_CLASS.CONVERTED}>
           {STATUS_LABEL.CONVERTED}
-          {saleAmount != null ? ` · ${formatMoney(saleAmount)}` : ""}
+          {saleAmount != null ? ` · ${formatMoney(saleAmount, currency)}` : ""}
         </Badge>
         <Button
           variant="ghost"

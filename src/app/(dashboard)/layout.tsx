@@ -7,6 +7,7 @@ import { MobileNav } from "./mobile-nav";
 import { logoutAction } from "./actions";
 import { ImpersonationBanner } from "./impersonation-banner";
 import { ThemeToggle } from "@/components/theme-toggle";
+import { CurrencyProvider } from "@/lib/currency";
 
 export default async function DashboardLayout({
   children,
@@ -18,9 +19,10 @@ export default async function DashboardLayout({
   const platformAdmin = isPlatformAdmin(user.email);
   const org = await prisma.organization.findUnique({
     where: { id: orgId },
-    select: { dealsEnabled: true },
+    select: { dealsEnabled: true, currency: true },
   });
   const dealsEnabled = org?.dealsEnabled ?? true;
+  const currency = org?.currency ?? "UZS";
 
   return (
     <div className="flex min-h-full">
@@ -72,7 +74,9 @@ export default async function DashboardLayout({
           </div>
         </header>
 
-        <main className="flex-1 p-5 md:p-8">{children}</main>
+        <main className="flex-1 p-5 md:p-8">
+          <CurrencyProvider value={currency}>{children}</CurrencyProvider>
+        </main>
       </div>
     </div>
   );

@@ -19,13 +19,17 @@ export function formatDateTime(d: Date | string | null | undefined): string {
   }).format(date);
 }
 
-export function formatMoney(amount: number | null | undefined): string {
+export function formatMoney(
+  amount: number | null | undefined,
+  currency: string = "UZS"
+): string {
   if (amount == null) return "—";
   // Butun songa yaxlitlaymiz — "333 333,333 so'm" ko'rinishi kerak emas
-  return (
-    new Intl.NumberFormat("uz-UZ", { maximumFractionDigits: 0 }).format(amount) +
-    " so'm"
+  const n = new Intl.NumberFormat("uz-UZ", { maximumFractionDigits: 0 }).format(
+    amount
   );
+  // Konvertatsiya yo'q — faqat valyuta belgisi o'zgaradi
+  return currency === "USD" ? `$${n}` : `${n} so'm`;
 }
 
 /** "2 kun oldin" ko'rinishida nisbiy vaqt */

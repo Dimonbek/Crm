@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { prisma } from "@/lib/prisma";
 import { currentOrg } from "@/lib/auth";
+import { getCurrency } from "@/lib/currency-server";
 import { LEAD_STATUSES, STATUS_LABEL, STATUS_CLASS } from "@/lib/leads";
 import { formatDate, formatMoney } from "@/lib/format";
 import type { LeadStatus } from "@/generated/prisma/enums";
@@ -30,6 +31,7 @@ export default async function DashboardPage({
   searchParams: Promise<{ period?: string }>;
 }) {
   const { orgId, session: user } = await currentOrg();
+  const cur = await getCurrency();
   const { period } = await searchParams;
 
   // Davr: 7 yoki 30 kun (standart — 7)
@@ -114,7 +116,7 @@ export default async function DashboardPage({
         <StatCard label="Ochiq vazifalar" value={openTasks} />
         <StatCard
           label="Sotuv summasi"
-          value={formatMoney(wonAgg._sum.saleAmount)}
+          value={formatMoney(wonAgg._sum.saleAmount, cur)}
           accent="text-success"
         />
       </div>

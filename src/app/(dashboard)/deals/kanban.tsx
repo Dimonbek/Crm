@@ -10,6 +10,7 @@ import {
 } from "./actions";
 import { DEAL_STAGES, STAGE_LABEL, STAGE_ACCENT } from "@/lib/deals";
 import { formatMoney } from "@/lib/format";
+import { useCurrency } from "@/lib/currency";
 import {
   Modal,
   Field,
@@ -43,6 +44,7 @@ export function Kanban({
   contacts: Option[];
   users: Option[];
 }) {
+  const currency = useCurrency();
   const [deals, setDeals] = useState<DealCard[]>(initialDeals);
   const [dragId, setDragId] = useState<string | null>(null);
   const [overStage, setOverStage] = useState<DealStage | null>(null);
@@ -100,7 +102,7 @@ export function Kanban({
               </div>
               {sum > 0 && (
                 <div className="text-muted-foreground px-4 pb-2 text-xs tabular-nums">
-                  {formatMoney(sum)}
+                  {formatMoney(sum, currency)}
                 </div>
               )}
               <div className="flex min-h-[120px] flex-col gap-2 p-2">
@@ -121,7 +123,7 @@ export function Kanban({
                     </div>
                     {deal.amount != null && (
                       <div className="text-success mt-1 text-sm font-medium tabular-nums">
-                        {formatMoney(deal.amount)}
+                        {formatMoney(deal.amount, currency)}
                       </div>
                     )}
                     <div className="mt-2 flex flex-wrap gap-1.5">

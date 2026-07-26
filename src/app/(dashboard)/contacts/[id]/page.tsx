@@ -2,6 +2,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import { currentOrg } from "@/lib/auth";
+import { getCurrency } from "@/lib/currency-server";
 import { formatDate, formatMoney, timeAgo } from "@/lib/format";
 import { STATUS_LABEL, STATUS_CLASS } from "@/lib/leads";
 import { EditContactButton } from "../contacts-client";
@@ -12,6 +13,7 @@ export default async function ContactDetailPage({
   params: Promise<{ id: string }>;
 }) {
   const { orgId } = await currentOrg();
+  const cur = await getCurrency();
   const { id } = await params;
 
   const contact = await prisma.contact.findFirst({
@@ -90,12 +92,12 @@ export default async function ContactDetailPage({
         />
         <Kpi
           label="Jami to'lagan"
-          value={formatMoney(spent)}
+          value={formatMoney(spent, cur)}
           accent="text-success"
         />
         <Kpi
           label="O'rtacha xarid"
-          value={avgCheck > 0 ? formatMoney(avgCheck) : "—"}
+          value={avgCheck > 0 ? formatMoney(avgCheck, cur) : "—"}
         />
       </div>
 
@@ -140,7 +142,7 @@ export default async function ContactDetailPage({
                       <div className="flex items-center gap-2">
                         {isSold && lead.saleAmount != null && (
                           <span className="font-medium text-success">
-                            {formatMoney(lead.saleAmount)}
+                            {formatMoney(lead.saleAmount, cur)}
                           </span>
                         )}
                         <span
@@ -183,7 +185,7 @@ export default async function ContactDetailPage({
                   </div>
                 </div>
                 <span className="text-sm text-muted-foreground">
-                  {formatMoney(deal.amount)}
+                  {formatMoney(deal.amount, cur)}
                 </span>
               </div>
             ))}

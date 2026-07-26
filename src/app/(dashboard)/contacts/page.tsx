@@ -2,6 +2,7 @@ import Link from "next/link";
 import { Search } from "lucide-react";
 import { prisma } from "@/lib/prisma";
 import { currentOrg } from "@/lib/auth";
+import { getCurrency } from "@/lib/currency-server";
 import { formatMoney, timeAgo } from "@/lib/format";
 import { AddContactButton } from "./contacts-client";
 import { PageHeader, StatCard, TableCard, FilterChip } from "@/components/page";
@@ -23,6 +24,7 @@ export default async function ContactsPage({
   searchParams: Promise<{ q?: string; f?: string }>;
 }) {
   const { orgId } = await currentOrg();
+  const cur = await getCurrency();
   const { q, f } = await searchParams;
 
   const contacts = await prisma.contact.findMany({
@@ -88,7 +90,7 @@ export default async function ContactsPage({
         />
         <StatCard
           label="Jami xaridlar"
-          value={formatMoney(totalSpent)}
+          value={formatMoney(totalSpent, cur)}
           accent="text-success"
         />
       </div>
@@ -166,7 +168,7 @@ export default async function ContactsPage({
                 </TableCell>
                 <TableCell className="font-medium tabular-nums">
                   {spent > 0 ? (
-                    formatMoney(spent)
+                    formatMoney(spent, cur)
                   ) : (
                     <span className="text-muted-foreground font-normal">—</span>
                   )}

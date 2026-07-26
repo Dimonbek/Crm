@@ -12,6 +12,7 @@ import {
 } from "./actions";
 import { Modal, Field } from "@/components/form";
 import { formatMoney } from "@/lib/format";
+import { useCurrency } from "@/lib/currency";
 
 const soldInitial: SoldState = {};
 
@@ -25,6 +26,7 @@ export function SoldButton({
   sold: boolean;
   amount: number | null;
 }) {
+  const currency = useCurrency();
   const [open, setOpen] = useState(false);
   const [state, formAction, pending] = useActionState(
     markSoldAction.bind(null, leadId),
@@ -36,7 +38,7 @@ export function SoldButton({
     return (
       <div className="flex items-center gap-3 rounded-lg border border-success/30 bg-success/10 px-4 py-2.5">
         <span className="text-sm text-success">
-          ✓ Sotildi{amount != null ? ` — ${formatMoney(amount)}` : ""}
+          ✓ Sotildi{amount != null ? ` — ${formatMoney(amount, currency)}` : ""}
         </span>
         <button
           disabled={undoing}

@@ -10,11 +10,17 @@ import {
   type CampaignState,
 } from "./actions";
 import { Modal, Field, FormButtons } from "@/components/form";
+import { useCurrency } from "@/lib/currency";
 
 const initial: CampaignState = {};
 
+function unit(currency: string) {
+  return currency === "USD" ? "$" : "so'm";
+}
+
 export function AddCampaignButton() {
   const [open, setOpen] = useState(false);
+  const currency = useCurrency();
   const [state, formAction, pending] = useActionState(
     createCampaignAction,
     initial
@@ -44,7 +50,7 @@ export function AddCampaignButton() {
           <Field name="channel" label="Kanal" placeholder="Instagram" />
           <Field
             name="budget"
-            label="Sarflangan byudjet (so'm)"
+            label={`Sarflangan byudjet (${unit(currency)})`}
             type="number"
             placeholder="0 — keyin ham kiritish mumkin"
           />
@@ -70,6 +76,7 @@ export function BudgetCell({
   campaignId: string;
   budget: number;
 }) {
+  const currency = useCurrency();
   const [value, setValue] = useState(String(budget));
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
@@ -98,6 +105,7 @@ export function BudgetCell({
         inputMode="numeric"
         className="w-28 rounded-lg border border-border bg-muted px-2 py-1 text-sm text-foreground outline-none transition focus:border-primary disabled:opacity-50"
       />
+      <span className="text-xs text-muted-foreground">{unit(currency)}</span>
       {saved && <span className="text-xs text-success">✓</span>}
     </div>
   );

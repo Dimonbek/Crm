@@ -4,7 +4,7 @@ import { currentOrg } from "@/lib/auth";
 import { isPlatformAdmin, supportContact } from "@/lib/platform";
 import { formatDate } from "@/lib/format";
 import { ProfileForm, PasswordForm } from "./account-client";
-import { DealsToggle } from "./sections-client";
+import { DealsToggle, CurrencySelect } from "./sections-client";
 
 export default async function SettingsPage() {
   const { orgId, session } = await currentOrg();
@@ -72,11 +72,17 @@ export default async function SettingsPage() {
             Kerak bo&apos;lmagan bo&apos;limni menyudan vaqtincha yashiring —
             xohlagan vaqtingizda qaytarasiz
           </p>
-          <div className="mt-5">
+          <div className="mt-5 flex flex-col gap-5">
             <DealsToggle
               initial={org.dealsEnabled}
               disabled={session.impersonating}
             />
+            <div className="border-t border-border pt-5">
+              <CurrencySelect
+                initial={org.currency}
+                disabled={session.impersonating}
+              />
+            </div>
           </div>
         </div>
       )}

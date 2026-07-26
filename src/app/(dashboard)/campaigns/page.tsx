@@ -16,7 +16,7 @@ export default async function CampaignsPage() {
   const [org, campaigns] = await Promise.all([
     prisma.organization.findUnique({
       where: { id: orgId },
-      select: { botUsername: true },
+      select: { botUsername: true, currency: true },
     }),
     prisma.campaign.findMany({
       where: { organizationId: orgId },
@@ -73,6 +73,9 @@ export default async function CampaignsPage() {
     where: { organizationId: orgId, campaignId: null },
   });
 
+  const cur = org?.currency ?? "UZS";
+  const money = (n: number | null | undefined) => formatMoney(n, cur);
+
   return (
     <div className="flex flex-col gap-6">
       <div className="flex flex-wrap items-center justify-between gap-4">
@@ -88,19 +91,19 @@ export default async function CampaignsPage() {
       {/* Umumiy KPI */}
       {rows.length > 0 && (
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          <Kpi label="Sarflangan" value={formatMoney(totals.budget)} />
+          <Kpi label="Sarflangan" value={money(totals.budget)} />
           <Kpi
             label="1 lead narxi (o'rtacha)"
-            value={totalM.cpl != null ? formatMoney(totalM.cpl) : "—"}
+            value={totalM.cpl != null ? money(totalM.cpl) : "—"}
           />
           <Kpi
             label="Daromad"
-            value={formatMoney(totals.revenue)}
+            value={money(totals.revenue)}
             accent="text-success"
           />
           <Kpi
             label="Sof foyda"
-            value={formatMoney(totalM.profit)}
+            value={money(totalM.profit)}
             accent={totalM.profit >= 0 ? "text-success" : "text-destructive"}
             hint={totalM.roi != null ? `ROI ${totalM.roi.toFixed(0)}%` : undefined}
           />
@@ -157,7 +160,7 @@ export default async function CampaignsPage() {
                   </td>
                   <td className="px-4 py-3 font-medium">{m.leads}</td>
                   <td className="px-4 py-3 text-muted-foreground">
-                    {m.cpl != null ? formatMoney(m.cpl) : "—"}
+                    {m.cpl != null ? money(m.cpl) : "—"}
                   </td>
                   <td className="px-4 py-3">
                     {m.sales}
@@ -168,10 +171,10 @@ export default async function CampaignsPage() {
                     )}
                   </td>
                   <td className="px-4 py-3 text-muted-foreground">
-                    {m.cac != null ? formatMoney(m.cac) : "—"}
+                    {m.cac != null ? money(m.cac) : "—"}
                   </td>
                   <td className="px-4 py-3 text-success">
-                    {m.revenue > 0 ? formatMoney(m.revenue) : "—"}
+                    {m.revenue > 0 ? money(m.revenue) : "—"}
                   </td>
                   <td
                     className={`px-4 py-3 font-medium ${
@@ -184,7 +187,7 @@ export default async function CampaignsPage() {
                   >
                     {c.budget === 0 && m.revenue === 0
                       ? "—"
-                      : formatMoney(m.profit)}
+                      : money(m.profit)}
                     {m.roi != null && (
                       <div className="text-xs font-normal text-muted-foreground">
                         ROI {m.roi.toFixed(0)}%
@@ -209,22 +212,22 @@ export default async function CampaignsPage() {
             <tfoot>
               <tr className="border-t border-border bg-muted/40 font-medium">
                 <td className="px-4 py-3">Jami</td>
-                <td className="px-4 py-3">{formatMoney(totals.budget)}</td>
+                <td className="px-4 py-3">{money(totals.budget)}</td>
                 <td className="px-4 py-3">{totals.leads}</td>
                 <td className="px-4 py-3 text-muted-foreground">
-                  {totalM.cpl != null ? formatMoney(totalM.cpl) : "—"}
+                  {totalM.cpl != null ? money(totalM.cpl) : "—"}
                 </td>
                 <td className="px-4 py-3">{totals.sales}</td>
                 <td className="px-4 py-3 text-muted-foreground">
-                  {totalM.cac != null ? formatMoney(totalM.cac) : "—"}
+                  {totalM.cac != null ? money(totalM.cac) : "—"}
                 </td>
                 <td className="px-4 py-3 text-success">
-                  {formatMoney(totals.revenue)}
+                  {money(totals.revenue)}
                 </td>
                 <td
                   className={`px-4 py-3 ${totalM.profit >= 0 ? "text-success" : "text-destructive"}`}
                 >
-                  {formatMoney(totalM.profit)}
+                  {money(totalM.profit)}
                 </td>
                 <td className="px-4 py-3"></td>
                 <td className="px-4 py-3"></td>

@@ -22,3 +22,22 @@ export async function setDealsEnabledAction(enabled: boolean) {
   revalidatePath("/settings");
   return { ok: true, enabled };
 }
+
+// Pul valyutasini o'zgartirish (faqat ADMIN). Konvertatsiya yo'q — faqat belgi.
+export async function setCurrencyAction(currency: string) {
+  const { orgId, session } = await currentOrg();
+  if (session.role !== "ADMIN") {
+    throw new Error("Faqat admin o'zgartira oladi");
+  }
+  if (session.impersonating) {
+    throw new Error("Impersonatsiya rejimida o'zgartirib bo'lmaydi");
+  }
+  const value = currency === "USD" ? "USD" : "UZS";
+  await prisma.organization.update({
+    where: { id: orgId },
+    data: { currency: value },
+  });
+  revalidatePath("/", "layout");
+  revalidatePath("/settings");
+  return { ok: true, currency: value };
+}

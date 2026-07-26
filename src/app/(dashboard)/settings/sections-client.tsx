@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useTransition } from "react";
-import { setDealsEnabledAction } from "./section-actions";
+import { setDealsEnabledAction, setCurrencyAction } from "./section-actions";
 
 export function DealsToggle({
   initial,
@@ -55,6 +55,54 @@ export function DealsToggle({
           }`}
         />
       </button>
+    </div>
+  );
+}
+
+export function CurrencySelect({
+  initial,
+  disabled,
+}: {
+  initial: string;
+  disabled?: boolean;
+}) {
+  const [currency, setCurrency] = useState(initial === "USD" ? "USD" : "UZS");
+  const [pending, startTransition] = useTransition();
+  const [err, setErr] = useState<string | null>(null);
+
+  function change(next: string) {
+    const prev = currency;
+    setCurrency(next); // optimistik
+    setErr(null);
+    startTransition(async () => {
+      try {
+        await setCurrencyAction(next);
+      } catch (e) {
+        setCurrency(prev);
+        setErr(e instanceof Error ? e.message : "Xato yuz berdi");
+      }
+    });
+  }
+
+  return (
+    <div className="flex items-center justify-between gap-4">
+      <div className="min-w-0">
+        <div className="text-sm font-medium">Pul valyutasi</div>
+        <div className="mt-0.5 text-xs text-muted-foreground">
+          Byudjet, daromad va foyda shu valyutada ko&apos;rinadi (konvertatsiya
+          yo&apos;q — faqat belgi)
+          {err && <span className="text-destructive"> — {err}</span>}
+        </div>
+      </div>
+      <select
+        value={currency}
+        onChange={(e) => change(e.target.value)}
+        disabled={disabled || pending}
+        className="rounded-lg border border-border bg-muted px-3 py-1.5 text-sm outline-none transition focus:border-primary disabled:opacity-50"
+      >
+        <option value="UZS">so&apos;m (UZS)</option>
+        <option value="USD">dollar ($)</option>
+      </select>
     </div>
   );
 }
