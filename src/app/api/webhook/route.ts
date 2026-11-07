@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
 import { prisma } from "@/lib/prisma";
+import { notifyNewLead } from "@/lib/notifications";
 
 // Bot leadlarni shu endpointga POST qiladi (har kompaniya o'z tokeni bilan).
 // Himoya: WEBHOOK_SECRET (header `x-webhook-secret` yoki `?secret=`).
@@ -116,6 +117,16 @@ export async function POST(req: Request) {
       },
     });
   }
+
+  // Bildirishnoma — menejer CRM'ni ochganda qo'ng'iroqchada ko'radi
+  await notifyNewLead({
+    orgId: org.id,
+    leadId: lead.id,
+    phone: d.phone,
+    destination: d.destination,
+    source: "telegram",
+    assignedToId: lead.assignedToId,
+  });
 
   return NextResponse.json({ ok: true, leadId: lead.id }, { status: 201 });
 }

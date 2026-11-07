@@ -7,6 +7,7 @@ import { MobileNav } from "./mobile-nav";
 import { logoutAction } from "./actions";
 import { ImpersonationBanner } from "./impersonation-banner";
 import { ThemeToggle } from "@/components/theme-toggle";
+import { NotificationBell } from "./notification-bell";
 import { CurrencyProvider } from "@/lib/currency";
 
 export default async function DashboardLayout({
@@ -23,6 +24,11 @@ export default async function DashboardLayout({
   });
   const dealsEnabled = org?.dealsEnabled ?? true;
   const currency = org?.currency ?? "UZS";
+
+  // Qo'ng'iroqcha raqami sahifa ochilishi bilan ko'rinishi uchun serverda olinadi
+  const unreadNotifications = await prisma.notification.count({
+    where: { userId: user.userId, readAt: null },
+  });
 
   return (
     <div className="flex min-h-full">
@@ -43,6 +49,7 @@ export default async function DashboardLayout({
             dealsEnabled={dealsEnabled}
           />
           <div className="flex flex-1 items-center justify-end gap-3">
+            <NotificationBell initialUnread={unreadNotifications} />
             <ThemeToggle />
             {platformAdmin && (
               <Link

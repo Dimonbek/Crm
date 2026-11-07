@@ -5,6 +5,7 @@ import { revalidatePath } from "next/cache";
 import { prisma } from "@/lib/prisma";
 import { currentOrg } from "@/lib/auth";
 import { LEAD_STATUSES, STATUS_LABEL } from "@/lib/leads";
+import { notifyNewLead } from "@/lib/notifications";
 import type { LeadStatus } from "@/generated/prisma/enums";
 
 const createSchema = z.object({
@@ -65,6 +66,14 @@ export async function createLeadAction(
       leadId: lead.id,
       organizationId: orgId,
     },
+  });
+
+  await notifyNewLead({
+    orgId,
+    leadId: lead.id,
+    phone,
+    destination,
+    source: "manual",
   });
 
   revalidatePath("/leads");

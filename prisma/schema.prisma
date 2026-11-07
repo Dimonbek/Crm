@@ -40,6 +40,7 @@ model Organization {
   notes      Note[]
   activities Activity[]
   campaigns  Campaign[]
+  notifications Notification[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -83,6 +84,7 @@ model User {
   deals          Deal[]
   tasks          Task[]
   activities     Activity[]
+  notifications  Notification[]
   createdAt      DateTime     @default(now())
 
   @@index([organizationId])
@@ -218,6 +220,47 @@ model Activity {
   createdAt DateTime     @default(now())
 
   @@index([organizationId])
+}
+
+/// Xodimga ko'rsatiladigan bildirishnoma (CRM ichidagi qo'ng'iroqcha).
+/// Har bir yozuv bitta foydalanuvchiga tegishli — o'qilganlik holati shaxsiy.
+model Notification {
+  id    String           @id @default(cuid())
+  type  NotificationType
+  title String
+  /// Qo'shimcha matn (telefon, muddat, summa...)
+  body  String?
+  /// Bosilganda ochiladigan sahifa, masalan "/leads/abc123"
+  link  String?
+
+  /// O'qilgan vaqt — null bo'lsa o'qilmagan
+  readAt DateTime?
+
+  /// Takroriy yozuvni to'sish kaliti, masalan "task_due:<taskId>".
+  /// Bir foydalanuvchi uchun bitta kalit faqat bir marta yoziladi.
+  dedupeKey String?
+
+  user           User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId         String
+  organization   Organization? @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  organizationId String?
+
+  createdAt DateTime @default(now())
+
+  @@unique([userId, dedupeKey])
+  @@index([userId, readAt])
+  @@index([userId, createdAt])
+}
+
+enum NotificationType {
+  /// Yangi lead keldi (bot yoki qo'lda)
+  NEW_LEAD
+  /// Lead yoki bitim xodimga biriktirildi
+  ASSIGNED
+  /// Vazifa muddati keldi yoki o'tdi
+  TASK_DUE
+  /// Lead/bitim uzoq vaqt tegilmagan
+  STALE
 }
 
 enum Role {

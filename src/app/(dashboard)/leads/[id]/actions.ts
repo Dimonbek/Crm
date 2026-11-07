@@ -5,6 +5,7 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import { currentOrg } from "@/lib/auth";
+import { notifyAssigned } from "@/lib/notifications";
 
 /** Lead shu kompaniyaga tegishlimi — har amaldan oldin tekshiriladi */
 async function ownLead(leadId: string, orgId: string) {
@@ -74,6 +75,21 @@ export async function assignLeadAction(
       organizationId: orgId,
     },
   });
+
+  if (assignee) {
+    const lead = await prisma.lead.findFirst({
+      where: { id: leadId, organizationId: orgId },
+      select: { phone: true, destination: true },
+    });
+    await notifyAssigned({
+      orgId,
+      userId: assignee.id,
+      actorId: session.userId,
+      kind: "lead",
+      entityId: leadId,
+      label: lead ? `${lead.phone} — ${lead.destination}` : "Yangi lead",
+    });
+  }
 
   revalidatePath(`/leads/${leadId}`);
 }

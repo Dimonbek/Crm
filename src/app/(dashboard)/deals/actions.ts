@@ -5,6 +5,7 @@ import { revalidatePath } from "next/cache";
 import { prisma } from "@/lib/prisma";
 import { currentOrg } from "@/lib/auth";
 import { DEAL_STAGES, STAGE_LABEL } from "@/lib/deals";
+import { notifyAssigned } from "@/lib/notifications";
 import type { DealStage } from "@/generated/prisma/enums";
 
 const createSchema = z.object({
@@ -75,6 +76,17 @@ export async function createDealAction(
       organizationId: orgId,
     },
   });
+
+  if (assignee) {
+    await notifyAssigned({
+      orgId,
+      userId: assignee.id,
+      actorId: session.userId,
+      kind: "deal",
+      entityId: deal.id,
+      label: title,
+    });
+  }
 
   revalidatePath("/deals");
   revalidatePath("/dashboard");
