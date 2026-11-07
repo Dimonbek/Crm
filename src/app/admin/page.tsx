@@ -2,7 +2,7 @@ import Link from "next/link";
 import { headers } from "next/headers";
 import { prisma } from "@/lib/prisma";
 import { requirePlatformAdmin } from "@/lib/platform";
-import { formatDate, formatMoney } from "@/lib/format";
+import { formatDate, formatMoney, timeAgo } from "@/lib/format";
 import { PageHeader, StatCard, TableCard } from "@/components/page";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -14,6 +14,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { ActivityFeed, weeklyActivity } from "./activity-feed";
 import {
   AddOrgButton,
   BotCell,
@@ -33,6 +34,8 @@ export default async function AdminPage() {
   const host = h.get("host") ?? "localhost:3000";
   const proto = host.startsWith("localhost") ? "http" : "https";
   const webhookUrl = `${proto}://${host}/api/webhook`;
+
+  const weekly = await weeklyActivity();
 
   const orgs = await prisma.organization.findMany({
     orderBy: { createdAt: "desc" },
@@ -98,6 +101,7 @@ export default async function AdminPage() {
               <TableHead>Mijozlar</TableHead>
               <TableHead>Sotuv</TableHead>
               <TableHead>Bitimlar</TableHead>
+              <TableHead>Faollik (7 kun)</TableHead>
               <TableHead>Yaratilgan</TableHead>
               <TableHead>Bot ulash</TableHead>
             </TableRow>
@@ -105,7 +109,7 @@ export default async function AdminPage() {
           <TableBody>
             {orgs.length === 0 && (
               <TableRow>
-                <TableCell colSpan={10} className="text-muted-foreground h-32 text-center">
+                <TableCell colSpan={11} className="text-muted-foreground h-32 text-center">
                   Hali kompaniya yo&apos;q.
                 </TableCell>
               </TableRow>
@@ -114,6 +118,7 @@ export default async function AdminPage() {
               const sold = o.leads.filter((l) => l.status === "CONVERTED");
               const revenue = sold.reduce((s, l) => s + (l.saleAmount ?? 0), 0);
               const admin = o.users[0];
+              const act = weekly.get(o.id);
               const connected = !!o.botUsername;
               return (
                 <TableRow key={o.id}>
@@ -163,6 +168,16 @@ export default async function AdminPage() {
                   <TableCell>
                     <OrgDealsToggle orgId={o.id} enabled={o.dealsEnabled} />
                   </TableCell>
+                  <TableCell>
+                    {act?.actions ? (
+                      <span className="text-success">{act.actions} harakat</span>
+                    ) : (
+                      <span className="text-muted-foreground">jim</span>
+                    )}
+                    <div className="text-xs text-muted-foreground">
+                      {act?.lastAt ? `oxirgi: ${timeAgo(act.lastAt)}` : "hech qachon"}
+                    </div>
+                  </TableCell>
                   <TableCell className="text-muted-foreground">
                     {formatDate(o.createdAt)}
                   </TableCell>
@@ -187,6 +202,8 @@ export default async function AdminPage() {
           </TableBody>
         </Table>
       </TableCard>
+
+      <ActivityFeed />
 
       <Card>
         <CardHeader>

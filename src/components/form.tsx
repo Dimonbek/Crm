@@ -96,11 +96,14 @@ export function SelectField({
   label,
   options,
   defaultValue,
+  onChange,
 }: {
   name: string;
   label: string;
   options: { value: string; label: string }[];
   defaultValue?: string;
+  /** Tanlov o'zgarganda — masalan tanlangan rol izohini ko'rsatish uchun */
+  onChange?: (value: string) => void;
 }) {
   return (
     <div className="flex flex-col gap-2">
@@ -109,6 +112,7 @@ export function SelectField({
         id={name}
         name={name}
         defaultValue={defaultValue}
+        onChange={onChange ? (e) => onChange(e.target.value) : undefined}
         className={selectClass}
       >
         {options.map((o) => (

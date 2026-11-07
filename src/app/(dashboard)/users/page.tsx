@@ -1,7 +1,12 @@
 import { prisma } from "@/lib/prisma";
 import { requireAdmin, currentOrg } from "@/lib/auth";
 import { formatDate } from "@/lib/format";
-import { AddUserButton, RoleSelect, ActiveToggle } from "./users-client";
+import {
+  AddUserButton,
+  RoleSelect,
+  ActiveToggle,
+  DeleteUserButton,
+} from "./users-client";
 
 export default async function UsersPage() {
   const me = await requireAdmin();
@@ -28,12 +33,13 @@ export default async function UsersPage() {
           <thead>
             <tr className="border-b border-border text-left text-xs uppercase tracking-wide text-muted-foreground">
               <th className="px-4 py-3 font-medium">Ism</th>
-              <th className="px-4 py-3 font-medium">Email</th>
+              <th className="px-4 py-3 font-medium">Login</th>
               <th className="px-4 py-3 font-medium">Rol</th>
               <th className="px-4 py-3 font-medium">Leadlar</th>
               <th className="px-4 py-3 font-medium">Bitimlar</th>
               <th className="px-4 py-3 font-medium">Holat</th>
               <th className="px-4 py-3 font-medium">Qo&apos;shilgan</th>
+              <th className="px-4 py-3" />
             </tr>
           </thead>
           <tbody>
@@ -50,7 +56,14 @@ export default async function UsersPage() {
                       <span className="ml-2 text-xs text-muted-foreground">(siz)</span>
                     )}
                   </td>
-                  <td className="px-4 py-3 text-muted-foreground">{u.email}</td>
+                  <td className="px-4 py-3">
+                    <code className="text-xs">{u.username ?? "—"}</code>
+                    {!u.email.endsWith(".local") && (
+                      <div className="text-xs text-muted-foreground">
+                        {u.email}
+                      </div>
+                    )}
+                  </td>
                   <td className="px-4 py-3">
                     <RoleSelect userId={u.id} role={u.role} disabled={isSelf} />
                   </td>
@@ -65,6 +78,14 @@ export default async function UsersPage() {
                   </td>
                   <td className="px-4 py-3 text-muted-foreground">
                     {formatDate(u.createdAt)}
+                  </td>
+                  <td className="px-4 py-3 text-right">
+                    <DeleteUserButton
+                      userId={u.id}
+                      name={u.name}
+                      leadCount={u._count.leads}
+                      disabled={isSelf}
+                    />
                   </td>
                 </tr>
               );
